@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+
 // Cria instância do axios com baseURL da variável de ambiente
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL

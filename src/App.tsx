@@ -2,8 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
 // import { Home } from "./assets/pages/Index";
-import LoginPage from "./assets/pages/Auth";
+
 import { Home } from "./assets/pages/Index";
+import LoginPage from "./assets/pages/Auth";
+
+
 
 function App() {
   return (
