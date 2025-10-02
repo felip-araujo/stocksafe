@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function CadastroComp() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     cnpj: "",
@@ -31,6 +34,7 @@ export function CadastroComp() {
         formData
       );
       setMessage("Empresa cadastrada com sucesso!");
+      navigate("/auth");
       setFormData({
         name: "",
         cnpj: "",

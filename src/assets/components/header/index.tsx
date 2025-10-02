@@ -25,7 +25,7 @@ export function Header() {
           </a>
           <a
             className="text-lm font-normal bg-blue-500 text-white p-2.5 rounded-sm"
-            href="/auth"
+            href="/cadastro"
           >
             Teste Grátis
           </a>
