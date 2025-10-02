@@ -30,8 +30,11 @@ export function LoginPage() {
       console.log("Login realizado", res.data);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
+      localStorage.setItem("companyId", res.data.user.companyId);
+      localStorage.setItem("companyName", res.data.user.company.name);
+      localStorage.setItem("representant", res.data.user.company.representant);
       const funcao = res.data.user.role;
-      // console.log(funcao);
+      console.log(res.data);
 
       if (funcao === "SUPER_ADMIN") {
         navigate("/superdash");
@@ -47,19 +50,19 @@ export function LoginPage() {
     } catch (err: unknown) {
       console.error("Erro no login", err);
       if (axios.isAxiosError(err)) {
-    setToast({
-      message:
-        err.response?.status === 401
-          ? "Usuário ou senha incorretos"
-          : "Erro no login",
-      type: "error",
-    });
-  } else {
-    setToast({
-      message: "Erro inesperado no login",
-      type: "error",
-    });
-  }
+        setToast({
+          message:
+            err.response?.status === 401
+              ? "Usuário ou senha incorretos"
+              : "Erro no login",
+          type: "error",
+        });
+      } else {
+        setToast({
+          message: "Erro inesperado no login",
+          type: "error",
+        });
+      }
     }
   };
   // Faz o toast desaparecer após 3 segundos
