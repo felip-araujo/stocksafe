@@ -1,11 +1,20 @@
-import axios from "axios";
+// import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "@/services/api/api";
 
 export function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "error" | "success";
+  } | null>(null);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -15,53 +24,101 @@ export function LoginPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "https://stock-back-vert.vercel.app/auth",
-        formData
-      );
-      console.log("Login realizado", res);
-      // window.location.href = "/";
+      const res = await api.post("/auth", formData);
+
+      console.log("Login realizado", res.data);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
+      const funcao = res.data.user.role;
+      // console.log(funcao);
+
+      if (funcao === "SUPER_ADMIN") {
+        navigate("/superdash");
+      }
+      if (funcao === "COMPANY_ADMIN") {
+        navigate("/dashboard");
+      }
+
       setFormData({
         email: "",
         password: "",
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error("Erro no login", err);
+
+      setToast({
+        message:
+          err.response?.status === 401
+            ? "Usuário ou senha incorretos"
+            : "Erro no login",
+        type: "error",
+      });
     }
-  };
+      // Faz o toast desaparecer após 3 segundos
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+  }
+  
 
   return (
     <>
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
-            Senha:
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Enviar
-          </button>
-        </form>
+
+      <div className="items-center flex justify-center h-screen bg-gray-100">
+         {/* Toast */}
+      {toast && (
+        <div
+          className={`absolute bottom-10 right-5 w-full max-w-2xs p-2.5 rounded shadow-md font-bold text-center ${
+            toast.type === "error" ? "bg-red-500 rounded  text-white" : "bg-green-500 text-white"
+          }`}
+        >
+          <span>{toast.message}</span>
+    <button
+      onClick={() => setToast(null)}
+      className="ml-4 text-white font-bold hover:text-gray-200 transition-colors"
+    >
+      ✕
+    </button>
+        </div>
+      )}
+        <div className="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md ">
+          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-4 space-x-18">
+            <label htmlFor="email" className="block text-sm font-medium mb-1">
+              Email:
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-1"
+            >
+              Senha:
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="w-full py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Enviar
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

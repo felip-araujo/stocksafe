@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // import axios from "axios";
-import api from "@/services/api/api"
+import api from "@/services/api/api";
 
 // Interface para tipar os dados da API
 interface Company {
