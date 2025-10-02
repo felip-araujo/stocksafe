@@ -1,7 +1,8 @@
 // import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api/api";
+import axios from "axios";
 
 export function LoginPage() {
   const [formData, setFormData] = useState({
@@ -16,11 +17,11 @@ export function LoginPage() {
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -43,50 +44,56 @@ export function LoginPage() {
         email: "",
         password: "",
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Erro no login", err);
-
-      setToast({
-        message:
-          err.response?.status === 401
-            ? "Usuário ou senha incorretos"
-            : "Erro no login",
-        type: "error",
-      });
+      if (axios.isAxiosError(err)) {
+    setToast({
+      message:
+        err.response?.status === 401
+          ? "Usuário ou senha incorretos"
+          : "Erro no login",
+      type: "error",
+    });
+  } else {
+    setToast({
+      message: "Erro inesperado no login",
+      type: "error",
+    });
+  }
     }
-      // Faz o toast desaparecer após 3 segundos
+  };
+  // Faz o toast desaparecer após 3 segundos
   useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => setToast(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [toast]);
-  }
-  
 
   return (
     <>
-
       <div className="items-center flex justify-center h-screen bg-gray-100">
-         {/* Toast */}
-      {toast && (
-        <div
-          className={`absolute bottom-10 right-5 w-full max-w-2xs p-2.5 rounded shadow-md font-bold text-center ${
-            toast.type === "error" ? "bg-red-500 rounded  text-white" : "bg-green-500 text-white"
-          }`}
-        >
-          <span>{toast.message}</span>
-    <button
-      onClick={() => setToast(null)}
-      className="ml-4 text-white font-bold hover:text-gray-200 transition-colors"
-    >
-      ✕
-    </button>
-        </div>
-      )}
+        {/* Toast */}
+        {toast && (
+          <div
+            className={`absolute bottom-10 right-5 w-full max-w-2xs p-2.5 rounded shadow-md font-bold text-center ${
+              toast.type === "error"
+                ? "bg-red-500 rounded  text-white"
+                : "bg-green-500 text-white"
+            }`}
+          >
+            <span>{toast.message}</span>
+            <button
+              onClick={() => setToast(null)}
+              className="ml-4 text-white font-bold hover:text-gray-200 transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+        )}
         <div className="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md ">
           <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4 space-x-18">
             <label htmlFor="email" className="block text-sm font-medium mb-1">
               Email:

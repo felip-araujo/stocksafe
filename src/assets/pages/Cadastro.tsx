@@ -15,18 +15,21 @@ export function CadastroComp() {
   const [message, setMessage] = useState("");
 
   // Atualiza o state conforme digita
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   // Envia o formulário
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
     try {
-      const res = await axios.post("https://stock-back-vert.vercel.app/companies", formData);
+      const res = await axios.post(
+        "https://stock-back-vert.vercel.app/companies",
+        formData
+      );
       setMessage("Empresa cadastrada com sucesso!");
       setFormData({
         name: "",
@@ -36,6 +39,7 @@ export function CadastroComp() {
         rep_num: "",
         password: "",
       });
+      console.log(res);
     } catch (err) {
       console.error(err);
       setMessage("Erro ao cadastrar empresa.");
@@ -46,10 +50,14 @@ export function CadastroComp() {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Cadastro de Empresa</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">
+        Cadastro de Empresa
+      </h2>
 
       {message && (
-        <p className="mb-4 text-center text-sm font-medium text-red-500">{message}</p>
+        <p className="mb-4 text-center text-sm font-medium text-red-500">
+          {message}
+        </p>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,7 +90,10 @@ export function CadastroComp() {
         </div>
 
         <div>
-          <label htmlFor="representant" className="block text-sm font-medium mb-1">
+          <label
+            htmlFor="representant"
+            className="block text-sm font-medium mb-1"
+          >
             Representante
           </label>
           <input
