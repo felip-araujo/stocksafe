@@ -8,7 +8,7 @@ export function SidebarDash() {
   const navItems = [
     { to: "/dashboard", label: "Início", icon: <Home size={20} /> },
     { to: "/produtos", label: "Produtos", icon: <Package size={20} /> },
-    { to: "/dashboard/usuarios", label: "Usuários", icon: <Users size={20} /> },
+    { to: "/usuarios", label: "Usuários", icon: <Users size={20} /> },
     { to: "/dashboard/config", label: "Configurações", icon: <Settings size={20} /> },
   ];
 
