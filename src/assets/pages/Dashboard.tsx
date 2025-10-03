@@ -1,13 +1,12 @@
 import { useAuthGuard } from "@/services/hooks/validator";
-
-import { SidebarDash } from "../components/company_dash/SideBarDash";
+import { DashboardCompany } from "../components/company_dash/DashStats";
 
 export function DashPage() {
   useAuthGuard(["COMPANY_ADMIN"]);
 
   return (
     <>
-      <SidebarDash></SidebarDash>
+      <DashboardCompany></DashboardCompany>
     </>
   );
 }
