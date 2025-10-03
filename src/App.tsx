@@ -25,7 +25,7 @@ function App() {
         <Route path="/produtos" element={<ProdutosCompany></ProdutosCompany>}></Route>
         <Route path="/usuarios" element={<UsuariosCompany></UsuariosCompany>} ></Route>
         <Route path="/esqueci-senha" element={<EsqSenha></EsqSenha>} ></Route>
-        <Route path="/reset-password" element={<ResetPassword></ResetPassword>} ></Route>
+        <Route path="/reset-password/:token" element={<ResetPassword></ResetPassword>} ></Route>
       </Routes>
     </>
   );
