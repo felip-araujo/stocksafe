@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api/api";
 import axios from "axios";
+import { PackagePlus } from "lucide-react";
 
 export function LoginPage() {
   const [formData, setFormData] = useState({
@@ -95,7 +96,19 @@ export function LoginPage() {
           </div>
         )}
         <div className="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md ">
-          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+          {/* Logo + Texto */}
+          <div className="flex items-center justify-center">
+            <div className="p-4 bg-blue-500 rounded-lg items-center justify-center">
+              <a className="text-white font-bold" href="/">
+                <PackagePlus />
+              </a>
+            </div>
+            <a href="/">
+              <p className="text-zinc-900 text-2xl font-medium ml-2">
+                StockSafe
+              </p>
+            </a>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 space-x-18">
             <label htmlFor="email" className="block text-sm font-medium mb-1">
@@ -103,6 +116,7 @@ export function LoginPage() {
             </label>
             <input
               type="email"
+              placeholder="Email:"
               id="email"
               value={formData.email}
               onChange={handleChange}
@@ -116,6 +130,7 @@ export function LoginPage() {
             </label>
             <input
               type="password"
+              placeholder="Senha:"
               id="password"
               value={formData.password}
               onChange={handleChange}
@@ -128,6 +143,15 @@ export function LoginPage() {
               Enviar
             </button>
           </form>
+          <div className="mt-2 align-middle ">
+            <a className="text-gray-800 justify-end text-sm" href="/cadastro">
+              Cadastre-se
+            </a>{" "}
+            <br />
+            <a className="text-gray-800 text-sm" href="">
+              Esqueceu a senha?
+            </a>
+          </div>
         </div>
       </div>
     </>
