@@ -148,7 +148,7 @@ export function LoginPage() {
               Cadastre-se
             </a>{" "}
             <br />
-            <a className="text-gray-800 text-sm" href="">
+            <a className="text-gray-800 text-sm" href="/esqueci-senha">
               Esqueceu a senha?
             </a>
           </div>
