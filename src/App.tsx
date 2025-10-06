@@ -12,6 +12,7 @@ import { ProdutosCompany } from "./assets/components/company_dash/Produtos";
 import { UsuariosCompany } from "./assets/components/company_dash/Users";
 import { EsqSenha } from "./assets/pages/EsqueciSenha";
 import ResetPassword from "./assets/pages/ResetPassword";
+import { CodeMail } from "./assets/pages/Code";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/usuarios" element={<UsuariosCompany></UsuariosCompany>} ></Route>
         <Route path="/esqueci-senha" element={<EsqSenha></EsqSenha>} ></Route>
         <Route path="/reset-password/:token" element={<ResetPassword></ResetPassword>} ></Route>
+        <Route path="/code-insert" element={<CodeMail></CodeMail>}></Route>
       </Routes>
     </>
   );

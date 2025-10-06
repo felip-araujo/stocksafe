@@ -1,10 +1,12 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "@/services/api/api";
 import { Eye, EyeOff } from "lucide-react"; // usar lucide-react para os ícones
 
 export default function ResetPassword() {
+  const navigate = useNavigate();
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -36,8 +38,14 @@ export default function ResetPassword() {
     setError("");
     setSuccess("");
 
+    const userId = localStorage.getItem("id"); // id salvo previamente
+    if (!userId) {
+      setError("Usuário não encontrado. Tente novamente.");
+      return;
+    }
+
     if (!token) {
-      setError("Token inválido ou expirado.");
+      setError("Código inválido ou expirado.");
       return;
     }
 
@@ -54,12 +62,27 @@ export default function ResetPassword() {
     }
 
     try {
-      await api.post("/auth/reset-password", { token, password });
-      setSuccess("Senha redefinida com sucesso! Agora você já pode fazer login.");
+      // POST enviando id, code e newPassword
+      await api.post("/auth/reset-password", {
+        id: Number(userId),
+        code: token,
+        newPassword: password,
+      });
+
+      setSuccess(
+        "Senha redefinida com sucesso! Agora você já pode fazer login."
+      );
       setPassword("");
       setConfirmPassword("");
-    } catch (err) {
-      setError("Erro ao redefinir senha.");
+      localStorage.removeItem("userId"); // limpar id após redefinir a senha
+      setTimeout(() => {
+        navigate("/auth");
+      }, 3000); // 3000 ms = 3 segundos
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message ||
+          "Erro ao redefinir senha. Tente novamente."
+      );
       console.error(err);
     }
   };
@@ -92,7 +115,6 @@ export default function ResetPassword() {
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
-        
         </div>
 
         <div className="mb-3 relative">
@@ -117,24 +139,44 @@ export default function ResetPassword() {
           )}
         </div>
 
-          {/* Validações em tempo real */}
-          <ul className="text-xs mt-1 mb-6">
-             <li className={passwordValidations.length ? "text-green-600" : "text-red-500"}>
-              Mínimo 8 caracteres
-            </li>
-            <li className={passwordValidations.uppercase ? "text-green-600" : "text-red-500"}>
-              Uma letra maiúscula
-            </li>
-            <li className={passwordValidations.lowercase ? "text-green-600" : "text-red-500"}>
-              Uma letra minúscula
-            </li>
-            <li className={passwordValidations.number ? "text-green-600" : "text-red-500"}>
-              Um número
-            </li>
-            <li className={passwordValidations.special ? "text-green-600" : "text-red-500"}>
-              Um caractere especial
-            </li>
-          </ul>
+        {/* Validações em tempo real */}
+        <ul className="text-xs mt-1 mb-6">
+          <li
+            className={
+              passwordValidations.length ? "text-green-600" : "text-red-500"
+            }
+          >
+            Mínimo 8 caracteres
+          </li>
+          <li
+            className={
+              passwordValidations.uppercase ? "text-green-600" : "text-red-500"
+            }
+          >
+            Uma letra maiúscula
+          </li>
+          <li
+            className={
+              passwordValidations.lowercase ? "text-green-600" : "text-red-500"
+            }
+          >
+            Uma letra minúscula
+          </li>
+          <li
+            className={
+              passwordValidations.number ? "text-green-600" : "text-red-500"
+            }
+          >
+            Um número
+          </li>
+          <li
+            className={
+              passwordValidations.special ? "text-green-600" : "text-red-500"
+            }
+          >
+            Um caractere especial
+          </li>
+        </ul>
 
         <button
           type="submit"
