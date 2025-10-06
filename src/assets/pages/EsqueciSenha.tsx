@@ -1,7 +1,11 @@
 import { useState } from "react";
 import api from "@/services/api/api";
+import { useNavigate } from "react-router-dom";
 
 export function EsqSenha() {
+
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -15,6 +19,7 @@ export function EsqSenha() {
       const res = await api.post("/auth/recover-password", { email });
       if (res) {
         setMessage(res.data.message || "Verifique sua caixa de e-mail!");
+        navigate
       }
     } catch (err: any) {
       setMessage(
