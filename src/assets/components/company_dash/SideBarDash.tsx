@@ -4,19 +4,33 @@ import { useLogout } from "@/services/hooks/logout";
 
 export function SidebarDash() {
   const logout = useLogout();
+  const role = localStorage.getItem("role");
+  const companyName = localStorage.getItem("companyName");
+  console.log(companyName);
 
-  const navItems = [
+  let navItems = [
     { to: "/dashboard", label: "Início", icon: <Home size={20} /> },
     { to: "/produtos", label: "Produtos", icon: <Package size={20} /> },
     { to: "/usuarios", label: "Usuários", icon: <Users size={20} /> },
-    { to: "/dashboard/config", label: "Configurações", icon: <Settings size={20} /> },
+    {
+      to: "/dashboard/config",
+      label: "Configurações",
+      icon: <Settings size={20} />,
+    },
   ];
+
+  if (role === "EMPLOYEE") {
+    navItems = [
+      { to: "/dash-employee", label: "Início", icon: <Home size={20} /> },
+      { to: "/material", label: "Material", icon: <Package size={20} /> },
+    ];
+  }
 
   return (
     <aside className="h-screen w-64 bg-gray-900 text-gray-100 flex flex-col shadow-lg">
       {/* Logo / Título */}
       <div className="px-6 py-4 text-xl font-bold border-b border-gray-700">
-        StockSafe
+        {companyName}
       </div>
 
       {/* Menu */}

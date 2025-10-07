@@ -44,6 +44,10 @@ export function LoginPage() {
         navigate("/dashboard");
       }
 
+      if (funcao === "EMPLOYEE") {
+        navigate("/dash-employee");
+      }
+
       setFormData({
         email: "",
         password: "",

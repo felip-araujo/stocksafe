@@ -3,11 +3,13 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 
-interface DashboardStats {
+export interface DashboardStats {
   totalUsers: number;
   totalProducts: number;
   totalRequests: number;
+  totalMaterial: number
 }
+
 
 export function DashboardCompany() {
   useAuthGuard(["COMPANY_ADMIN"]);
@@ -28,6 +30,8 @@ export function DashboardCompany() {
       setLoading(false);
     }
   };
+
+  console.log(stats)
 
   useEffect(() => {
     fetchStats();
@@ -56,7 +60,13 @@ export function DashboardCompany() {
               <p className="text-3xl font-bold">{stats.totalProducts}</p>
             </div>
 
-            {/* Total de Requisições */}
+            {/* Total de Materiais */}
+            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
+              <h2 className="text-lg font-semibold mb-2">Material</h2>
+              <p className="text-3xl font-bold">{stats.totalMaterial}</p>
+            </div>
+           
+            {/* Total de Materiais */}
             <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
               <h2 className="text-lg font-semibold mb-2">Requisições</h2>
               <p className="text-3xl font-bold">{stats.totalRequests}</p>

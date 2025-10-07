@@ -13,21 +13,34 @@ import { UsuariosCompany } from "./assets/components/company_dash/Users";
 import { EsqSenha } from "./assets/pages/EsqueciSenha";
 import ResetPassword from "./assets/pages/ResetPassword";
 import { CodeMail } from "./assets/pages/Code";
+import { DashEmployee } from "./assets/pages/DashEmployee";
+import { MaterialsCompany } from "./assets/components/company_dash/Material";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home></Home>}></Route>
+        {/* Rota de Index, pagina principal */}
+        <Route path="/" element={<Home></Home>}></Route> 
+
+        {/* Rotas de Login, Auth, e recuperação de senhas */}
         <Route path="/auth" element={<LoginPage></LoginPage>}></Route>
         <Route path="/cadastro" element={<CadastroComp></CadastroComp>}></Route>
-        <Route path="/dashboard" element={<DashPage></DashPage>}></Route>
-        <Route path="/superdash" element={<SuperDash></SuperDash>}></Route>
-        <Route path="/produtos" element={<ProdutosCompany></ProdutosCompany>}></Route>
-        <Route path="/usuarios" element={<UsuariosCompany></UsuariosCompany>} ></Route>
         <Route path="/esqueci-senha" element={<EsqSenha></EsqSenha>} ></Route>
         <Route path="/reset-password/:token" element={<ResetPassword></ResetPassword>} ></Route>
         <Route path="/code-insert" element={<CodeMail></CodeMail>}></Route>
+
+        {/* Dashboards e elementos de dashboards */}
+        <Route path="/dashboard" element={<DashPage></DashPage>}></Route>
+        <Route path="/dash-employee" element={<DashEmployee></DashEmployee>}></Route>
+        <Route path="/superdash" element={<SuperDash></SuperDash>}></Route>
+        <Route path="/produtos" element={<ProdutosCompany></ProdutosCompany>}></Route>
+        <Route path="/usuarios" element={<UsuariosCompany></UsuariosCompany>} ></Route>
+        <Route path="/material" element={<MaterialsCompany></MaterialsCompany>} ></Route>
+        
+        
+        
+
       </Routes>
     </>
   );
