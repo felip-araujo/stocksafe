@@ -5,8 +5,8 @@ export function useLogout() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    localStorage.clear()
+
     navigate("/auth"); // redireciona pro login
   };
 

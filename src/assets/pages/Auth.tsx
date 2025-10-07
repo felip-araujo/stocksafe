@@ -31,6 +31,7 @@ export function LoginPage() {
       console.log("Login realizado", res.data);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
+      localStorage.setItem("id", res.data.user.id);
       localStorage.setItem("companyId", res.data.user.companyId);
       localStorage.setItem("companyName", res.data.user.company.name);
       localStorage.setItem("representant", res.data.user.company.representant);
