@@ -15,6 +15,7 @@ import ResetPassword from "./assets/pages/ResetPassword";
 import { CodeMail } from "./assets/pages/Code";
 import { DashEmployee } from "./assets/pages/DashEmployee";
 import { MaterialsCompany } from "./assets/components/company_dash/Material";
+import { RequestsCompany } from "./assets/components/company_dash/Requests";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/produtos" element={<ProdutosCompany></ProdutosCompany>}></Route>
         <Route path="/usuarios" element={<UsuariosCompany></UsuariosCompany>} ></Route>
         <Route path="/material" element={<MaterialsCompany></MaterialsCompany>} ></Route>
+        <Route path="/requisicao" element={<RequestsCompany></RequestsCompany>} ></Route>
         
         
         
