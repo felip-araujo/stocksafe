@@ -24,20 +24,18 @@ export function RequestsCompany() {
 
   const companyId = localStorage.getItem("companyId");
   const [requests, setRequests] = useState<Request[]>([]);
+  const [statusChanges, setStatusChanges] = useState<{ [key: number]: string }>({});
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 5; // limite fixo por página
+  const limit = 5;
 
   const fetchRequests = async (page: number) => {
     if (!companyId) return;
     try {
-      const res = await api.get(
-        `/requisicao/${companyId}?page=${page}&limit=${limit}`
-      );
+      const res = await api.get(`/requisicao/${companyId}?page=${page}&limit=${limit}`);
       setRequests(res.data.data);
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
-      console.log(res.data.data[0].user);
     } catch (err) {
       console.error("Erro ao buscar requisições:", err);
     }
@@ -56,6 +54,30 @@ export function RequestsCompany() {
     } catch (err) {
       console.error("Erro ao excluir requisição:", err);
       alert("Erro ao excluir requisição");
+    }
+  };
+
+  const handleStatusChange = (id: number, newStatus: string) => {
+    setStatusChanges((prev) => ({
+      ...prev,
+      [id]: newStatus,
+    }));
+  };
+
+  const handleUpdateStatus = async (id: number) => {
+    const newStatus = statusChanges[id];
+    if (!newStatus) {
+      alert("Selecione um status antes de enviar.");
+      return;
+    }
+
+    try {
+      await api.put(`/requisicao/${companyId}/${id}`, { status: newStatus });
+      alert("Status atualizado com sucesso!");
+      fetchRequests(page);
+    } catch (err) {
+      console.error("Erro ao atualizar status:", err);
+      alert("Erro ao atualizar status");
     }
   };
 
@@ -81,60 +103,56 @@ export function RequestsCompany() {
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Material
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Usuário
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Quantidade
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Status
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Criado em
-                    </th>
-                    <th className="p-3 text-center text-sm font-semibold text-gray-700">
-                      Ações
-                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Material</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Usuário</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Quantidade</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
+                    <th className="p-3 text-center text-sm font-semibold text-gray-700">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {requests.map((req) => (
                     <tr key={req.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3 text-sm font-medium text-gray-800">
-                        {req.material.name}
-                      </td>
+                      <td className="p-3 text-sm font-medium text-gray-800">{req.material.name}</td>
                       <td className="p-3 text-sm text-gray-600">{req.user.name}</td>
+                      <td className="p-3 text-sm text-gray-600">{req.quantity}</td>
+
+                      {/* STATUS SELECT */}
                       <td className="p-3 text-sm text-gray-600">
-                        {req.quantity}
+                        <select
+                          value={statusChanges[req.id] || req.status}
+                          onChange={(e) => handleStatusChange(req.id, e.target.value)}
+                          className={`px-2 py-1 rounded-full text-xs border ${
+                            req.status === "approved"
+                              ? "bg-green-100 text-green-700"
+                              : req.status === "rejected"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }`}
+                        >
+                          <option value="pending">Pendente</option>
+                          <option value="approved">Aprovado</option>
+                          <option value="rejected">Rejeitado</option>
+                        </select>
                       </td>
-                      <td className="p-3 text-sm text-gray-600 capitalize">
-                        {req.status === "pending" ? (
-                          <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs">
-                            Pendente
-                          </span>
-                        ) : req.status === "approved" ? (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
-                            Aprovada
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">
-                            Rejeitada
-                          </span>
-                        )}
-                      </td>
+
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(req.createdAt).toLocaleDateString("pt-BR")}
                       </td>
+
                       <td className="p-3 text-center">
                         <button
                           onClick={() => handleExclude(req.id)}
                           className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
                         >
                           Excluir
+                        </button>
+                        <button
+                          onClick={() => handleUpdateStatus(req.id)}
+                          className="px-3 py-1 ml-2 text-sm bg-green-500 text-white rounded hover:bg-green-600 transition"
+                        >
+                          Atualizar
                         </button>
                       </td>
                     </tr>
