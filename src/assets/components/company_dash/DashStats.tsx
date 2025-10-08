@@ -7,9 +7,9 @@ export interface DashboardStats {
   totalUsers: number;
   totalProducts: number;
   totalRequests: number;
-  totalMaterial: number
+  totalMaterial: number;
+  pendingRequests: number;
 }
-
 
 export function DashboardCompany() {
   useAuthGuard(["COMPANY_ADMIN"]);
@@ -31,7 +31,7 @@ export function DashboardCompany() {
     }
   };
 
-  console.log(stats)
+  console.log(stats);
 
   useEffect(() => {
     fetchStats();
@@ -50,7 +50,7 @@ export function DashboardCompany() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Total de Usuários */}
             <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Usuários</h2>
+              <h2 className="text-lg font-semibold mb-2">Colaboradores</h2>
               <p className="text-3xl font-bold">{stats.totalUsers}</p>
             </div>
 
@@ -62,14 +62,25 @@ export function DashboardCompany() {
 
             {/* Total de Materiais */}
             <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Material</h2>
+              <h2 className="text-lg font-semibold mb-2">Materiais</h2>
               <p className="text-3xl font-bold">{stats.totalMaterial}</p>
             </div>
-           
-            {/* Total de Materiais */}
+
+            {/* Total de Requisições */}
             <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Requisições</h2>
+              <h2 className="text-lg font-semibold mb-2">
+                Total de Requisições
+              </h2>
               <p className="text-3xl font-bold">{stats.totalRequests}</p>
+            </div>
+
+            {/* Total de Requisições Pendentes */}
+
+            <div className="p-6 bg-yellow-300 rounded-lg shadow flex flex-col items-center justify-center">
+              <h2 className="text-lg font-semibold mb-2">
+                Requisições Pendentes
+              </h2>
+              <p className="text-3xl font-bold">{stats.pendingRequests}</p>
             </div>
           </div>
         ) : (
