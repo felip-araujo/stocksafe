@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
-import { data } from "react-router-dom";
 
 interface UserData {
   id: number;
@@ -19,7 +18,6 @@ export function PerfilCompany() {
   const userId = localStorage.getItem("id");
 
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [newPassword, setNewPassword] = useState("");
   const [updating, setUpdating] = useState(false);
 
@@ -28,16 +26,14 @@ export function PerfilCompany() {
     if (!companyId || !userId) return;
     try {
       const res = await api.get(`/user/${companyId}/${userId}`);
-      setUserData(res.data);
-      console.log(res.data)
+      setUserData(res.data.data);
+      console.log(res.data.data);
     } catch (err) {
       console.error("Erro ao buscar dados do usuário:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  console.log(userData)
+  console.log(userData);
 
   useEffect(() => {
     fetchUserData();
@@ -76,16 +72,18 @@ export function PerfilCompany() {
           <div className="bg-white shadow rounded-xl p-6 mb-6 max-w-lg">
             <div className="mb-4">
               <p className="text-gray-500 text-sm">Nome</p>
-              <p className="text-gray-800 font-medium">{userData.data.name}</p>
+              <p className="text-gray-800 font-medium">{userData.name}</p>
             </div>
             <div className="mb-4">
               <p className="text-gray-500 text-sm">E-mail</p>
-              <p className="text-gray-800 font-medium">{userData.data.email}</p>
+              <p className="text-gray-800 font-medium">{userData.email}</p>
             </div>
             <div className="mb-4">
               <p className="text-gray-500 text-sm">Função</p>
               <p className="text-gray-800 font-medium">
-                {userData.role === "COMPANY_ADMIN" ? "Administrador" : "Funcionário"}
+                {userData.role === "COMPANY_ADMIN"
+                  ? "Administrador"
+                  : "Funcionário"}
               </p>
             </div>
             <div>
