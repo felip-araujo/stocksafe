@@ -29,6 +29,10 @@ export function RequestsCompany() {
       setRequests(res.data.data);
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
+      console.log(res.data.data[0].user)
+
+      
+
     } catch (err) {
       console.error("Erro ao buscar requisições:", err);
     }
@@ -72,9 +76,9 @@ export function RequestsCompany() {
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">ID</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Material ID</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Usuário ID</th>
+                    
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Material</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Usuário</th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Quantidade</th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Status</th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
@@ -84,9 +88,9 @@ export function RequestsCompany() {
                 <tbody>
                   {requests.map((req) => (
                     <tr key={req.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3 text-sm text-gray-600">{req.id}</td>
-                      <td className="p-3 text-sm font-medium text-gray-800">{req.materialId}</td>
-                      <td className="p-3 text-sm text-gray-600">{req.userId}</td>
+                      
+                      <td className="p-3 text-sm font-medium text-gray-800">{req.material.name}</td>
+                      <td className="p-3 text-sm text-gray-600">{req.user.name}</td>
                       <td className="p-3 text-sm text-gray-600">{req.quantity}</td>
                       <td className="p-3 text-sm text-gray-600 capitalize">
                         {req.status === "pending" ? (
