@@ -11,6 +11,12 @@ interface Request {
   quantity: number;
   status: string;
   createdAt: string;
+  material: {
+    name: string;
+  };
+  user: {
+    name: string;
+  };
 }
 
 export function RequestsCompany() {
@@ -25,14 +31,13 @@ export function RequestsCompany() {
   const fetchRequests = async (page: number) => {
     if (!companyId) return;
     try {
-      const res = await api.get(`/requisicao/${companyId}?page=${page}&limit=${limit}`);
+      const res = await api.get(
+        `/requisicao/${companyId}?page=${page}&limit=${limit}`
+      );
       setRequests(res.data.data);
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
-      console.log(res.data.data[0].user)
-
-      
-
+      console.log(res.data.data[0].user);
     } catch (err) {
       console.error("Erro ao buscar requisições:", err);
     }
@@ -76,22 +81,36 @@ export function RequestsCompany() {
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Material</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Usuário</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Quantidade</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
-                    <th className="p-3 text-center text-sm font-semibold text-gray-700">Ações</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Material
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Usuário
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Quantidade
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Status
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Criado em
+                    </th>
+                    <th className="p-3 text-center text-sm font-semibold text-gray-700">
+                      Ações
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {requests.map((req) => (
                     <tr key={req.id} className="border-b hover:bg-gray-50">
-                      
-                      <td className="p-3 text-sm font-medium text-gray-800">{req.material.name}</td>
+                      <td className="p-3 text-sm font-medium text-gray-800">
+                        {req.material.name}
+                      </td>
                       <td className="p-3 text-sm text-gray-600">{req.user.name}</td>
-                      <td className="p-3 text-sm text-gray-600">{req.quantity}</td>
+                      <td className="p-3 text-sm text-gray-600">
+                        {req.quantity}
+                      </td>
                       <td className="p-3 text-sm text-gray-600 capitalize">
                         {req.status === "pending" ? (
                           <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs">
