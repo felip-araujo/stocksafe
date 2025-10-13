@@ -6,7 +6,12 @@ interface Material {
   id: number;
   name: string;
 
-  [key: string]: any; // caso venha mais campos da API
+  [key: string]: unknown; // caso venha mais campos da API
+}
+
+interface SelectedMaterial {
+  materialId: number;
+  quantity: number;
 }
 
 export function CreateRequest() {
@@ -15,7 +20,7 @@ export function CreateRequest() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [materials, setMaterials] = useState<Material[]>([]);
-  const [selectedMaterials, setSelectedMaterials] = useState([]);
+  const [selectedMaterials, setSelectedMaterials] = useState<SelectedMaterial[]>([]);
 
   // Carregar materiais ao abrir o modal
   useEffect(() => {
@@ -33,7 +38,7 @@ export function CreateRequest() {
   }, [isOpen]);
 
   // Lidar com seleção de materiais
-  const handleSelect = (materialId) => {
+  const handleSelect = (materialId: number) => {
     if (selectedMaterials.some((m) => m.materialId === materialId)) {
       setSelectedMaterials(
         selectedMaterials.filter((m) => m.materialId !== materialId)
@@ -44,7 +49,7 @@ export function CreateRequest() {
   };
 
   // Alterar quantidade
-  const handleQuantityChange = (materialId, newQuantity) => {
+  const handleQuantityChange = (materialId: number, newQuantity: number) => {
     setSelectedMaterials((prev) =>
       prev.map((m) =>
         m.materialId === materialId

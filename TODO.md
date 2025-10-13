@@ -1,2 +1,4 @@
-- [x] Update src/assets/pages/Auth.tsx: Remove invalid React.useEffect from handleSubmit, add axios import, and implement POST request to login API with re and senha, logging the response on success.
-- [x] Test the login functionality by running the dev server and submitting the form.
+- [x] Add interface for SelectedMaterial in NewRequest.tsx
+- [x] Type selectedMaterials state as SelectedMaterial[]
+- [x] Add types to handleSelect and handleQuantityChange parameters
+- [x] Run build to verify fixes
