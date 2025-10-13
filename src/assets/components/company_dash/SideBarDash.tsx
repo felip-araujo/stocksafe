@@ -31,8 +31,9 @@ export function SidebarDash() {
 
   if (role === "EMPLOYEE") {
     navItems = [
-      { to: "/dash-employee", label: "Início", icon: <Home size={20} /> },
+      // { to: "/dash-employee", label: "Início", icon: <Home size={20} /> },
       { to: "/material", label: "Material", icon: <Store size={20} /> },
+      { to: "/user-request", label: "Requisições", icon: <NotebookPen size={20} /> },
       { to: "/config", label: "Configurações", icon: <Settings size={20} /> },
     ];
   }

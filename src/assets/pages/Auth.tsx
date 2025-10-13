@@ -1,15 +1,16 @@
-// import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api/api";
 import axios from "axios";
-import { PackagePlus } from "lucide-react";
+import { PackagePlus, Eye, EyeOff } from "lucide-react";
 
 export function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [toast, setToast] = useState<{
     message: string;
@@ -71,7 +72,7 @@ export function LoginPage() {
       }
     }
   };
-  // Faz o toast desaparecer após 3 segundos
+
   useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => setToast(null), 3000);
@@ -87,7 +88,7 @@ export function LoginPage() {
           <div
             className={`absolute bottom-10 right-5 w-full max-w-2xs p-2.5 rounded shadow-md font-bold text-center ${
               toast.type === "error"
-                ? "bg-red-500 rounded  text-white"
+                ? "bg-red-500 rounded text-white"
                 : "bg-green-500 text-white"
             }`}
           >
@@ -100,6 +101,7 @@ export function LoginPage() {
             </button>
           </div>
         )}
+
         <div className="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md ">
           {/* Logo + Texto */}
           <div className="flex items-center justify-center">
@@ -127,20 +129,35 @@ export function LoginPage() {
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+
             <label
               htmlFor="password"
               className="block text-sm font-medium mb-1"
             >
               Senha:
             </label>
-            <input
-              type="password"
-              placeholder="Senha:"
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Senha:"
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? (
+                  <EyeOff size={18} strokeWidth={1.8} />
+                ) : (
+                  <Eye size={18} strokeWidth={1.8} />
+                )}
+              </button>
+            </div>
+
             <button
               type="submit"
               className="w-full py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition-colors"
@@ -148,7 +165,8 @@ export function LoginPage() {
               Enviar
             </button>
           </form>
-          <div className="mt-2 align-middle ">
+
+          <div className="mt-2 align-middle">
             <a className="text-gray-800 justify-end text-sm" href="/cadastro">
               Cadastre-se
             </a>{" "}
