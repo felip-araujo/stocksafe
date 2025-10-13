@@ -1,25 +1,19 @@
 import { useState } from "react";
 import api from "@/services/api/api";
 
-export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
+export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
   const companyId = Number(localStorage.getItem("companyId"));
 
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    price: 0,
-    stock: 0,
+    group: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
-    setFormData({
-      ...formData,
-      [id]: id === "price" || id === "stock" ? parseFloat(value) : value,
-    });
+    setFormData({ ...formData, [id]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,16 +21,15 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
     if (!companyId) return;
 
     try {
-      // Incluindo companyId no corpo da requisição
-      const res = await api.post(`/product`, { ...formData, companyId });
-      alert("Produto criado com sucesso!");
-      console.log(res);
+      const res = await api.post("/material", { ...formData, companyId });
+      alert("Material criado com sucesso!");
+      console.log(res)
       setIsOpen(false);
-      setFormData({ name: "", description: "", price: 0, stock: 0 });
-      if (onCreated) onCreated(); // callback para atualizar lista de produtos
+      setFormData({ name: "", description: "", group: "" });
+      if (onCreated) onCreated(); // callback para atualizar lista de materiais
     } catch (err) {
-      console.error("Erro ao criar produto:", err);
-      alert("Erro ao criar produto");
+      console.error("Erro ao criar material:", err);
+      alert("Erro ao criar material");
     }
   };
 
@@ -46,13 +39,13 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
         onClick={() => setIsOpen(true)}
         className="bg-green-600 p-2 rounded mb-4 text-white font-medium"
       >
-        Novo Produto
+        Novo Material
       </button>
 
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 bg-opacity-20 z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Criar Produto</h2>
+            <h2 className="text-xl font-bold mb-4">Criar Material</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-1">
@@ -80,32 +73,16 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="price" className="block text-sm font-medium mb-1">
-                  Preço
+                <label htmlFor="group" className="block text-sm font-medium mb-1">
+                  Grupo
                 </label>
                 <input
-                  type="number"
-                  id="price"
-                  value={formData.price}
+                  type="text"
+                  id="group"
+                  value={formData.group}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   required
-                  min={0}
-                  step={0.01}
-                />
-              </div>
-              <div>
-                <label htmlFor="stock" className="block text-sm font-medium mb-1">
-                  Estoque
-                </label>
-                <input
-                  type="number"
-                  id="stock"
-                  value={formData.stock}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  required
-                  min={0}
                 />
               </div>
 

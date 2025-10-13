@@ -76,11 +76,19 @@ export function DashboardCompany() {
 
             {/* Total de Requisições Pendentes */}
 
-            <div className="p-6 bg-yellow-300 rounded-lg shadow flex flex-col items-center justify-center">
+            <div
+              className={`p-6 rounded-lg shadow flex flex-col items-center justify-center ${
+                stats.pendingRequests === 0 ? "bg-green-400" : "bg-yellow-300"
+              }`}
+            >
               <h2 className="text-lg font-semibold mb-2">
                 Requisições Pendentes
               </h2>
-              <p className="text-3xl font-bold">{stats.pendingRequests}</p>
+              <p className="text-3xl font-bold">
+                {stats.pendingRequests === 0
+                  ? "0"
+                  : stats.pendingRequests}
+              </p>
             </div>
           </div>
         ) : (

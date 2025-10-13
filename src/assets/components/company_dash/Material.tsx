@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
-import { CreateProduct } from "./NewProduct"; // pode criar depois o CreateMaterial, se quiser separar
+import { NewMaterial } from "./NewMaterial";
 
 interface Material {
   id: number;
@@ -64,7 +64,7 @@ export function MaterialsCompany() {
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-6 bg-gray-50">
-        {role !== "EMPLOYEE" && (<CreateProduct onCreated={() => fetchMaterials(page)} />)}
+        {role !== "EMPLOYEE" && (<NewMaterial  />)}
 
         {materials.length > 0 ? (
           <>

@@ -14,9 +14,11 @@ interface Produto {
 }
 
 export function ProdutosCompany() {
-  useAuthGuard(["COMPANY_ADMIN"]);
+  useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
 
   const companyId = localStorage.getItem("companyId");
+  const role = localStorage.getItem("role"); 
+  console.log(role)
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -62,7 +64,7 @@ export function ProdutosCompany() {
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-6 bg-gray-50">
-        <CreateProduct onCreated={() => fetchProdutos(page)} />
+       {role !== "EMPLOYEE" && ( <CreateProduct onCreated={() => fetchProdutos(page)} /> )}
 
         {produtos.length > 0 ? (
           <>
@@ -76,7 +78,11 @@ export function ProdutosCompany() {
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Preço</th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Estoque</th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
-                    <th className="p-3 text-center text-sm font-semibold text-gray-700">Ações</th>
+                    {role !== "EMPLOYEE" && (
+  <th className="p-3 text-center text-sm font-semibold text-gray-700">
+    Ações
+  </th>
+)}
                   </tr>
                 </thead>
                 <tbody>
@@ -90,14 +96,14 @@ export function ProdutosCompany() {
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(produto.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="p-3 text-center">
-                        <button
+                     {role !== "EMPLOYEE" &&  ( <td className="p-3 text-center">
+                       <button
                           onClick={() => handleExclude(produto.id)}
                           className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
                         >
                           Excluir
                         </button>
-                      </td>
+                      </td> )}
                     </tr>
                   ))}
                 </tbody>
