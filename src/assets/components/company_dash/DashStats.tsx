@@ -31,70 +31,60 @@ export function DashboardCompany() {
     }
   };
 
-  console.log(stats);
-
   useEffect(() => {
     fetchStats();
   }, [companyId]);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       <SidebarDash />
-
-      <div className="flex-1 p-6 bg-gray-50">
+      <main className="flex-1 p-4 md:p-6">
         <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
         {loading ? (
           <p>Carregando...</p>
         ) : stats ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Total de Usuários */}
-            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
+            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
               <h2 className="text-lg font-semibold mb-2">Colaboradores</h2>
               <p className="text-3xl font-bold">{stats.totalUsers}</p>
             </div>
 
             {/* Total de Produtos */}
-            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
+            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
               <h2 className="text-lg font-semibold mb-2">Produtos</h2>
               <p className="text-3xl font-bold">{stats.totalProducts}</p>
             </div>
 
             {/* Total de Materiais */}
-            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
+            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
               <h2 className="text-lg font-semibold mb-2">Materiais</h2>
               <p className="text-3xl font-bold">{stats.totalMaterial}</p>
             </div>
 
             {/* Total de Requisições */}
-            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">
-                Total de Requisições
-              </h2>
+            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
+              <h2 className="text-lg font-semibold mb-2">Total de Requisições</h2>
               <p className="text-3xl font-bold">{stats.totalRequests}</p>
             </div>
 
             {/* Total de Requisições Pendentes */}
-
             <div
-              className={`p-6 rounded-lg shadow flex flex-col items-center justify-center ${
+              className={`p-4 sm:p-6 rounded-lg shadow flex flex-col items-center justify-center ${
                 stats.pendingRequests === 0 ? "bg-green-400" : "bg-yellow-300"
               }`}
             >
-              <h2 className="text-lg font-semibold mb-2">
-                Requisições Pendentes
-              </h2>
+              <h2 className="text-lg font-semibold mb-2">Requisições Pendentes</h2>
               <p className="text-3xl font-bold">
-                {stats.pendingRequests === 0
-                  ? "0"
-                  : stats.pendingRequests}
+                {stats.pendingRequests === 0 ? "Nenhuma" : stats.pendingRequests}
               </p>
             </div>
           </div>
         ) : (
           <p>Nenhum dado disponível.</p>
         )}
-      </div>
+      </main>
     </div>
   );
 }

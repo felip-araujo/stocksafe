@@ -18,6 +18,7 @@ import { MaterialsCompany } from "./assets/components/company_dash/Material";
 import { RequestsCompany } from "./assets/components/company_dash/Requests";
 import { PerfilCompany } from "./assets/components/company_dash/PerfilCompany";
 import { UserRequest } from "./assets/components/company_dash/RequestsOfUser";
+import { Blog } from "./assets/pages/Blog";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         {/* Rota de Index, pagina principal */}
         <Route path="/" element={<Home></Home>}></Route> 
+        <Route path="/blog" element={<Blog></Blog>}></Route> 
 
         {/* Rotas de Login, Auth, e recuperação de senhas */}
         <Route path="/auth" element={<LoginPage></LoginPage>}></Route>
