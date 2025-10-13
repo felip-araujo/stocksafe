@@ -1,6 +1,7 @@
 import { SidebarDash } from "./SideBarDash";
 import { useEffect, useState } from "react";
 import api from "@/services/api/api";
+import { CreateRequest } from "./NewRequest";
 
 interface Request {
   id: number;
@@ -38,10 +39,12 @@ export function UserRequest() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
+      
       <div className="flex-1 p-6 bg-gray-50">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Minhas Requisições
         </h2>
+        <CreateRequest />
 
         {requests.length > 0 ? (
           <>
@@ -60,6 +63,10 @@ export function UserRequest() {
                     </th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Criado em
+                    </th>
+                    
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Empresa:
                     </th>
                   </tr>
                 </thead>
@@ -91,6 +98,10 @@ export function UserRequest() {
 
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(req.createdAt).toLocaleDateString("pt-BR")}
+                      </td>
+
+                      <td className="p-3 text-sm text-gray-600">
+                        {req.companyId}
                       </td>
 
                       {/* <td className="p-3 text-center">
