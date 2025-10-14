@@ -20,14 +20,12 @@ export function MaterialsCompany() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 5; // limite fixo por página
+  const limit = 5;
 
   const fetchMaterials = async (page: number) => {
     if (!companyId) return;
     try {
-      const res = await api.get(
-        `/material/${companyId}?page=${page}&limit=${limit}`
-      );
+      const res = await api.get(`/material/${companyId}?page=${page}&limit=${limit}`);
       setMaterials(res.data.data);
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
@@ -64,75 +62,86 @@ export function MaterialsCompany() {
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-6 bg-gray-50">
-        {role !== "EMPLOYEE" && (<NewMaterial  />)}
+        {role !== "EMPLOYEE" && <NewMaterial />}
 
         {materials.length > 0 ? (
           <>
-            <div className="overflow-x-auto rounded-lg shadow">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto rounded-lg shadow">
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      ID
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Nome
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Descrição
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Grupo
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Criado em
-                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">ID</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Nome</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Descrição</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Grupo</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
                     {role !== "EMPLOYEE" && (
-                      <th className="p-3 text-center text-sm font-semibold text-gray-700">
-                        Ações
-                      </th>
+                      <th className="p-3 text-center text-sm font-semibold text-gray-700">Ações</th>
                     )}
                   </tr>
                 </thead>
                 <tbody>
                   {materials.map((material) => (
                     <tr key={material.id} className="border-b hover:bg-gray-50">
+                      <td className="p-3 text-sm text-gray-600">{material.id}</td>
+                      <td className="p-3 text-sm font-medium text-gray-800">{material.name}</td>
+                      <td className="p-3 text-sm text-gray-600">{material.description}</td>
+                      <td className="p-3 text-sm text-gray-600">{material.group}</td>
                       <td className="p-3 text-sm text-gray-600">
-                        {material.id}
+                        {new Date(material.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="p-3 text-sm font-medium text-gray-800">
-                        {material.name}
-                      </td>
-                      <td className="p-3 text-sm text-gray-600">
-                        {material.description}
-                      </td>
-                      <td className="p-3 text-sm text-gray-600">
-                        {material.group}
-                      </td>
-                      <td className="p-3 text-sm text-gray-600">
-                        {new Date(material.createdAt).toLocaleDateString(
-                          "pt-BR"
-                        )}
-                      </td>
-                      <td className="p-3 text-center">
-                        {role !== "EMPLOYEE" && (
+                      {role !== "EMPLOYEE" && (
+                        <td className="p-3 text-center">
                           <button
                             onClick={() => handleExclude(material.id)}
                             className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
-                            id="exclude-btn"
                           >
                             Excluir
                           </button>
-                        )}
-                      </td>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
+              {materials.map((material) => (
+                <div
+                  key={material.id}
+                  className="bg-white rounded-lg shadow p-4 border border-gray-100"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h2 className="font-semibold text-gray-800 text-lg">{material.name}</h2>
+                    {role !== "EMPLOYEE" && (
+                      <button
+                        onClick={() => handleExclude(material.id)}
+                        className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+                      >
+                        Excluir
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600 mb-1">
+                    <span className="font-medium text-gray-700">Descrição:</span>{" "}
+                    {material.description}
+                  </p>
+                  <p className="text-sm text-gray-600 mb-1">
+                    <span className="font-medium text-gray-700">Grupo:</span> {material.group}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium text-gray-700">Criado em:</span>{" "}
+                    {new Date(material.createdAt).toLocaleDateString("pt-BR")}
+                  </p>
+                </div>
+              ))}
+            </div>
+
             {/* Paginação */}
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between mt-4 flex-wrap gap-2">
               <button
                 onClick={handlePrevPage}
                 disabled={page === 1}
@@ -140,7 +149,7 @@ export function MaterialsCompany() {
               >
                 Anterior
               </button>
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-gray-700">
                 Página {page} de {totalPages}
               </span>
               <button
