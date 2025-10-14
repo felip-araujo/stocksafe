@@ -1,4 +1,4 @@
-- [x] Update Request interface to match new API response with items as array
+- [x] Update Request interface in RequestsOfUser.tsx to match new API response with items array
 - [x] Adjust table rendering to display multiple materials and quantities per request
 - [x] Adjust mobile cards rendering similarly
-- [x] Test the changes
+- [x] Test the build

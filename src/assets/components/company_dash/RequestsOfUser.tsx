@@ -4,15 +4,20 @@ import { usePaginatedFetch } from "@/services/hooks/usePaginatedFetch";
 
 interface Request {
   id: number;
-  materialId: number;
   userId: number;
   companyId: number;
-  quantity: number;
   status: string;
   createdAt: string;
-  material: {
-    name: string;
-  };
+  items: {
+    id: number;
+    requestId: number;
+    materialId: number;
+    quantity: number;
+    createdAt: string;
+    material: {
+      name: string;
+    };
+  }[];
 }
 
 export function UserRequest() {
@@ -37,8 +42,7 @@ export function UserRequest() {
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Minhas Requisições
         </h2>
-
-        <CreateRequest />
+        <div><CreateRequest /></div>
 
         {loading ? (
           <p className="text-gray-600">Carregando...</p>
@@ -73,14 +77,18 @@ export function UserRequest() {
                   {requests.map((req) => (
                     <tr key={req.id} className="border-b hover:bg-gray-50">
                       <td className="p-3 text-sm font-medium text-gray-800">
-                        {req.material.name}
+                        {req.items.map((item) => item.material.name).join(", ")}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
-                        {req.quantity}
+                        {req.items
+                          .map(
+                            (item) => `${item.material.name}: ${item.quantity}`
+                          )
+                          .join(", ")}
                       </td>
                       <td className="p-3 text-sm font-medium text-center">
                         <span
-                          className={`px-2 py-1 rounded-md text-xs font-semibold 
+                          className={`px-2 py-1 rounded-md text-xs font-semibold
       ${
         req.status === "pending"
           ? "text-yellow-700 bg-yellow-100"
@@ -122,7 +130,7 @@ export function UserRequest() {
                 >
                   <div className="flex justify-between items-center mb-2">
                     <p className="font-semibold text-gray-800">
-                      {req.material.name}
+                      {req.items.map((item) => item.material.name).join(", ")}
                     </p>
                     <span
                       className={`text-sm font-medium
@@ -142,7 +150,9 @@ export function UserRequest() {
 
                   <p className="text-sm text-gray-700 mb-1">
                     <span className="font-medium">Quantidade:</span>{" "}
-                    {req.quantity}
+                    {req.items
+                      .map((item) => `${item.material.name}: ${item.quantity}`)
+                      .join(", ")}
                   </p>
                   <p className="text-sm text-gray-700 mb-1">
                     <span className="font-medium">Empresa:</span>{" "}

@@ -62,14 +62,13 @@ export function CreateRequest() {
   // Enviar requisição
   const handleSubmit = async () => {
     try {
-      for (const item of selectedMaterials) {
-        await api.post(`/requisicao/${companyId}`, {
+      await api.post(`/requisicao/${companyId}`, {
+        userId,
+        items: selectedMaterials.map((item) => ({
           materialId: item.materialId,
-          userId,
-          companyId,
           quantity: item.quantity,
-        });
-      }
+        })),
+      });
       alert("Requisição criada com sucesso!");
       setIsOpen(false);
       setSelectedMaterials([]);
@@ -89,7 +88,7 @@ export function CreateRequest() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
+        <div className="fixed z-10 inset-0 bg-black/40 flex justify-center items-center">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
             {/* Fechar modal */}
             <button
