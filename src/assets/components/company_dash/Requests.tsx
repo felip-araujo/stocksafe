@@ -3,7 +3,6 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 
-
 interface Request {
   id: number;
   materialId: number;
@@ -100,7 +99,8 @@ export function RequestsCompany() {
 
         {requests.length > 0 ? (
           <>
-            <div className="overflow-x-auto rounded-lg shadow">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto rounded-lg shadow">
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
@@ -118,13 +118,11 @@ export function RequestsCompany() {
                       <td className="p-3 text-sm font-medium text-gray-800">{req.material.name}</td>
                       <td className="p-3 text-sm text-gray-600">{req.user.name}</td>
                       <td className="p-3 text-sm text-gray-600">{req.quantity}</td>
-
-                      {/* STATUS SELECT */}
                       <td className="p-3 text-sm text-gray-600">
                         <select
                           value={statusChanges[req.id] || req.status}
                           onChange={(e) => handleStatusChange(req.id, e.target.value)}
-                          className={`px-2 py-1 rounded-full text-xs border ${
+                          className={`px-2 py-1 rounded-full text-xs border focus:outline-none ${
                             req.status === "approved"
                               ? "bg-green-100 text-green-700"
                               : req.status === "rejected"
@@ -137,11 +135,9 @@ export function RequestsCompany() {
                           <option value="rejected">Rejeitado</option>
                         </select>
                       </td>
-
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(req.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-
                       <td className="p-3 text-center">
                         <button
                           onClick={() => handleExclude(req.id)}
@@ -162,8 +158,77 @@ export function RequestsCompany() {
               </table>
             </div>
 
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
+              {requests.map((req) => (
+                <div
+                  key={req.id}
+                  className="bg-white rounded-lg shadow p-4 border border-gray-100"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h2 className="font-semibold text-gray-800 text-lg">{req.material.name}</h2>
+                      <p className="text-sm text-gray-500">Solicitado por: {req.user.name}</p>
+                    </div>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        req.status === "approved"
+                          ? "bg-green-100 text-green-700"
+                          : req.status === "rejected"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {req.status === "approved"
+                        ? "Aprovado"
+                        : req.status === "rejected"
+                        ? "Rejeitado"
+                        : "Pendente"}
+                    </span>
+                  </div>
+
+                  <p className="text-sm text-gray-600 mb-1">
+                    <span className="font-medium text-gray-700">Quantidade:</span> {req.quantity}
+                  </p>
+                  <p className="text-sm text-gray-600 mb-2">
+                    <span className="font-medium text-gray-700">Criado em:</span>{" "}
+                    {new Date(req.createdAt).toLocaleDateString("pt-BR")}
+                  </p>
+
+                  {/* Status Select */}
+                  <div className="mt-2">
+                    <select
+                      value={statusChanges[req.id] || req.status}
+                      onChange={(e) => handleStatusChange(req.id, e.target.value)}
+                      className="w-full px-2 py-1 text-sm border rounded focus:outline-none"
+                    >
+                      <option value="pending">Pendente</option>
+                      <option value="approved">Aprovado</option>
+                      <option value="rejected">Rejeitado</option>
+                    </select>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex justify-end mt-3 gap-2">
+                    <button
+                      onClick={() => handleExclude(req.id)}
+                      className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+                    >
+                      Excluir
+                    </button>
+                    <button
+                      onClick={() => handleUpdateStatus(req.id)}
+                      className="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition"
+                    >
+                      Atualizar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             {/* Paginação */}
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between mt-4 flex-wrap gap-2">
               <button
                 onClick={handlePrevPage}
                 disabled={page === 1}
@@ -171,7 +236,7 @@ export function RequestsCompany() {
               >
                 Anterior
               </button>
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-gray-700">
                 Página {page} de {totalPages}
               </span>
               <button
