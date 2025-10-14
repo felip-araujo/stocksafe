@@ -1,4 +1,4 @@
-- [x] Add interface for SelectedMaterial in NewRequest.tsx
-- [x] Type selectedMaterials state as SelectedMaterial[]
-- [x] Add types to handleSelect and handleQuantityChange parameters
-- [x] Run build to verify fixes
+- [x] Update Request interface to match new API response with items as array
+- [x] Adjust table rendering to display multiple materials and quantities per request
+- [x] Adjust mobile cards rendering similarly
+- [x] Test the changes

@@ -19,7 +19,6 @@ export function UserRequest() {
   const userId = localStorage.getItem("id");
   const companyId = localStorage.getItem("companyId");
 
-  // ✅ Hook de paginação
   const {
     data: requests,
     page,
@@ -33,7 +32,7 @@ export function UserRequest() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
-      
+
       <div className="flex-1 p-6 bg-gray-50">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Minhas Requisições
@@ -47,7 +46,8 @@ export function UserRequest() {
           <p className="text-red-600">{error}</p>
         ) : requests.length > 0 ? (
           <>
-            <div className="overflow-x-auto rounded-lg shadow">
+            {/* ✅ Layout responsivo */}
+            <div className="hidden md:block overflow-x-auto rounded-lg shadow">
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
@@ -78,26 +78,32 @@ export function UserRequest() {
                       <td className="p-3 text-sm text-gray-600">
                         {req.quantity}
                       </td>
-
-                      <td
-                        className={`p-3 text-sm font-medium rounded
-                          ${req.status === "pending" ? "text-yellow-600" : ""}
-                          ${req.status === "approved" ? "text-green-600" : ""}
-                          ${req.status === "rejected" ? "text-red-600" : ""}`}
-                      >
-                        {req.status === "pending"
-                          ? "Pendente"
-                          : req.status === "approved"
-                          ? "Aprovado"
-                          : req.status === "rejected"
-                          ? "Rejeitada"
-                          : req.status}
+                      <td className="p-3 text-sm font-medium text-center">
+                        <span
+                          className={`px-2 py-1 rounded-md text-xs font-semibold 
+      ${
+        req.status === "pending"
+          ? "text-yellow-700 bg-yellow-100"
+          : req.status === "approved"
+          ? "text-green-700 bg-green-100"
+          : req.status === "rejected"
+          ? "text-red-700 bg-red-100"
+          : "text-gray-700 bg-gray-100"
+      }`}
+                        >
+                          {req.status === "pending"
+                            ? "Pendente"
+                            : req.status === "approved"
+                            ? "Aprovado"
+                            : req.status === "rejected"
+                            ? "Rejeitada"
+                            : req.status}
+                        </span>
                       </td>
 
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(req.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-
                       <td className="p-3 text-sm text-gray-600">
                         {req.companyId}
                       </td>
@@ -107,8 +113,51 @@ export function UserRequest() {
               </table>
             </div>
 
+            {/* ✅ Cards no mobile */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+              {requests.map((req) => (
+                <div
+                  key={req.id}
+                  className="bg-white rounded-lg shadow p-4 border border-gray-200"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="font-semibold text-gray-800">
+                      {req.material.name}
+                    </p>
+                    <span
+                      className={`text-sm font-medium
+                        ${req.status === "pending" ? "text-yellow-600" : ""}
+                        ${req.status === "approved" ? "text-green-600" : ""}
+                        ${req.status === "rejected" ? "text-red-600" : ""}`}
+                    >
+                      {req.status === "pending"
+                        ? "Pendente"
+                        : req.status === "approved"
+                        ? "Aprovado"
+                        : req.status === "rejected"
+                        ? "Rejeitada"
+                        : req.status}
+                    </span>
+                  </div>
+
+                  <p className="text-sm text-gray-700 mb-1">
+                    <span className="font-medium">Quantidade:</span>{" "}
+                    {req.quantity}
+                  </p>
+                  <p className="text-sm text-gray-700 mb-1">
+                    <span className="font-medium">Empresa:</span>{" "}
+                    {req.companyId}
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-medium">Criado em:</span>{" "}
+                    {new Date(req.createdAt).toLocaleDateString("pt-BR")}
+                  </p>
+                </div>
+              ))}
+            </div>
+
             {/* ✅ Controles de Paginação */}
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between mt-6">
               <button
                 onClick={prevPage}
                 disabled={page === 1}
@@ -116,7 +165,7 @@ export function UserRequest() {
               >
                 Anterior
               </button>
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-gray-700">
                 Página {page} de {totalPages}
               </span>
               <button

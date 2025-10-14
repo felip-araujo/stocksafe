@@ -5,18 +5,23 @@ import api from "@/services/api/api";
 
 interface Request {
   id: number;
-  materialId: number;
   userId: number;
   companyId: number;
-  quantity: number;
   status: string;
   createdAt: string;
-  material: {
-    name: string;
-  };
   user: {
     name: string;
   };
+  items: {
+    id: number;
+    requestId: number;
+    materialId: number;
+    quantity: number;
+    createdAt: string;
+    material: {
+      name: string;
+    };
+  }[];
 }
 
 export function RequestsCompany() {
@@ -24,7 +29,9 @@ export function RequestsCompany() {
 
   const companyId = localStorage.getItem("companyId");
   const [requests, setRequests] = useState<Request[]>([]);
-  const [statusChanges, setStatusChanges] = useState<{ [key: number]: string }>({});
+  const [statusChanges, setStatusChanges] = useState<{ [key: number]: string }>(
+    {}
+  );
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 5;
@@ -32,8 +39,11 @@ export function RequestsCompany() {
   const fetchRequests = async (page: number) => {
     if (!companyId) return;
     try {
-      const res = await api.get(`/requisicao/${companyId}?page=${page}&limit=${limit}`);
+      const res = await api.get(
+        `/requisicao/${companyId}?page=${page}&limit=${limit}`
+      );
       setRequests(res.data.data);
+      console.log(res.data);
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
     } catch (err) {
@@ -104,24 +114,44 @@ export function RequestsCompany() {
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Material</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Usuário</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Quantidade</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
-                    <th className="p-3 text-center text-sm font-semibold text-gray-700">Ações</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Material
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Usuário
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Quantidade
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Status
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Criado em
+                    </th>
+                    <th className="p-3 text-center text-sm font-semibold text-gray-700">
+                      Ações
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {requests.map((req) => (
                     <tr key={req.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3 text-sm font-medium text-gray-800">{req.material.name}</td>
-                      <td className="p-3 text-sm text-gray-600">{req.user.name}</td>
-                      <td className="p-3 text-sm text-gray-600">{req.quantity}</td>
+                      <td className="p-3 text-sm font-medium text-gray-800">
+                        {req.items.map((item) => item.material.name).join(", ")}
+                      </td>
+                      <td className="p-3 text-sm text-gray-600">
+                        {req.user.name}
+                      </td>
+                      <td className="p-3 text-sm text-gray-600">
+                        {req.items.map((item) => `${item.material.name}: ${item.quantity}`).join(", ")}
+                      </td>
                       <td className="p-3 text-sm text-gray-600">
                         <select
                           value={statusChanges[req.id] || req.status}
-                          onChange={(e) => handleStatusChange(req.id, e.target.value)}
+                          onChange={(e) =>
+                            handleStatusChange(req.id, e.target.value)
+                          }
                           className={`px-2 py-1 rounded-full text-xs border focus:outline-none ${
                             req.status === "approved"
                               ? "bg-green-100 text-green-700"
@@ -167,8 +197,12 @@ export function RequestsCompany() {
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <h2 className="font-semibold text-gray-800 text-lg">{req.material.name}</h2>
-                      <p className="text-sm text-gray-500">Solicitado por: {req.user.name}</p>
+                      <h2 className="font-semibold text-gray-800 text-lg">
+                        {req.items.map((item) => item.material.name).join(", ")}
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        Solicitado por: {req.user.name}
+                      </p>
                     </div>
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -188,10 +222,15 @@ export function RequestsCompany() {
                   </div>
 
                   <p className="text-sm text-gray-600 mb-1">
-                    <span className="font-medium text-gray-700">Quantidade:</span> {req.quantity}
+                    <span className="font-medium text-gray-700">
+                      Quantidade:
+                    </span>{" "}
+                    {req.items.map((item) => `${item.material.name}: ${item.quantity}`).join(", ")}
                   </p>
                   <p className="text-sm text-gray-600 mb-2">
-                    <span className="font-medium text-gray-700">Criado em:</span>{" "}
+                    <span className="font-medium text-gray-700">
+                      Criado em:
+                    </span>{" "}
                     {new Date(req.createdAt).toLocaleDateString("pt-BR")}
                   </p>
 
@@ -199,7 +238,9 @@ export function RequestsCompany() {
                   <div className="mt-2">
                     <select
                       value={statusChanges[req.id] || req.status}
-                      onChange={(e) => handleStatusChange(req.id, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(req.id, e.target.value)
+                      }
                       className="w-full px-2 py-1 text-sm border rounded focus:outline-none"
                     >
                       <option value="pending">Pendente</option>
