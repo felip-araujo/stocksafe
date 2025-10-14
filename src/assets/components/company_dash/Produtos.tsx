@@ -17,12 +17,11 @@ export function ProdutosCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
 
   const companyId = localStorage.getItem("companyId");
-  const role = localStorage.getItem("role"); 
-  console.log(role)
+  const role = localStorage.getItem("role");
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 5; // limite fixo por página
+  const limit = 5;
 
   const fetchProdutos = async (page: number) => {
     if (!companyId) return;
@@ -45,7 +44,7 @@ export function ProdutosCompany() {
     try {
       await api.delete(`/product/${companyId}/${id}`);
       alert("Produto excluído com sucesso!");
-      fetchProdutos(page); // atualiza a lista da página atual
+      fetchProdutos(page);
     } catch (err) {
       console.error("Erro ao excluir produto:", err);
       alert("Erro ao excluir produto");
@@ -63,12 +62,13 @@ export function ProdutosCompany() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
-      <div className="flex-1 p-6 bg-gray-50">
-       {role !== "EMPLOYEE" && ( <CreateProduct onCreated={() => fetchProdutos(page)} /> )}
+      <div className="flex-1 p-4 sm:p-6 bg-gray-50">
+        {role !== "EMPLOYEE" && <CreateProduct onCreated={() => fetchProdutos(page)} />}
 
         {produtos.length > 0 ? (
           <>
-            <div className="overflow-x-auto rounded-lg shadow">
+            {/* Tabela Desktop */}
+            <div className="hidden md:block overflow-x-auto rounded-lg shadow">
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
@@ -79,10 +79,8 @@ export function ProdutosCompany() {
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Estoque</th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
                     {role !== "EMPLOYEE" && (
-  <th className="p-3 text-center text-sm font-semibold text-gray-700">
-    Ações
-  </th>
-)}
+                      <th className="p-3 text-center text-sm font-semibold text-gray-700">Ações</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -96,26 +94,65 @@ export function ProdutosCompany() {
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(produto.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                     {role !== "EMPLOYEE" &&  ( <td className="p-3 text-center">
-                       <button
-                          onClick={() => handleExclude(produto.id)}
-                          className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
-                        >
-                          Excluir
-                        </button>
-                      </td> )}
+                      {role !== "EMPLOYEE" && (
+                        <td className="p-3 text-center">
+                          <button
+                            onClick={() => handleExclude(produto.id)}
+                            className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
+                          >
+                            Excluir
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
+            {/* Layout Mobile */}
+            <div className="block md:hidden space-y-4 mt-4">
+              {produtos.map((produto) => (
+                <div
+                  key={produto.id}
+                  className="bg-white rounded-lg shadow p-4 flex flex-col text-sm"
+                >
+                  <p>
+                    <span className="font-semibold text-gray-700">Nome:</span> {produto.name}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-gray-700">Descrição:</span>{" "}
+                    {produto.description}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-gray-700">Preço:</span> R${" "}
+                    {produto.price.toFixed(2)}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-gray-700">Estoque:</span> {produto.stock}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-gray-700">Criado em:</span>{" "}
+                    {new Date(produto.createdAt).toLocaleDateString("pt-BR")}
+                  </p>
+                  {role !== "EMPLOYEE" && (
+                    <button
+                      onClick={() => handleExclude(produto.id)}
+                      className="mt-3 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                    >
+                      Excluir
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
             {/* Paginação */}
-            <div className="flex justify-between mt-4">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-6">
               <button
                 onClick={handlePrevPage}
                 disabled={page === 1}
-                className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-gray-400"
+                className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-gray-400 w-full sm:w-auto"
               >
                 Anterior
               </button>
@@ -125,14 +162,14 @@ export function ProdutosCompany() {
               <button
                 onClick={handleNextPage}
                 disabled={page === totalPages}
-                className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-gray-400"
+                className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-gray-400 w-full sm:w-auto"
               >
                 Próxima
               </button>
             </div>
           </>
         ) : (
-          <p>Nenhum produto encontrado.</p>
+          <p className="mt-6 text-center text-gray-600">Nenhum produto encontrado.</p>
         )}
       </div>
     </div>
