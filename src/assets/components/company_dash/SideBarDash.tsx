@@ -52,7 +52,7 @@ export function SidebarDash() {
       {/* Botão mobile fixo */}
       <button
         onClick={() => setIsMobileMenuOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-50 bg-gray-900 p-2 rounded-lg text-gray-100"
+        className="md:hidden fixed top-6 right-6 z-50 bg-gray-900 p-2 rounded-lg text-gray-100"
       >
         <Menu size={22} />
       </button>
@@ -61,7 +61,7 @@ export function SidebarDash() {
       {isMobileMenuOpen && (
         <div
           onClick={() => setIsMobileMenuOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/40 bg-opacity-50 z-40 md:hidden"
         />
       )}
 
