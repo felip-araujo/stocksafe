@@ -29,12 +29,38 @@ export function CadastroComp() {
     setMessage("");
 
     try {
+      // 1️⃣ Cria a empresa
       const res = await axios.post(
-        "https://stock-back-vert.vercel.app/companies",
+        `${import.meta.env.VITE_API_URL}/companies`,
         formData
       );
+
+      const companyId = res.data.company.id;
+      if (!companyId) {
+        console.log(res.data.company.id)
+        throw new Error("Erro: ID da empresa não retornado.");
+        
+      }
+
+      // salva no localStorage
+      localStorage.setItem("companyId", companyId);
+
       setMessage("Empresa cadastrada com sucesso!");
-      navigate("/auth");
+
+      // 2️⃣ Chama a rota de assinatura (plano básico por padrão)
+      const priceId = "price_1SGJp4KKzmjTKU73iTsqViGv"; // ID do plano padrão
+      const subRes = await axios.post(
+        `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
+        { priceId }
+      );
+
+      // 3️⃣ Se o Stripe retornar a URL de checkout, redireciona
+      if (subRes.data?.url) {
+        window.location.href = subRes.data.url;
+      } else {
+        navigate("/auth");
+      }
+
       setFormData({
         name: "",
         cnpj: "",
@@ -43,7 +69,6 @@ export function CadastroComp() {
         rep_num: "",
         password: "",
       });
-      console.log(res);
     } catch (err) {
       console.error(err);
       setMessage("Erro ao cadastrar empresa.");

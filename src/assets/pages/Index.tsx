@@ -1,6 +1,7 @@
 
 import { Footer } from "../components/footer";
 import { Header } from "../components/header";
+import { SubscriptionPlans } from "../components/signature/PlanosAssinatura";
 
 
 
@@ -8,7 +9,7 @@ export function Home() {
   return (
     <>
       <Header/>
-      <p>teste</p>
+      <SubscriptionPlans />
       <Footer/>
     </>
   );
