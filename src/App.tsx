@@ -19,6 +19,7 @@ import { RequestsCompany } from "./assets/components/company_dash/Requests";
 import { PerfilCompany } from "./assets/components/company_dash/PerfilCompany";
 import { UserRequest } from "./assets/components/company_dash/RequestsOfUser";
 import { Blog } from "./assets/pages/Blog";
+import SuccessPage from "./assets/pages/AssinaturaSucesso";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/requisicao" element={<RequestsCompany></RequestsCompany>} ></Route>
         <Route path="/config"  element={<PerfilCompany></PerfilCompany>} ></Route>
         <Route path="/user-request" element={<UserRequest></UserRequest>} ></Route>
+        <Route path="/assinatura/sucesso" element={<SuccessPage></SuccessPage>}></Route>
         
         
         
