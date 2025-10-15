@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api/api";
 import axios from "axios";
 import { PackagePlus, Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
 
 export function LoginPage() {
   const [formData, setFormData] = useState({
@@ -11,7 +12,6 @@ export function LoginPage() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: "error" | "success" } | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +33,8 @@ export function LoginPage() {
 
       const funcao = res.data.user.role;
 
+      toast.success("Login realizado com sucesso!");
+
       if (funcao === "SUPER_ADMIN") navigate("/superdash");
       if (funcao === "COMPANY_ADMIN") navigate("/dashboard");
       if (funcao === "EMPLOYEE") navigate("/dash-employee");
@@ -40,45 +42,19 @@ export function LoginPage() {
       setFormData({ email: "", password: "" });
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        setToast({
-          message: err.response?.status === 401 ? "Usuário ou senha incorretos" : "Erro no login",
-          type: "error",
-        });
+        if (err.response?.status === 401) {
+          toast.error("Usuário ou senha incorretos");
+        } else {
+          toast.error("Erro ao fazer login. Tente novamente.");
+        }
       } else {
-        setToast({
-          message: "Erro inesperado no login",
-          type: "error",
-        });
+        toast.error("Erro inesperado ao tentar login.");
       }
     }
   };
 
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-      {/* Toast */}
-      {toast && (
-        <div
-          className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 w-[90%] max-w-xs p-3 rounded shadow-md font-bold text-center z-50 ${
-            toast.type === "error" ? "bg-red-500 text-white" : "bg-green-500 text-white"
-          }`}
-        >
-          <span>{toast.message}</span>
-          <button
-            onClick={() => setToast(null)}
-            className="ml-4 text-white font-bold hover:text-gray-200 transition-colors"
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
       {/* Card de Login */}
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6 sm:p-8">
         {/* Logo + Nome */}
