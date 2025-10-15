@@ -20,7 +20,7 @@ export function SubscriptionPlans() {
       name: "Plano Básico",
       price: "R$ 79/mês",
       description: "Ideal para pequenas equipes que estão começando.",
-      priceId: "price_1SGJp4KKzmjTKU73iTsqViGv", // substitua pelo ID real do Stripe
+      priceId: "price_1SGUg6KKzmjTKU73c65elqqK", // substitua pelo ID real do Stripe
       features: [
         "Até 5 usuários",
         "Suporte via e-mail",
@@ -32,7 +32,7 @@ export function SubscriptionPlans() {
       name: "Plano Premium",
       price: "R$ 149/mês",
       description: "Para empresas que precisam de mais controle e recursos.",
-      priceId: "price_premium_id_aqui",
+      priceId: "price_1SGUg6KKzmjTKU73c65elqqK",
       features: [
         "Usuários ilimitados",
         "Suporte prioritário",
@@ -46,6 +46,7 @@ export function SubscriptionPlans() {
       setLoading(priceId);
 
       const companyId = localStorage.getItem("companyId");
+      console.log(priceId)
 
       // se não tiver empresa no localStorage, manda para a tela de cadastro
       if (!companyId) {
