@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "@/services/api/api";
+import toast from "react-hot-toast";
 
 export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
   const companyId = Number(localStorage.getItem("companyId"));
@@ -29,14 +30,16 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
     try {
       // Incluindo companyId no corpo da requisição
       const res = await api.post(`/product`, { ...formData, companyId });
-      alert("Produto criado com sucesso!");
+      // alert("Produto criado com sucesso!");
+      toast.success("Produto criado com sucesso!");
       console.log(res);
       setIsOpen(false);
       setFormData({ name: "", description: "", price: 0, stock: 0 });
       if (onCreated) onCreated(); // callback para atualizar lista de produtos
     } catch (err) {
       console.error("Erro ao criar produto:", err);
-      alert("Erro ao criar produto");
+      // alert("Erro ao criar produto");
+      toast.error("rro ao criar produto");
     }
   };
 
@@ -55,7 +58,10 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
             <h2 className="text-xl font-bold mb-4">Criar Produto</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-1"
+                >
                   Nome
                 </label>
                 <input
@@ -68,7 +74,10 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="description" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium mb-1"
+                >
                   Descrição
                 </label>
                 <textarea
@@ -80,7 +89,10 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="price" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium mb-1"
+                >
                   Preço
                 </label>
                 <input
@@ -95,7 +107,10 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="stock" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="stock"
+                  className="block text-sm font-medium mb-1"
+                >
                   Estoque
                 </label>
                 <input

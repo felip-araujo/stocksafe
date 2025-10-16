@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api/api";
 import { Plus, Minus, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface Material {
   id: number;
@@ -69,12 +70,14 @@ export function CreateRequest() {
           quantity: item.quantity,
         })),
       });
-      alert("Requisição criada com sucesso!");
+      // alert("Requisição criada com sucesso!");
+      toast.success("Requisição criada com sucesso!")
       setIsOpen(false);
       setSelectedMaterials([]);
     } catch (err) {
       console.error("Erro ao criar requisição:", err);
-      alert("Erro ao criar requisição.");
+      // alert("Erro ao criar requisição.");
+      toast.error("Erro ao criar requisição!")
     }
   };
 

@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const SuccessPage = () => {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("confirmando...");
   const companyId = localStorage.getItem("companyId");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const confirmSubscription = async () => {
@@ -12,16 +16,21 @@ const SuccessPage = () => {
       if (!sessionId) return setStatus("Sessão inválida");
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/subscription/${companyId}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId }),
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/subscription/${companyId}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionId }),
+          }
+        );
 
         const data = await res.json();
 
         if (data.status === "active") {
-          setStatus("✅ Assinatura confirmada! Acesso liberado.");
+          setStatus("Assinatura confirmada! Acesso liberado.");
+          toast.success("Assinatura confirmada!");
+          navigate("/auth");
         } else {
           setStatus(`⚠️ Status: ${data.status}`);
         }

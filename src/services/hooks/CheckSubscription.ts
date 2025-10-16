@@ -16,7 +16,7 @@ export function useRequireSubscription() {
           return;
         }
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/subscription/${companyId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/subscription/status/${companyId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -25,12 +25,15 @@ export function useRequireSubscription() {
         if (!res.ok) {
           // assinatura inativa ou erro → redireciona
           navigate("/assinatura/necessaria");
+          localStorage.clear()
+          
         }
 
-        // se estiver tudo certo, continua na página
+        console.log(res)
       } catch (err) {
         console.error("Erro ao verificar assinatura:", err);
         navigate("/assinatura/necessaria");
+        localStorage.clear()
       }
     };
 

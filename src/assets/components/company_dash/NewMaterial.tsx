@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "@/services/api/api";
+import toast from "react-hot-toast";
 
 export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
   const companyId = Number(localStorage.getItem("companyId"));
@@ -22,14 +23,16 @@ export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
 
     try {
       const res = await api.post("/material", { ...formData, companyId });
-      alert("Material criado com sucesso!");
+      // alert("Material criado com sucesso!");
+      toast.success("Material criado com sucesso!")
       console.log(res)
       setIsOpen(false);
       setFormData({ name: "", description: "", group: "" });
       if (onCreated) onCreated(); // callback para atualizar lista de materiais
     } catch (err) {
       console.error("Erro ao criar material:", err);
-      alert("Erro ao criar material");
+      // alert("Erro ao criar material");
+      toast.error("Erro ao criar material")
     }
   };
 
