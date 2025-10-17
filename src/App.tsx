@@ -21,6 +21,8 @@ import { UserRequest } from "./assets/components/company_dash/RequestsOfUser";
 import { Blog } from "./assets/pages/Blog";
 import SuccessPage from "./assets/pages/AssinaturaSucesso";
 import { AssinaturaPendente } from "./assets/pages/AssinaturaNecessaria";
+import { PrivPolicy } from "./assets/pages/PrivacyPolicy";
+import { Sobre } from "./assets/pages/About";
 
 function App() {
   return (
@@ -49,6 +51,12 @@ function App() {
         <Route path="/user-request" element={<UserRequest></UserRequest>} ></Route>
         <Route path="/assinatura/sucesso" element={<SuccessPage></SuccessPage>}></Route>
         <Route path="/assinatura/necessaria" element={<AssinaturaPendente></AssinaturaPendente>}></Route>
+
+        {/* Paginas & Blog*/}
+        <Route path="/politica" element={<PrivPolicy></PrivPolicy>}></Route>
+        <Route path="/sobre" element={<Sobre></Sobre>}></Route>
+
+  
       </Routes>
     </>
   );

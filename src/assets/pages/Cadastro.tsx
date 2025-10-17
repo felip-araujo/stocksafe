@@ -78,9 +78,6 @@ export function CadastroComp() {
         <div className="flex items-center justify-center mb-6">
           <div className="flex items-center gap-4">
             <LogoNome />
-            <h2 className="text-2xl font-semibold text-gray-800 pl-4 border-l border-gray-300">
-              Cadastre sua Empresa
-            </h2>
           </div>
         </div>
 

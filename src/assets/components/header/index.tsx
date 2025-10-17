@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { PackagePlus, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { LogoNome } from "../logo/Logo&Nome";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -7,14 +8,7 @@ export function Header() {
   return (
     <header className="p-4 flex justify-between items-center border-b border-gray-200 relative">
       {/* Logo + Texto */}
-      <div className="flex items-center">
-        <a href="/" className="flex items-center">
-          <div className="p-3 bg-blue-500 rounded-lg flex items-center justify-center">
-            <PackagePlus className="text-white" />
-          </div>
-          <p className="text-zinc-900 text-xl font-semibold ml-2">StockSafe</p>
-        </a>
-      </div>
+      <LogoNome />
 
       {/* Menu Desktop */}
       <div className="hidden md:flex items-center">

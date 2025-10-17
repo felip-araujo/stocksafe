@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api/api";
 import axios from "axios";
-import { PackagePlus, Eye, EyeOff } from "lucide-react";
+import {Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
+import { LogoNome } from "../components/logo/Logo&Nome";
 
 export function LoginPage() {
   const [formData, setFormData] = useState({
@@ -58,16 +59,7 @@ export function LoginPage() {
       {/* Card de Login */}
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6 sm:p-8">
         {/* Logo + Nome */}
-        <div className="flex flex-col sm:flex-row items-center justify-center mb-6">
-          <div className="p-3 bg-blue-500 rounded-lg flex items-center justify-center mb-3 sm:mb-0 sm:mr-3">
-            <a href="/" className="text-white font-bold">
-              <PackagePlus />
-            </a>
-          </div>
-          <a href="/" className="text-center sm:text-left">
-            <p className="text-zinc-900 text-2xl font-semibold">StockSafe</p>
-          </a>
-        </div>
+        <LogoNome />
 
         {/* Formulário */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -86,7 +78,10 @@ export function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-1"
+            >
               Senha:
             </label>
             <div className="relative">
@@ -122,7 +117,10 @@ export function LoginPage() {
             Cadastre-se
           </a>
           <br />
-          <a className="text-blue-600 text-sm hover:underline" href="/esqueci-senha">
+          <a
+            className="text-blue-600 text-sm hover:underline"
+            href="/esqueci-senha"
+          >
             Esqueceu a senha?
           </a>
         </div>

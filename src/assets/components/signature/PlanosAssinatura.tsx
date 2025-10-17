@@ -81,7 +81,7 @@ export function SubscriptionPlans() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
-      <h1 className="text-2xl font-bold mb-8 text-center text-gray-800">
+      <h1 className="text-2xl font-ligth mb-8 text-center text-gray-800">
         Escolha seu plano de assinatura
       </h1>
 

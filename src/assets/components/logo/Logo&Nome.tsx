@@ -10,7 +10,7 @@ export function LogoNome() {
           </a>
         </div>
         <a href="/" className="text-center sm:text-left">
-          <p className="text-zinc-900 text-2xl font-semibold">StockSafe</p>
+          <p className="text-zinc-900 text-lg font-ligth">StockSeguro</p>
         </a>
       </div>
     </>
