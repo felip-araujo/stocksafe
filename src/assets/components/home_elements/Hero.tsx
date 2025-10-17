@@ -7,7 +7,7 @@ export function Hero() {
           <div className="w-full md:w-1/2 flex justify-center">
             <div className="relative w-full max-w-lg">
               <img
-                src="src\assets\images\dashboard.png" // Altere para o caminho da sua imagem
+                src="/images/dashboard.png" // Altere para o caminho da sua imagem
                 alt="Aplicação em destaque"
                 className="w-full h-auto rounded-xl shadow-2xl"
               />
@@ -17,12 +17,12 @@ export function Hero() {
           {/* Lado direito - Texto */}
           <div className="w-full md:w-1/2 text-center md:text-left space-y-4">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium text-gray-900 leading-tight">
-              Simplifique sua 
+              Simplifique sua
               <span className="text-blue-500 block">gestão de estoque</span>
               hoje mesmo
             </h1>
             <p className="text-lg text-gray-600 max-w-md mx-auto md:mx-0">
-              A ferramenta completa para gerenciar seus projetos e aumentar sua 
+              A ferramenta completa para gerenciar seus projetos e aumentar sua
               eficiência no dia a dia
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
