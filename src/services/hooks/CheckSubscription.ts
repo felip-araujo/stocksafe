@@ -27,7 +27,7 @@ export function useRequireSubscription() {
         if (!res.ok) {
           // assinatura inativa ou erro → redireciona
           navigate("/assinatura/necessaria");
-          localStorage.clear()
+          // localStorage.clear()
           
         }
         console.log(res)

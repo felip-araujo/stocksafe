@@ -24,7 +24,7 @@ export function SidebarDash() {
   let navItems = [
     { to: "/dashboard", label: "Início", icon: <Home size={20} /> },
     { to: "/produtos", label: "Produtos", icon: <Package size={20} /> },
-    { to: "/material", label: "Materiais", icon: <Store size={20} /> },
+    { to: "/material", label: "Material Consumo", icon: <Store size={20} /> },
     {
       to: "/requisicao",
       label: "Requisições",
@@ -36,7 +36,7 @@ export function SidebarDash() {
 
   if (role === "EMPLOYEE") {
     navItems = [
-      { to: "/material", label: "Material", icon: <Store size={20} /> },
+      { to: "/material", label: "Material Consumo", icon: <Store size={20} /> },
       { to: "/produtos", label: "Produtos", icon: <Package size={20} /> },
       {
         to: "/user-request",
