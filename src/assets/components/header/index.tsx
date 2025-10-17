@@ -1,25 +1,34 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { LogoNome } from "../logo/Logo&Nome";
+import { Link } from 'react-scroll';
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="p-4 flex justify-between items-center border-b border-gray-200 relative">
+    <header className="p-4 flex ml-10 mr-10 justify-between items-center border-b border-gray-200 relative">
       {/* Logo + Texto */}
       <LogoNome />
 
       {/* Menu Desktop */}
       <div className="hidden md:flex items-center">
+        <nav>
+         <Link to="plans" smooth={true} duration={500}>
+          <a href="">Planos</a>
+        </Link>
+        </nav>
+        
+
         <a
-          className="text-base font-normal text-zinc-900 px-3 py-2 rounded-sm mr-2 hover:bg-blue-500 hover:text-white transition-all"
+          className="text-base font-normal text-zinc-900 px-3 py-2 mr-2 hover:border-b-2 border-blue-800 hover:text-blue-800 transition-all ease-in-out"
           href="/auth"
         >
           Entrar
         </a>
+
         <a
-          className="text-base font-normal bg-blue-500 text-white px-3 py-2 rounded-sm hover:bg-blue-600 transition-all"
+          className="text-base font-normal bg-blue-500 text-white px-10 py-2 rounded-full hover:bg-blue-600 transition-all"
           href="/cadastro"
         >
           Teste Grátis

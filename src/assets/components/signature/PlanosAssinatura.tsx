@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Element } from 'react-scroll';
 
 interface Plan {
   id: string;
@@ -18,25 +19,27 @@ export function SubscriptionPlans() {
     {
       id: "basic",
       name: "Plano Básico",
-      price: "R$ 79/mês",
+      price: "R$ 79,90/mês",
       description: "Ideal para pequenas equipes que estão começando.",
       priceId: "price_1SGUg6KKzmjTKU73c65elqqK", // substitua pelo ID real do Stripe
       features: [
-        "Até 5 usuários",
-        "Suporte via e-mail",
-        "Acesso ao painel básico",
+        "Até 10 usuários",
+        "Até 2 administradores",
+        "Suporte via e-mail em até 24h",
+        "Acesso ao painel",
       ],
     },
     {
       id: "premium",
-      name: "Plano Premium",
-      price: "R$ 149/mês",
+      name: "Plano Ouro",
+      price: "R$ 119,90/mês",
       description: "Para empresas que precisam de mais controle e recursos.",
       priceId: "price_1SGUg6KKzmjTKU73c65elqqK",
       features: [
         "Usuários ilimitados",
-        "Suporte prioritário",
+        "Atendimento técnico via chat",
         "Recursos avançados de gestão",
+        "Relatórios personalizados"
       ],
     },
   ];
@@ -80,6 +83,7 @@ export function SubscriptionPlans() {
   };
 
   return (
+    <Element name="plans">
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
       <h1 className="text-2xl font-ligth mb-8 text-center text-gray-800">
         Escolha seu plano de assinatura
@@ -102,7 +106,7 @@ export function SubscriptionPlans() {
               <ul className="text-gray-700 space-y-2 mb-6">
                 {plan.features.map((feat, idx) => (
                   <li key={idx} className="flex items-center gap-2">
-                    ✅ <span>{feat}</span>
+                    - <span>{feat}</span>
                   </li>
                 ))}
               </ul>
@@ -123,5 +127,6 @@ export function SubscriptionPlans() {
         ))}
       </div>
     </div>
+    </Element>
   );
 }
