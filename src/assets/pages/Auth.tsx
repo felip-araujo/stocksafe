@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api/api";
 import axios from "axios";
-import {Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import { LogoNome } from "../components/logo/Logo&Nome";
+
 
 export function LoginPage() {
   const [formData, setFormData] = useState({
@@ -54,6 +55,7 @@ export function LoginPage() {
     }
   };
 
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       {/* Card de Login */}

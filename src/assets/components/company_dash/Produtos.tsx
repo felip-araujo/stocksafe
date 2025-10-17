@@ -4,6 +4,7 @@ import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { CreateProduct } from "./NewProduct";
 
+
 interface Produto {
   id: number;
   name: string;
@@ -15,6 +16,7 @@ interface Produto {
 
 export function ProdutosCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
+  
 
   const companyId = localStorage.getItem("companyId");
   const role = localStorage.getItem("role");

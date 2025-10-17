@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useAuthGuard } from "@/services/hooks/validator";
+
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
+
 
 export interface DashboardStats {
   totalUsers: number;
@@ -12,7 +13,7 @@ export interface DashboardStats {
 }
 
 export function DashboardCompany() {
-  useAuthGuard(["COMPANY_ADMIN"]);
+  
 
   const companyId = localStorage.getItem("companyId");
   const [stats, setStats] = useState<DashboardStats | null>(null);

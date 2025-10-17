@@ -4,10 +4,7 @@ import { DashboardCompany } from "../components/company_dash/DashStats";
 
 export function DashPage() {
   useAuthGuard(["COMPANY_ADMIN"]);
-  useRequireSubscription();
-  return (
-    <>
-      <DashboardCompany></DashboardCompany>
-    </>
-  );
+  useRequireSubscription()
+
+  return <DashboardCompany />;
 }

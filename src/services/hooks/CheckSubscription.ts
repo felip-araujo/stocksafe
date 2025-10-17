@@ -2,6 +2,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+
+
 export function useRequireSubscription() {
   const navigate = useNavigate();
 
@@ -28,7 +30,6 @@ export function useRequireSubscription() {
           localStorage.clear()
           
         }
-
         console.log(res)
       } catch (err) {
         console.error("Erro ao verificar assinatura:", err);
