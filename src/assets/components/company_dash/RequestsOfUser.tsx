@@ -1,6 +1,7 @@
 import { SidebarDash } from "./SideBarDash";
 import { CreateRequest } from "./NewRequest";
 import { usePaginatedFetch } from "@/services/hooks/usePaginatedFetch";
+import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 interface Request {
   id: number;
@@ -21,6 +22,8 @@ interface Request {
 }
 
 export function UserRequest() {
+  useRequireSubscription()
+
   const userId = localStorage.getItem("id");
   const companyId = localStorage.getItem("companyId");
 

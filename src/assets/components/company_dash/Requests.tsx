@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
+import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 interface Request {
   id: number;
@@ -26,6 +27,7 @@ interface Request {
 
 export function RequestsCompany() {
   useAuthGuard(["COMPANY_ADMIN"]);
+  useRequireSubscription()
 
   const companyId = localStorage.getItem("companyId");
   const [requests, setRequests] = useState<Request[]>([]);

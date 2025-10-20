@@ -3,6 +3,7 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { CreateUser } from "./NewUser";
+import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 interface Usuario {
   id: number;
@@ -14,6 +15,7 @@ interface Usuario {
 
 export function UsuariosCompany() {
   useAuthGuard(["COMPANY_ADMIN"]);
+  useRequireSubscription()
 
   const companyId = localStorage.getItem("companyId");
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);

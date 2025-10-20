@@ -22,7 +22,7 @@ export function DashboardCompany() {
     try {
       const res = await api.get(`/product/total/price/${companyId}`);
       setTotalPrice(res.data.totalPrice); // ✅ assume que sua rota retorna { totalPrice: 1234.56 }
-      console.log(totalPrice)
+      console.log(totalPrice);
     } catch (err) {
       console.error("Erro ao buscar valor total dos produtos:", err);
     }
@@ -78,16 +78,24 @@ export function DashboardCompany() {
 
             {/* Total de Requisições */}
             <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Total de Requisições</h2>
+              <h2 className="text-lg font-semibold mb-2">
+                Total de Requisições
+              </h2>
               <p className="text-3xl font-bold">{stats.totalRequests}</p>
             </div>
 
             {/* Valor total dos produtos no estoque */}
             <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Valor total em estoque</h2>
-              <p className="text-3xl font-bold text-green-600">
-                {totalPrice !== null ? `R$ ${totalPrice.toFixed(2)}` : "—"}
-                
+              <h2 className="text-lg font-semibold mb-2">
+                Valor total em estoque
+              </h2>
+              <p className="text-3xl font-bold text-blue-900">
+                {totalPrice !== null
+                  ? totalPrice.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })
+                  : "—"}
               </p>
             </div>
 
@@ -97,9 +105,13 @@ export function DashboardCompany() {
                 stats.pendingRequests === 0 ? "bg-green-400" : "bg-yellow-300"
               }`}
             >
-              <h2 className="text-lg font-semibold mb-2">Requisições Pendentes</h2>
+              <h2 className="text-lg font-semibold mb-2">
+                Requisições Pendentes
+              </h2>
               <p className="text-3xl font-bold">
-                {stats.pendingRequests === 0 ? "Nenhuma" : stats.pendingRequests}
+                {stats.pendingRequests === 0
+                  ? "Nenhuma"
+                  : stats.pendingRequests}
               </p>
             </div>
           </div>

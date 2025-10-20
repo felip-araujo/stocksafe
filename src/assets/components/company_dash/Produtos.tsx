@@ -3,6 +3,7 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { CreateProduct } from "./NewProduct";
+import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 interface Produto {
   id: number;
@@ -15,6 +16,7 @@ interface Produto {
 
 export function ProdutosCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
+  useRequireSubscription()
 
   const companyId = localStorage.getItem("companyId");
   const role = localStorage.getItem("role");
@@ -91,9 +93,7 @@ export function ProdutosCompany() {
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      ID
-                    </th>
+                    
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Nome
                     </th>
@@ -122,9 +122,7 @@ export function ProdutosCompany() {
                 <tbody>
                   {produtos.map((produto) => (
                     <tr key={produto.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3 text-sm text-gray-600">
-                        {produto.id}
-                      </td>
+                      
                       <td className="p-3 text-sm font-medium text-gray-800">
                         {produto.name}
                       </td>
@@ -145,20 +143,47 @@ export function ProdutosCompany() {
                               )
                             }
                             className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                          ></button>
+                          >
+                            -
+                          </button>
                         )}
 
-                        <span>{produto.stock}</span>
+                        <input
+                          type="number"
+                          value={produto.stock}
+                          onChange={(e) => {
+                            const newStock = Number(e.target.value);
+                            setProdutos((prev) =>
+                              prev.map((p) =>
+                                p.id === produto.id
+                                  ? { ...p, stock: newStock }
+                                  : p
+                              )
+                            );
+                          }}
+                          onBlur={(e) => {
+                            const newStock = Number(e.target.value);
+                            handleUpdateStock(produto.id, newStock);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              const newStock = Number(e.currentTarget.value);
+                              handleUpdateStock(produto.id, newStock);
+                              e.currentTarget.blur(); // sai do input
+                            }
+                          }}
+                          className="w-16 text-center border rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
 
                         {role !== "EMPLOYEE" && (
-                        <button
-                          onClick={() =>
-                            handleUpdateStock(produto.id, produto.stock + 1)
-                          }
-                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                        >
-                          +
-                        </button>
+                          <button
+                            onClick={() =>
+                              handleUpdateStock(produto.id, produto.stock + 1)
+                            }
+                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                          >
+                            +
+                          </button>
                         )}
                       </td>
 

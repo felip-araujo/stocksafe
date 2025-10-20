@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
+import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 interface UserData {
   id: number;
@@ -13,6 +14,7 @@ interface UserData {
 
 export function PerfilCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
+  useRequireSubscription()
 
   const companyId = localStorage.getItem("companyId");
   const userId = localStorage.getItem("id");

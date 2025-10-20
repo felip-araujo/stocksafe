@@ -3,6 +3,7 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { NewMaterial } from "./NewMaterial";
+import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 interface Material {
   id: number;
@@ -14,6 +15,7 @@ interface Material {
 
 export function MaterialsCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
+  useRequireSubscription()
 
   const role = localStorage.getItem("role");
   const companyId = localStorage.getItem("companyId");

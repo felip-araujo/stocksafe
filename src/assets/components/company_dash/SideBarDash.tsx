@@ -9,12 +9,16 @@ import {
   Menu,
   X,
   ChevronLeft,
+  DollarSign,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useLogout } from "@/services/hooks/logout";
 import { useState } from "react";
+import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 export function SidebarDash() {
+  useRequireSubscription()
+
   const logout = useLogout();
   const role = localStorage.getItem("role");
   const companyName = localStorage.getItem("companyName");
@@ -30,6 +34,7 @@ export function SidebarDash() {
       label: "Requisições",
       icon: <NotebookPen size={20} />,
     },
+    { to: "/sales", label: "Vendas", icon: <DollarSign size={20} /> },
     { to: "/usuarios", label: "Usuários", icon: <Users size={20} /> },
     { to: "/config", label: "Configurações", icon: <Settings size={20} /> },
   ];
