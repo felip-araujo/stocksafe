@@ -4,7 +4,6 @@ import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { CreateProduct } from "./NewProduct";
 
-
 interface Produto {
   id: number;
   name: string;
@@ -16,7 +15,6 @@ interface Produto {
 
 export function ProdutosCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
-  
 
   const companyId = localStorage.getItem("companyId");
   const role = localStorage.getItem("role");
@@ -28,7 +26,9 @@ export function ProdutosCompany() {
   const fetchProdutos = async (page: number) => {
     if (!companyId) return;
     try {
-      const res = await api.get(`/product/${companyId}?page=${page}&limit=${limit}`);
+      const res = await api.get(
+        `/product/${companyId}?page=${page}&limit=${limit}`
+      );
       setProdutos(res.data.data);
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
@@ -61,11 +61,28 @@ export function ProdutosCompany() {
     if (page < totalPages) setPage(page + 1);
   };
 
+  // Nova função acima do return:
+  const handleUpdateStock = async (id: number, newStock: number) => {
+    try {
+      await api.put(`/product/${companyId}/${id}`, { stock: newStock });
+
+      // Atualiza o estado local para refletir a mudança
+      setProdutos((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, stock: newStock } : p))
+      );
+    } catch (err) {
+      console.error("Erro ao atualizar estoque:", err);
+      alert("Erro ao atualizar estoque");
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-4 sm:p-6 bg-gray-50">
-        {role !== "EMPLOYEE" && <CreateProduct onCreated={() => fetchProdutos(page)} />}
+        {role !== "EMPLOYEE" && (
+          <CreateProduct onCreated={() => fetchProdutos(page)} />
+        )}
 
         {produtos.length > 0 ? (
           <>
@@ -74,27 +91,81 @@ export function ProdutosCompany() {
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">ID</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Nome</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Descrição</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Preço</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Estoque</th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">Criado em</th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      ID
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Nome
+                    </th>
+
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Descrição
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Preço
+                    </th>
+
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Estoque
+                    </th>
+
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Criado em
+                    </th>
                     {role !== "EMPLOYEE" && (
-                      <th className="p-3 text-center text-sm font-semibold text-gray-700">Ações</th>
+                      <th className="p-3 text-center text-sm font-semibold text-gray-700">
+                        Ações
+                      </th>
                     )}
                   </tr>
                 </thead>
                 <tbody>
                   {produtos.map((produto) => (
                     <tr key={produto.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3 text-sm text-gray-600">{produto.id}</td>
-                      <td className="p-3 text-sm font-medium text-gray-800">{produto.name}</td>
-                      <td className="p-3 text-sm text-gray-600">{produto.description}</td>
-                      <td className="p-3 text-sm text-gray-600">R$ {produto.price.toFixed(2)}</td>
-                      <td className="p-3 text-sm text-gray-600">{produto.stock}</td>
                       <td className="p-3 text-sm text-gray-600">
-                        {new Date(produto.createdAt).toLocaleDateString("pt-BR")}
+                        {produto.id}
+                      </td>
+                      <td className="p-3 text-sm font-medium text-gray-800">
+                        {produto.name}
+                      </td>
+                      <td className="p-3 text-sm text-gray-600">
+                        {produto.description}
+                      </td>
+                      <td className="p-3 text-sm text-gray-600">
+                        R$ {produto.price.toFixed(2)}
+                      </td>
+
+                      <td className="p-3 text-sm text-gray-600 flex items-center gap-2">
+                        {role !== "EMPLOYEE" && (
+                          <button
+                            onClick={() =>
+                              handleUpdateStock(
+                                produto.id,
+                                Math.max(produto.stock - 1, 0)
+                              )
+                            }
+                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                          ></button>
+                        )}
+
+                        <span>{produto.stock}</span>
+
+                        {role !== "EMPLOYEE" && (
+                        <button
+                          onClick={() =>
+                            handleUpdateStock(produto.id, produto.stock + 1)
+                          }
+                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        >
+                          +
+                        </button>
+                        )}
+                      </td>
+
+                      <td className="p-3 text-sm text-gray-600">
+                        {new Date(produto.createdAt).toLocaleDateString(
+                          "pt-BR"
+                        )}
                       </td>
                       {role !== "EMPLOYEE" && (
                         <td className="p-3 text-center">
@@ -120,21 +191,29 @@ export function ProdutosCompany() {
                   className="bg-white rounded-lg shadow p-4 flex flex-col text-sm"
                 >
                   <p>
-                    <span className="font-semibold text-gray-700">Nome:</span> {produto.name}
+                    <span className="font-semibold text-gray-700">Nome:</span>{" "}
+                    {produto.name}
                   </p>
                   <p>
-                    <span className="font-semibold text-gray-700">Descrição:</span>{" "}
+                    <span className="font-semibold text-gray-700">
+                      Descrição:
+                    </span>{" "}
                     {produto.description}
                   </p>
                   <p>
-                    <span className="font-semibold text-gray-700">Preço:</span> R${" "}
-                    {produto.price.toFixed(2)}
+                    <span className="font-semibold text-gray-700">Preço:</span>{" "}
+                    R$ {produto.price.toFixed(2)}
                   </p>
                   <p>
-                    <span className="font-semibold text-gray-700">Estoque:</span> {produto.stock}
+                    <span className="font-semibold text-gray-700">
+                      Estoque:
+                    </span>{" "}
+                    {produto.stock}
                   </p>
                   <p>
-                    <span className="font-semibold text-gray-700">Criado em:</span>{" "}
+                    <span className="font-semibold text-gray-700">
+                      Criado em:
+                    </span>{" "}
                     {new Date(produto.createdAt).toLocaleDateString("pt-BR")}
                   </p>
                   {role !== "EMPLOYEE" && (
@@ -171,7 +250,9 @@ export function ProdutosCompany() {
             </div>
           </>
         ) : (
-          <p className="mt-6 text-center text-gray-600">Nenhum produto encontrado.</p>
+          <p className="mt-6 text-center text-gray-600">
+            Nenhum produto encontrado.
+          </p>
         )}
       </div>
     </div>

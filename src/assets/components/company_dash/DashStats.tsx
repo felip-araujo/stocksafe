@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
-
 
 export interface DashboardStats {
   totalUsers: number;
@@ -10,15 +8,27 @@ export interface DashboardStats {
   totalRequests: number;
   totalMaterial: number;
   pendingRequests: number;
+  totalPrice: number;
 }
 
 export function DashboardCompany() {
-  
-
   const companyId = localStorage.getItem("companyId");
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [totalPrice, setTotalPrice] = useState<number | null>(null); // ✅ corrigido
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Busca o valor total de produtos no estoque
+  const fetchPrice = async () => {
+    try {
+      const res = await api.get(`/product/total/price/${companyId}`);
+      setTotalPrice(res.data.totalPrice); // ✅ assume que sua rota retorna { totalPrice: 1234.56 }
+      console.log(totalPrice)
+    } catch (err) {
+      console.error("Erro ao buscar valor total dos produtos:", err);
+    }
+  };
+
+  // 🔹 Busca estatísticas gerais do dashboard
   const fetchStats = async () => {
     if (!companyId) return;
     try {
@@ -32,8 +42,10 @@ export function DashboardCompany() {
     }
   };
 
+  // 🔹 Executa ambas as requisições quando o componente carrega
   useEffect(() => {
     fetchStats();
+    fetchPrice();
   }, [companyId]);
 
   return (
@@ -70,7 +82,16 @@ export function DashboardCompany() {
               <p className="text-3xl font-bold">{stats.totalRequests}</p>
             </div>
 
-            {/* Total de Requisições Pendentes */}
+            {/* Valor total dos produtos no estoque */}
+            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
+              <h2 className="text-lg font-semibold mb-2">Valor total em estoque</h2>
+              <p className="text-3xl font-bold text-green-600">
+                {totalPrice !== null ? `R$ ${totalPrice.toFixed(2)}` : "—"}
+                
+              </p>
+            </div>
+
+            {/* Requisições Pendentes */}
             <div
               className={`p-4 sm:p-6 rounded-lg shadow flex flex-col items-center justify-center ${
                 stats.pendingRequests === 0 ? "bg-green-400" : "bg-yellow-300"
