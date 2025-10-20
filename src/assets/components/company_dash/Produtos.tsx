@@ -12,11 +12,12 @@ interface Produto {
   price: number;
   stock: number;
   createdAt: string;
+  codigo: string;
 }
 
 export function ProdutosCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
-  useRequireSubscription()
+  useRequireSubscription();
 
   const companyId = localStorage.getItem("companyId");
   const role = localStorage.getItem("role");
@@ -78,6 +79,24 @@ export function ProdutosCompany() {
     }
   };
 
+  const handleUpdateProduct = async (
+    id: number,
+    data: { stock?: number; codigo?: string }
+  ) => {
+    try {
+      await api.put(`/product/${companyId}/${id}`, data);
+
+      // Atualiza localmente o estado
+      setProdutos((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, ...data } : p))
+      );
+      console.log("Produto atualizado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao atualizar produto:", err);
+      alert("Erro ao atualizar produto");
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
@@ -93,7 +112,6 @@ export function ProdutosCompany() {
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Nome
                     </th>
@@ -101,6 +119,11 @@ export function ProdutosCompany() {
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Descrição
                     </th>
+
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Código
+                    </th>
+
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Preço
                     </th>
@@ -122,12 +145,35 @@ export function ProdutosCompany() {
                 <tbody>
                   {produtos.map((produto) => (
                     <tr key={produto.id} className="border-b hover:bg-gray-50">
-                      
                       <td className="p-3 text-sm font-medium text-gray-800">
                         {produto.name}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
                         {produto.description}
+                      </td>
+                      <td className="p-3 text-sm text-gray-600">
+                        <input
+                          type="text"
+                          value={produto.codigo || ""}
+                          onChange={(e) => {
+                            const newCode = e.target.value;
+
+                            // Atualiza localmente no estado
+                            setProdutos((prev) =>
+                              prev.map((p) =>
+                                p.id === produto.id
+                                  ? { ...p, codigo: newCode }
+                                  : p
+                              )
+                            );
+                          }}
+                          onBlur={() =>
+                            handleUpdateProduct(produto.id, {
+                              codigo: produto.codigo,
+                            })
+                          }
+                          className="border px-2 py-1 rounded w-full"
+                        />
                       </td>
                       <td className="p-3 text-sm text-gray-600">
                         R$ {produto.price.toFixed(2)}

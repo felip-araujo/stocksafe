@@ -11,6 +11,7 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
     description: "",
     price: 0,
     stock: 0,
+    codigo: "",
   });
 
   const handleChange = (
@@ -34,7 +35,13 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
       toast.success("Produto criado com sucesso!");
       console.log(res);
       setIsOpen(false);
-      setFormData({ name: "", description: "", price: 0, stock: 0 });
+      setFormData({
+        name: "",
+        description: "",
+        price: 0,
+        stock: 0,
+        codigo: "",
+      });
       if (onCreated) onCreated(); // callback para atualizar lista de produtos
     } catch (err) {
       console.error("Erro ao criar produto:", err);
@@ -86,6 +93,19 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   required
+                />
+                <label
+                  htmlFor="codigo"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Código
+                </label>
+                <input
+                  type="text"
+                  id="codigo"
+                  value={formData.codigo}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <div>

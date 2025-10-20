@@ -10,9 +10,12 @@ export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
     name: "",
     description: "",
     group: "",
+    codigo: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
@@ -24,15 +27,15 @@ export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
     try {
       const res = await api.post("/material", { ...formData, companyId });
       // alert("Material criado com sucesso!");
-      toast.success("Material criado com sucesso!")
-      console.log(res)
+      toast.success("Material criado com sucesso!");
+      console.log(res);
       setIsOpen(false);
-      setFormData({ name: "", description: "", group: "" });
+      setFormData({ name: "", description: "", group: "", codigo: "" });
       if (onCreated) onCreated(); // callback para atualizar lista de materiais
     } catch (err) {
       console.error("Erro ao criar material:", err);
       // alert("Erro ao criar material");
-      toast.error("Erro ao criar material")
+      toast.error("Erro ao criar material");
     }
   };
 
@@ -51,7 +54,10 @@ export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
             <h2 className="text-xl font-bold mb-4">Criar Material</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-1"
+                >
                   Nome
                 </label>
                 <input
@@ -64,7 +70,10 @@ export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="description" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium mb-1"
+                >
                   Descrição
                 </label>
                 <textarea
@@ -76,13 +85,32 @@ export function NewMaterial({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="group" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="group"
+                  className="block text-sm font-medium mb-1"
+                >
                   Grupo
                 </label>
                 <input
                   type="text"
                   id="group"
                   value={formData.group}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="codigo"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Código
+                </label>
+                <input
+                  type="text"
+                  id="codigo"
+                  value={formData.codigo}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   required
