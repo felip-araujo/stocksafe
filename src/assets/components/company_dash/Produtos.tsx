@@ -101,6 +101,12 @@ export function ProdutosCompany() {
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-4 sm:p-6 bg-gray-50">
+        {role === "EMPLOYEE" && (
+          <h1 className="text-xl font-semibold text-gray-800 mb-6">
+            Produtos Estoque
+          </h1>
+        )}
+
         {role !== "EMPLOYEE" && (
           <CreateProduct onCreated={() => fetchProdutos(page)} />
         )}
@@ -152,6 +158,7 @@ export function ProdutosCompany() {
                         {produto.description}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
+                        {role !== "EMPLOYEE" &&(
                         <input
                           type="text"
                           value={produto.codigo || ""}
@@ -173,7 +180,10 @@ export function ProdutosCompany() {
                             })
                           }
                           className="border px-2 py-1 rounded w-full"
-                        />
+                        />)}
+                        {role === "EMPLOYEE" &&(
+                          <p>{produto.codigo}</p>
+                        )}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
                         R$ {produto.price.toFixed(2)}
@@ -191,10 +201,10 @@ export function ProdutosCompany() {
                             className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                           >
                             -
-                          </button>
-                        )}
+                          </button>)}
+                        
 
-                        <input
+                        { role !== "EMPLOYEE" && (<input
                           type="number"
                           value={produto.stock}
                           onChange={(e) => {
@@ -219,7 +229,11 @@ export function ProdutosCompany() {
                             }
                           }}
                           className="w-16 text-center border rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                        /> )}
+
+                        {role === "EMPLOYEE" && (
+                          <p>{produto.stock}</p>
+                        )}
 
                         {role !== "EMPLOYEE" && (
                           <button

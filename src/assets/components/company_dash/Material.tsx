@@ -85,7 +85,16 @@ export function MaterialsCompany() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
+      
       <div className="flex-1 p-6 bg-gray-50">
+        {role === "EMPLOYEE" &&(
+           <h1 className="text-xl font-semibold text-gray-800 mb-6">
+          Material de Consumo
+        </h1>
+        )}
+        
+        
+
         {role !== "EMPLOYEE" && <NewMaterial />}
 
         {materials.length > 0 ? (
@@ -132,6 +141,7 @@ export function MaterialsCompany() {
                         {material.group}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
+                       {role !== "EMPLOYEE" &&(
                        <input
                           type="text"
                           value={material.codigo || ""}
@@ -153,7 +163,10 @@ export function MaterialsCompany() {
                             })
                           }
                           className="border px-2 py-1 rounded w-full"
-                        />
+                        />)}
+                        {role === "EMPLOYEE" && (
+                          <p>{material.codigo || "-"}</p>
+                        )}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(material.createdAt).toLocaleDateString(

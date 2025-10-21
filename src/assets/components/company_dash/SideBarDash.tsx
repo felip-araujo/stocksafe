@@ -43,6 +43,7 @@ export function SidebarDash() {
     navItems = [
       { to: "/material", label: "Material Consumo", icon: <Store size={20} /> },
       { to: "/produtos", label: "Produtos Estoque", icon: <Package size={20} /> },
+      { to: "/sales", label: "Vendas", icon: <DollarSign size={20} /> },
       {
         to: "/user-request",
         label: "Requisições",

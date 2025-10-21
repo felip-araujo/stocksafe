@@ -25,6 +25,7 @@ import { PrivPolicy } from "./assets/pages/PrivacyPolicy";
 import { Sobre } from "./assets/pages/About";
 import { VendasCompany } from "./assets/components/company_dash/Vendas";
 
+
 function App() {
   return (
     <>

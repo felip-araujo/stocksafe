@@ -3,6 +3,7 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
+import { CreateSale } from "./NewSale";
 
 interface Venda {
   id: number;
@@ -51,20 +52,24 @@ export function VendasCompany() {
   const handlePrevPage = () => {
     if (page > 1) setPage(page - 1);
   };
- 
+
   const handleNextPage = () => {
     if (page < totalPages) setPage(page + 1);
   };
 
+  console.log(vendas)
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-4 sm:p-6 bg-gray-50">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+        <h1 className="text-xl font-semibold text-gray-800 mb-6">
           Histórico de Vendas
         </h1>
+        <CreateSale />
+        
 
-        {vendas.length > 0 ? (
+        {vendas.length > 0  ? (
+
           <>
             {/* Tabela Desktop */}
             <div className="hidden md:block overflow-x-auto rounded-lg shadow">
