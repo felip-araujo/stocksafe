@@ -57,7 +57,7 @@ export function VendasCompany() {
     if (page < totalPages) setPage(page + 1);
   };
 
-  console.log(vendas)
+  
   return (
     <div className="flex min-h-screen">
       <SidebarDash />

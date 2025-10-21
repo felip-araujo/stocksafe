@@ -30,7 +30,7 @@ export function useRequireSubscription() {
           // localStorage.clear()
           
         }
-        console.log(res)
+        
       } catch (err) {
         console.error("Erro ao verificar assinatura:", err);
         navigate("/assinatura/necessaria");
