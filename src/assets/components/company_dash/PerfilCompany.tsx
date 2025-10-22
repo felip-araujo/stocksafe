@@ -3,7 +3,8 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
-import { CancelarAssinatura } from "../signature/CancelarAssinatura";
+
+import { UpgradePlan } from "../signature/FazerUpgrade";
 
 interface UserData {
   id: number;
@@ -16,7 +17,7 @@ interface UserData {
 export function PerfilCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
   useRequireSubscription();
-
+  const planoAtual = localStorage.getItem("plano")
   const companyId = localStorage.getItem("companyId");
   const userId = localStorage.getItem("id");
   const role = localStorage.getItem("role");
@@ -98,9 +99,9 @@ export function PerfilCompany() {
                 <p className="text-gray-800 font-medium">
                   {new Date(userData.createdAt).toLocaleDateString("pt-BR")}
                 </p>
-                {role !== "EMPLOYEE" && (
+                {role !== "EMPLOYEE" && planoAtual !== "gold" && (
                   <p>
-                    <CancelarAssinatura />
+                    <UpgradePlan />
                   </p>
                 )}
               </div>
