@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
-import { ArrowUp, ArrowDown, Minus } from "lucide-react"; // lucide-react
+import { ArrowUp, ArrowDown, Minus, LockIcon } from "lucide-react";
 
 export interface DashboardStats {
   totalUsers: number;
@@ -15,22 +15,13 @@ export interface DashboardStats {
 
 export function DashboardCompany() {
   const companyId = localStorage.getItem("companyId");
+  const plan = localStorage.getItem("plano"); // Plano do usuário
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
   const [totalValue, setTotalValue] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Busca o valor total de produtos no estoque
-  const fetchPrice = async () => {
-    try {
-      const res = await api.get(`/product/total/price/${companyId}`);
-      setTotalPrice(res.data.totalPrice);
-    } catch (err) {
-      console.error("Erro ao buscar valor total dos produtos:", err);
-    }
-  };
-
-  // 🔹 Busca estatísticas gerais do dashboard
+  // 🔹 Busca dados
   const fetchStats = async () => {
     if (!companyId) return;
     try {
@@ -44,7 +35,16 @@ export function DashboardCompany() {
     }
   };
 
-  // 🔹 Busca o valor total de vendas
+  const fetchPrice = async () => {
+    if (!companyId) return;
+    try {
+      const res = await api.get(`/product/total/price/${companyId}`);
+      setTotalPrice(res.data.totalPrice);
+    } catch (err) {
+      console.error("Erro ao buscar valor total dos produtos:", err);
+    }
+  };
+
   const handleSalesTotal = async () => {
     if (!companyId) return;
     try {
@@ -55,14 +55,13 @@ export function DashboardCompany() {
     }
   };
 
-  // 🔹 Executa todas as requisições ao carregar o componente
   useEffect(() => {
     fetchStats();
     fetchPrice();
     handleSalesTotal();
   }, [companyId]);
 
-  // 🔹 Determina cor de fundo, cor do texto, ícone e label do cartão de vendas
+  // 🔹 Determina status das vendas
   const getSalesStatus = () => {
     if (totalValue === null || totalPrice === null) {
       return { bg: "bg-yellow-300", textColor: "text-black", icon: <Minus className="w-5 h-5" />, label: "Carregando..." };
@@ -78,6 +77,9 @@ export function DashboardCompany() {
 
   const salesStatus = getSalesStatus();
 
+  // 🔹 Cards premium (apenas para Gold)
+  const premiumCards = ["Produtos", "Valor total em estoque", "Valor total em Vendas"];
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       <SidebarDash />
@@ -88,67 +90,37 @@ export function DashboardCompany() {
           <p>Carregando...</p>
         ) : stats ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Colaboradores */}
-            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Colaboradores</h2>
-              <p className="text-3xl font-bold">{stats.totalUsers}</p>
-            </div>
+            {[
+              { label: "Colaboradores", value: stats.totalUsers },
+              { label: "Produtos", value: stats.totalProducts },
+              { label: "Materiais", value: stats.totalMaterial },
+              { label: "Total de Requisições", value: stats.totalRequests },
+              { label: "Valor total em estoque", value: totalPrice !== null ? totalPrice.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "—", highlight: "text-blue-900" },
+              { label: "Requisições Pendentes", value: stats.pendingRequests === 0 ? "Nenhuma" : stats.pendingRequests },
+              { label: "Valor total em Vendas", value: totalValue !== null ? totalValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "—", bg: salesStatus.bg, textColor: salesStatus.textColor, icon: salesStatus.icon, labelStatus: salesStatus.label },
+            ].map((card, index) => {
+              const isPremium = premiumCards.includes(card.label);
+              const isLocked = plan === "basic" && isPremium;
 
-            {/* Produtos */}
-            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Produtos</h2>
-              <p className="text-3xl font-bold">{stats.totalProducts}</p>
-            </div>
-
-            {/* Materiais */}
-            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Materiais</h2>
-              <p className="text-3xl font-bold">{stats.totalMaterial}</p>
-            </div>
-
-            {/* Requisições */}
-            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Total de Requisições</h2>
-              <p className="text-3xl font-bold">{stats.totalRequests}</p>
-            </div>
-
-            {/* Valor em estoque */}
-            <div className="p-4 sm:p-6 bg-white rounded-lg shadow flex flex-col items-center justify-center">
-              <h2 className="text-lg font-semibold mb-2">Valor total em estoque</h2>
-              <p className="text-3xl font-bold text-blue-900">
-                {totalPrice !== null
-                  ? totalPrice.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
-                  : "—"}
-              </p>
-            </div>
-
-            {/* Requisições Pendentes */}
-            <div
-              className={`p-4 sm:p-6 rounded-lg shadow flex flex-col items-center justify-center ${
-                stats.pendingRequests === 0 ? "bg-green-400" : "bg-yellow-300"
-              }`}
-            >
-              <h2 className="text-lg font-semibold mb-2">Requisições Pendentes</h2>
-              <p className="text-3xl font-bold">
-                {stats.pendingRequests === 0 ? "Nenhuma" : stats.pendingRequests}
-              </p>
-            </div>
-
-            {/* Valor total em vendas */}
-            <div
-              className={`p-4 sm:p-6 rounded-lg shadow flex flex-col items-center justify-center ${salesStatus.bg}`}
-            >
-              <h2 className={`text-lg font-semibold mb-2 ${salesStatus.textColor}`}>Valor total em Vendas</h2>
-              <div className="flex items-center space-x-2">
-                <p className={`text-3xl font-bold ${salesStatus.textColor}`}>
-                  {totalValue !== null
-                    ? totalValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
-                    : "—"}
-                </p>
-                {salesStatus.icon}
-              </div>
-              <p className={`mt-1 text-sm font-medium ${salesStatus.textColor}`}>{salesStatus.label}</p>
-            </div>
+              return (
+                <div
+                  key={index}
+                  className={`relative p-4 sm:p-6 rounded-lg shadow flex flex-col items-center justify-center
+                    ${card.bg || "bg-white"}
+                    ${isLocked ? "opacity-60 backdrop-blur-sm cursor-not-allowed" : ""}
+                    transition-all duration-300`}
+                  title={isLocked ? "Recurso exclusivo do plano Gold" : ""}
+                >
+                  <h2 className={`text-lg font-semibold mb-2 ${card.textColor || ""}`}>{card.label}</h2>
+                  <div className="flex items-center space-x-2">
+                    <p className={`text-3xl font-bold ${card.highlight || card.textColor || ""}`}>{card.value}</p>
+                    {card.icon && !isLocked && card.icon}
+                  </div>
+                  {card.labelStatus && !isLocked && <p className={`mt-1 text-sm font-medium ${card.textColor}`}>{card.labelStatus}</p>}
+                  {isLocked && <span className="absolute top-1 right-2 text-gray-200"><LockIcon></LockIcon></span>}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p>Nenhum dado disponível.</p>
