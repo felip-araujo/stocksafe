@@ -15,7 +15,7 @@ export function UpgradePlan() {
   const plan: Plan[] = [
     {
       id: "gold",
-      name: "Plano Ouro",
+      name: "gold",
       price: "R$ 119,90/mês",
       description: "Para empresas que precisam de mais controle e recursos.",
       priceId: "price_1SJFs7KKzmjTKU73pRb6zGuT",
@@ -65,6 +65,7 @@ export function UpgradePlan() {
   return (
     <>
       {plan.map((p) => (
+        
         <button
           key={p.id}
           onClick={() => handleUpgrade(p.priceId, p.name)}
