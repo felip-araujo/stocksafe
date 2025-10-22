@@ -21,7 +21,8 @@ export function SubscriptionPlans() {
       name: "Plano Básico",
       price: "R$ 79,90/mês",
       description: "Ideal para pequenas equipes que estão começando.",
-      priceId: "price_1SAy2LKKzmjTKU738zEEFmhd", // substitua pelo ID real do Stripe
+      // priceId: "price_1SAy2LKKzmjTKU738zEEFmhd", // substitua pelo ID real do Stripe
+      priceId: "price_1SGJp4KKzmjTKU73iTsqViGv", // substitua pelo ID real do Stripe
       features: [
         "Até 10 usuários",
         "Até 2 administradores",
