@@ -25,6 +25,7 @@ import { PrivPolicy } from "./assets/pages/PrivacyPolicy";
 import { Sobre } from "./assets/pages/About";
 import { VendasCompany } from "./assets/components/company_dash/Vendas";
 import { UserSales } from "./assets/components/company_dash/VendasOfUser";
+import { Terms } from "./assets/pages/Termos";
 
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
         {/* Paginas & Blog*/}
         <Route path="/politica" element={<PrivPolicy></PrivPolicy>}></Route>
         <Route path="/sobre" element={<Sobre></Sobre>}></Route>
+        <Route path="/termos-de-uso" element={<Terms></Terms>}></Route>
 
   
       </Routes>

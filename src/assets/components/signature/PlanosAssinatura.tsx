@@ -25,8 +25,9 @@ export function SubscriptionPlans() {
       features: [
         "Até 10 usuários",
         "Até 2 administradores",
-        "Suporte via e-mail em até 24h",
-        "Acesso ao painel",
+        "Suporte via e-mail em até 48h",
+        "Acesso ao painel de Materiais",
+        "Acesso ao painel de Requisições",
       ],
     },
     {
@@ -38,8 +39,10 @@ export function SubscriptionPlans() {
       features: [
         "Usuários ilimitados",
         "Atendimento técnico via chat",
-        "Recursos avançados de gestão",
-        "Relatórios personalizados",
+        "Acesso ao painel de Materiais",
+        "Acesso ao painel de Requisições",
+        "Acesso ao painel de vendas",
+        "Acesso ao painel de produtos",
       ],
     },
   ];

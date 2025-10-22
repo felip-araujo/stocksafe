@@ -27,6 +27,12 @@ export function Footer() {
           >
             Política de Privacidade
           </a>
+          <a
+            href="/termos-de-uso"
+            className="hover:text-blue-500 transition-colors duration-200"
+          >
+            Termos de Uso
+          </a>
         </div>
 
         {/* Direitos autorais */}
