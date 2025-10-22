@@ -41,14 +41,16 @@ export function SidebarDash() {
 
   if (role === "EMPLOYEE") {
     navItems = [
-      { to: "/material", label: "Material Consumo", icon: <Store size={20} /> },
-      { to: "/produtos", label: "Produtos Estoque", icon: <Package size={20} /> },
-      { to: "/sales", label: "Vendas", icon: <DollarSign size={20} /> },
-      {
+      { to: "/sales/user", label: "Vendas", icon: <DollarSign size={20} /> },
+         {
         to: "/user-request",
         label: "Requisições",
         icon: <NotebookPen size={20} />,
       },
+      { to: "/material", label: "Material Consumo", icon: <Store size={20} /> },
+      { to: "/produtos", label: "Produtos Estoque", icon: <Package size={20} /> },
+      
+   
       { to: "/config", label: "Configurações", icon: <Settings size={20} /> },
     ];
   }

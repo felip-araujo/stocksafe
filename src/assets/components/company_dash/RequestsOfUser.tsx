@@ -70,9 +70,7 @@ export function UserRequest() {
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Criado em
                     </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Empresa
-                    </th>
+
                   </tr>
                 </thead>
 
@@ -115,9 +113,7 @@ export function UserRequest() {
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(req.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="p-3 text-sm text-gray-600">
-                        {req.companyId}
-                      </td>
+                     
                     </tr>
                   ))}
                 </tbody>

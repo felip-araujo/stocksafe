@@ -24,6 +24,7 @@ import { AssinaturaPendente } from "./assets/pages/AssinaturaNecessaria";
 import { PrivPolicy } from "./assets/pages/PrivacyPolicy";
 import { Sobre } from "./assets/pages/About";
 import { VendasCompany } from "./assets/components/company_dash/Vendas";
+import { UserSales } from "./assets/components/company_dash/VendasOfUser";
 
 
 function App() {
@@ -54,6 +55,8 @@ function App() {
         <Route path="/assinatura/sucesso" element={<SuccessPage></SuccessPage>}></Route>
         <Route path="/assinatura/necessaria" element={<AssinaturaPendente></AssinaturaPendente>}></Route>
         <Route path="/sales" element={<VendasCompany></VendasCompany>}></Route>
+        <Route path="/sales/user" element={<UserSales></UserSales>}></Route>
+        
 
         {/* Paginas & Blog*/}
         <Route path="/politica" element={<PrivPolicy></PrivPolicy>}></Route>
