@@ -21,7 +21,7 @@ export function SubscriptionPlans() {
       name: "Plano Básico",
       price: "R$ 79,90/mês",
       description: "Ideal para pequenas equipes que estão começando.",
-      priceId: "price_1SJFqXKKzmjTKU73NBCPJ7ik", // substitua pelo ID real do Stripe
+      priceId: "price_1SAy2LKKzmjTKU738zEEFmhd", // substitua pelo ID real do Stripe
       features: [
         "Até 10 usuários",
         "Até 2 administradores",
@@ -34,7 +34,7 @@ export function SubscriptionPlans() {
       name: "Plano Ouro",
       price: "R$ 119,90/mês",
       description: "Para empresas que precisam de mais controle e recursos.",
-      priceId: "price_1SJFs7KKzmjTKU73pRb6zGuT",
+      priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",
       features: [
         "Usuários ilimitados",
         "Atendimento técnico via chat",
