@@ -82,7 +82,7 @@ export function SubscriptionPlans() {
 
   return (
     <Element name="plans">
-      <section className="w-full bg-gray-50 py-8 px-5 sm:px-8 flex flex-col items-center">
+      <section className="w-full bg-gray-50 py-8 px-5 sm:px-8 flex mt-6 flex-col items-center">
         <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-center text-gray-900 leading-none">
           Escolha o plano ideal para o seu negócio
         </h1>
