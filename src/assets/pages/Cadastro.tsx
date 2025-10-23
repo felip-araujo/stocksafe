@@ -74,13 +74,13 @@ export function CadastroComp() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl p-8 md:p-10">
-        {/* Header com logo e título */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="flex items-center gap-4">
-            <LogoNome />
-          </div>
+        {/* Header com logo e texto de instrução */}
+        <div className="flex flex-col items-center justify-center mb-8 text-center">
+          <LogoNome />
+          <p className="text-gray-600 text-sm sm:text-base mt-3 max-w-md">
+            Preencha o formulário abaixo para continuar com seu cadastro.
+          </p>
         </div>
-
         {/* Formulário */}
         <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
           <div className="flex flex-col">
@@ -188,6 +188,24 @@ export function CadastroComp() {
             >
               {loading ? "Cadastrando..." : "Cadastrar Empresa"}
             </button>
+
+            <p className="text-sm mt-4 text-gray-600 text-center">
+              Ao se cadastrar, você concorda com os nossos{" "}
+              <a
+                href="/termos-de-uso"
+                className="font-semibold text-blue-600 hover:text-blue-700 underline transition-colors"
+              >
+                Termos de Uso
+              </a>
+              , e{" "}
+              <a
+                href="/politica"
+                className="font-semibold text-blue-600 hover:text-blue-700 underline transition-colors"
+              >
+                Políticas de Privacidade
+              </a>
+              .
+            </p>
           </div>
         </form>
       </div>
