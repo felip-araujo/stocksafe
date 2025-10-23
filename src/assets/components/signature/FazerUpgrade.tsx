@@ -18,7 +18,7 @@ export function UpgradePlan() {
       name: "gold",
       price: "R$ 119,90/mês",
       description: "Para empresas que precisam de mais controle e recursos.",
-      priceId: "price_1SJG1MxxqtViUk",
+      priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",
       features: [
         "Usuários ilimitados",
         "Atendimento técnico via chat",
