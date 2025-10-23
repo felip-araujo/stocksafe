@@ -21,7 +21,7 @@ export function SubscriptionPlans() {
       name: "Plano Básico",
       price: "R$ 79,90/mês",
       description: "Ideal para pequenas equipes que estão começando.",
-      priceId: "price_1SGJp4KKzmjTKU73iTsqViGv",
+      priceId: "price_1SLMTMKKzmjTKU73yN4NEgKN",
       features: [
         "Até 10 usuários",
         "Até 2 administradores",
