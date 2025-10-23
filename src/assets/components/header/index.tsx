@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { LogoNome } from "../logo/Logo&Nome";
-import { Link } from 'react-scroll';
+import { Link } from "react-scroll";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -14,24 +14,28 @@ export function Header() {
       {/* Menu Desktop */}
       <div className="hidden md:flex items-center">
         <nav>
-         <Link to="plans" smooth={true} duration={500}>
-          <a href="">Planos</a>
-        </Link>
+          <Link
+            to="plans"
+            smooth={true}
+            duration={500}
+            className="text-base font-normal text-zinc-900 hover:text-blue-800 transition-all ease-in-out cursor-pointer"
+          >
+            Planos
+          </Link>
         </nav>
-        
 
         <a
-          className="text-base font-normal text-zinc-900 px-3 py-2 mr-2 hover:border-b-2 border-blue-800 hover:text-blue-800 transition-all ease-in-out"
+          className="text-base font-normal text-zinc-900 px-3 py-2 mr-2 hover: hover:text-blue-800 transition-all ease-in-out"
           href="/auth"
         >
           Entrar
         </a>
 
         <a
-          className="text-base font-normal bg-blue-500 text-white px-10 py-2 rounded-full hover:bg-blue-600 transition-all"
-          href="/cadastro"
+          className="text-base font-normal bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-all"
+          href="/"
         >
-          Teste Grátis
+          Solicitar Demonstração
         </a>
       </div>
 

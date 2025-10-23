@@ -114,8 +114,9 @@ export function LoginPage() {
         </form>
 
         {/* Links */}
-        <div className="mt-4 text-center space-y-2">
-          <a className="text-blue-600 text-sm hover:underline" href="/cadastro">
+        <div className="mt-4 text-right space-y-2">
+          <a className="text-blue-600 text-sm hover:underline"
+           href="/assinatura/necessaria">
             Cadastre-se
           </a>
           <br />

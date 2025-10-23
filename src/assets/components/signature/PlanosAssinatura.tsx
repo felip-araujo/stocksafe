@@ -7,7 +7,7 @@ interface Plan {
   name: string;
   price: string;
   description: string;
-  priceId: string; // ID do preço vindo do Stripe
+  priceId: string;
   features: string[];
 }
 
@@ -50,16 +50,13 @@ export function SubscriptionPlans() {
   const handleSubscribe = async (priceId: string, plano: string) => {
     try {
       setLoading(priceId);
-
       const companyId = localStorage.getItem("companyId");
 
-      // Se não tiver empresa, redireciona para o cadastro
       if (!companyId) {
         navigate(`/cadastro?priceId=${priceId}&plano=${plano}`);
         return;
       }
 
-      // Cria sessão de pagamento com o plano e priceId
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
         {
@@ -70,9 +67,7 @@ export function SubscriptionPlans() {
       );
 
       const data = await res.json();
-
       if (data.url) {
-        // Redireciona para o checkout do Stripe
         window.location.href = data.url;
       } else {
         alert("Erro ao iniciar assinatura.");
@@ -87,29 +82,42 @@ export function SubscriptionPlans() {
 
   return (
     <Element name="plans">
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
-        <h1 className="text-2xl font-light mb-8 text-center text-gray-800">
-          Escolha seu plano de assinatura
+      <section className="w-full bg-gray-50 py-8 px-5 sm:px-8 flex flex-col items-center">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-center text-gray-900 leading-none">
+          Escolha o plano ideal para o seu negócio
         </h1>
 
-        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 max-w-4xl w-full">
+        <p className="text-base sm:text-lg text-gray-600 text-center mb-10 max-w-2xl leading-relaxed">
+          Simplifique sua rotina e tenha{" "}
+          <span className="font-semibold text-gray-800">
+            controle total do seu estoque
+          </span>{" "}
+          — o <strong>Stock Seguro</strong> te mostra o que entra, o que sai e o que realmente dá lucro.
+        </p>
+
+        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 max-w-5xl w-full">
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="bg-white rounded-2xl shadow-md p-6 flex flex-col justify-between hover:shadow-lg transition-all"
+              className="bg-white rounded-2xl shadow-md p-6 sm:p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-300"
             >
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   {plan.name}
                 </h2>
-                <p className="text-gray-600 mb-4">{plan.description}</p>
-                <p className="text-3xl font-bold text-blue-600 mb-4">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">
+                  {plan.description}
+                </p>
+
+                <p className="text-3xl sm:text-4xl font-bold text-blue-600 mb-6">
                   {plan.price}
                 </p>
-                <ul className="text-gray-700 space-y-2 mb-6">
+
+                <ul className="text-gray-700 space-y-2 mb-6 text-sm sm:text-base">
                   {plan.features.map((feat, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      - <span>{feat}</span>
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>{feat}</span>
                     </li>
                   ))}
                 </ul>
@@ -118,18 +126,18 @@ export function SubscriptionPlans() {
               <button
                 onClick={() => handleSubscribe(plan.priceId, plan.id)}
                 disabled={loading === plan.priceId}
-                className={`w-full py-3 rounded-lg font-semibold text-white ${
+                className={`w-full py-3 sm:py-4 rounded-lg font-semibold text-white text-base sm:text-lg ${
                   loading === plan.priceId
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-700 transition-all"
                 }`}
               >
-                {loading === plan.priceId ? "Processando..." : "Assinar"}
+                {loading === plan.priceId ? "Processando..." : "Assinar Agora"}
               </button>
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </Element>
   );
 }
