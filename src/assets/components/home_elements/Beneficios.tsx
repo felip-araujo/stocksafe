@@ -1,4 +1,4 @@
-import { CheckCircle, BarChart3, Smartphone, Bell, Settings } from "lucide-react";
+import { CheckCircle, BarChart3, Smartphone, Bell, Settings, Users } from "lucide-react";
 
 export function Beneficios() {
   const benefits = [
@@ -26,6 +26,11 @@ export function Beneficios() {
       icon: <Settings size={36} className="text-zinc-900" />,
       title: "Gestão simplificada",
       desc: "Interface intuitiva e fácil de usar, mesmo pra quem nunca lidou com sistemas.",
+    },
+    {
+      icon: <Users size={36} className="text-zinc-900" />,
+      title: "Gestão de Usuários",
+      desc: "Cadastre seus funcionários por departamento de forma segura e prática",
     },
   ];
 

@@ -15,6 +15,14 @@ export function Header() {
       <div className="hidden md:flex items-center">
         <nav>
           <Link
+            to=""
+            smooth={true}
+            duration={500}
+            className="text-base mr-2 font-normal text-zinc-900 hover:text-blue-800 transition-all ease-in-out cursor-pointer"
+          >
+            Contato
+          </Link>
+          <Link
             to="plans"
             smooth={true}
             duration={500}

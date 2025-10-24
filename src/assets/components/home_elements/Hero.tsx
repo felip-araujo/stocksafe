@@ -1,3 +1,5 @@
+import { Link } from "react-scroll";
+
 export function Hero() {
   return (
     <section className="w-full bg-gradient-to-b from-white to-gray-50 py-16 md:py-10">
@@ -23,27 +25,37 @@ export function Hero() {
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-600 max-w-md mx-auto md:mx-0 leading-relaxed">
-              Transforme o caos do seu estoque em <span className="font-semibold text-gray-800">lucro e tranquilidade</span>.
-              O <strong>Stock Seguro</strong> te mostra o que entra, o que sai e o que realmente dá retorno — tudo na palma da mão.
+              Transforme o caos do seu estoque em{" "}
+              <span className="font-semibold text-gray-800">
+                lucro e tranquilidade
+              </span>
+              . O <strong>Stock Seguro</strong> te mostra o que entra, o que sai
+              e o que realmente dá retorno — tudo na palma da mão.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2">
-              <a
-                href="/cadastro"
+              <Link
+                to="plans"
+                smooth={true}
+                duration={500}
                 className="bg-blue-600 text-white px-6 py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all font-semibold text-lg"
               >
                 Comecar Agora
-              </a>
-              <a
-                href="/sobre"
+              </Link>
+
+              <Link
+                to="como"
+                smooth={true}
+                duration={500}
                 className="border border-gray-300 text-gray-700 px-6 py-4 rounded-xl hover:bg-gray-100 transition-all font-medium text-lg"
               >
                 Ver como funciona
-              </a>
+              </Link>
             </div>
 
             <p className="text-sm text-gray-500 mt-4">
-              Solicite uma Demonstração. Teste e sinta a diferença em poucos minutos.
+              Solicite uma Demonstração. Teste e sinta a diferença em poucos
+              minutos.
             </p>
           </div>
         </div>
