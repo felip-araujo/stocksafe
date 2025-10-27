@@ -1,3 +1,4 @@
+import { Gem } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface Plan {
@@ -62,18 +63,19 @@ export function UpgradePlan() {
     }
   };
 
-  return (
-    <>
-      {plan.map((p) => (
-        
-        <button
-          key={p.id}
-          onClick={() => handleUpgrade(p.priceId, p.name)}
-          className="p-2 rounded mt-2 bg-yellow-500 text-white hover:bg-yellow-600 font-medium"
-        >
-          Assinar {p.name}
-        </button>
-      ))}
-    </>
-  );
+ return (
+  <>
+    {plan.map((p) => (
+      <button
+        key={p.id}
+        onClick={() => handleUpgrade(p.priceId, p.name)}
+        className="flex items-center gap-2 p-2  rounded mt-2 bg-yellow-500 text-white hover:bg-yellow-600 font-medium"
+      >
+        <Gem className="w-4 h-4" />
+        <span>Assinar {p.name}</span>
+      </button>
+    ))}
+  </>
+);
+
 }

@@ -5,6 +5,7 @@ import api from "@/services/api/api";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 import { UpgradePlan } from "../signature/FazerUpgrade";
+import { CancelarAssinatura } from "../signature/CancelarAssinaturaBtn";
 
 interface UserData {
   id: number;
@@ -17,7 +18,7 @@ interface UserData {
 export function PerfilCompany() {
   useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
   useRequireSubscription();
-  const planoAtual = localStorage.getItem("plano")
+  const planoAtual = localStorage.getItem("plano");
   const companyId = localStorage.getItem("companyId");
   const userId = localStorage.getItem("id");
   const role = localStorage.getItem("role");
@@ -126,6 +127,11 @@ export function PerfilCompany() {
               >
                 {updating ? "Alterando..." : "Salvar Nova Senha"}
               </button>
+              {role !== "EMPLOYEE" && (
+                <p>
+                  <CancelarAssinatura />
+                </p>
+              )}
             </div>
           </div>
         ) : (
