@@ -4,6 +4,8 @@ import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { CreateProduct } from "./NewProduct";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
+import toast from "react-hot-toast";
+import type { AxiosError } from "axios";
 
 interface Produto {
   id: number;
@@ -45,15 +47,45 @@ export function ProdutosCompany() {
   }, [companyId, page]);
 
   const handleExclude = async (id: number) => {
-    if (!confirm("Tem certeza que deseja excluir este produto?")) return;
-    try {
-      await api.delete(`/product/${companyId}/${id}`);
-      alert("Produto excluído com sucesso!");
-      fetchProdutos(page);
-    } catch (err) {
-      console.error("Erro ao excluir produto:", err);
-      alert("Erro ao excluir produto");
-    }
+    toast(
+      (t) => (
+        <div className="flex flex-col">
+          <span>Tem certeza que deseja deletar?</span>
+          <div className="flex justify-end mt-2 gap-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id); // fecha o toast
+                // ação
+                excludeOnce();
+              }}
+              className="px-2 py-1 bg-red-500 text-white rounded"
+            >
+              Sim
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-2 py-1 bg-gray-300 rounded"
+            >
+              Não
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 5000 } // tempo que o toast fica visível (opcional)
+    );
+
+    const excludeOnce = async () => {
+      try {
+        await api.delete(`/product/${companyId}/${id}`);
+        alert("Produto excluído com sucesso!");
+        fetchProdutos(page);
+      } catch (err) {
+        const error = err as AxiosError<{ message: string }>;
+        const mensagem = error.response?.data?.message || "Erro inesperado";
+        console.error(mensagem);
+        toast.error(mensagem);
+      }
+    };
   };
 
   const handlePrevPage = () => {
@@ -158,32 +190,31 @@ export function ProdutosCompany() {
                         {produto.description}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
-                        {role !== "EMPLOYEE" &&(
-                        <input
-                          type="text"
-                          value={produto.codigo || ""}
-                          onChange={(e) => {
-                            const newCode = e.target.value;
+                        {role !== "EMPLOYEE" && (
+                          <input
+                            type="text"
+                            value={produto.codigo || ""}
+                            onChange={(e) => {
+                              const newCode = e.target.value;
 
-                            // Atualiza localmente no estado
-                            setProdutos((prev) =>
-                              prev.map((p) =>
-                                p.id === produto.id
-                                  ? { ...p, codigo: newCode }
-                                  : p
-                              )
-                            );
-                          }}
-                          onBlur={() =>
-                            handleUpdateProduct(produto.id, {
-                              codigo: produto.codigo,
-                            })
-                          }
-                          className="border px-2 py-1 rounded w-full"
-                        />)}
-                        {role === "EMPLOYEE" &&(
-                          <p>{produto.codigo}</p>
+                              // Atualiza localmente no estado
+                              setProdutos((prev) =>
+                                prev.map((p) =>
+                                  p.id === produto.id
+                                    ? { ...p, codigo: newCode }
+                                    : p
+                                )
+                              );
+                            }}
+                            onBlur={() =>
+                              handleUpdateProduct(produto.id, {
+                                codigo: produto.codigo,
+                              })
+                            }
+                            className="border px-2 py-1 rounded w-full"
+                          />
                         )}
+                        {role === "EMPLOYEE" && <p>{produto.codigo}</p>}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
                         R$ {produto.price.toFixed(2)}
@@ -201,39 +232,39 @@ export function ProdutosCompany() {
                             className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                           >
                             -
-                          </button>)}
-                        
-
-                        { role !== "EMPLOYEE" && (<input
-                          type="number"
-                          value={produto.stock}
-                          onChange={(e) => {
-                            const newStock = Number(e.target.value);
-                            setProdutos((prev) =>
-                              prev.map((p) =>
-                                p.id === produto.id
-                                  ? { ...p, stock: newStock }
-                                  : p
-                              )
-                            );
-                          }}
-                          onBlur={(e) => {
-                            const newStock = Number(e.target.value);
-                            handleUpdateStock(produto.id, newStock);
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              const newStock = Number(e.currentTarget.value);
-                              handleUpdateStock(produto.id, newStock);
-                              e.currentTarget.blur(); // sai do input
-                            }
-                          }}
-                          className="w-16 text-center border rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        /> )}
-
-                        {role === "EMPLOYEE" && (
-                          <p>{produto.stock}</p>
+                          </button>
                         )}
+
+                        {role !== "EMPLOYEE" && (
+                          <input
+                            type="number"
+                            value={produto.stock}
+                            onChange={(e) => {
+                              const newStock = Number(e.target.value);
+                              setProdutos((prev) =>
+                                prev.map((p) =>
+                                  p.id === produto.id
+                                    ? { ...p, stock: newStock }
+                                    : p
+                                )
+                              );
+                            }}
+                            onBlur={(e) => {
+                              const newStock = Number(e.target.value);
+                              handleUpdateStock(produto.id, newStock);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                const newStock = Number(e.currentTarget.value);
+                                handleUpdateStock(produto.id, newStock);
+                                e.currentTarget.blur(); // sai do input
+                              }
+                            }}
+                            className="w-16 text-center border rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          />
+                        )}
+
+                        {role === "EMPLOYEE" && <p>{produto.stock}</p>}
 
                         {role !== "EMPLOYEE" && (
                           <button

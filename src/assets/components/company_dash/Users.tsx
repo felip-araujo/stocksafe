@@ -4,6 +4,7 @@ import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { CreateUser } from "./NewUser";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
+import toast from "react-hot-toast";
 
 interface Usuario {
   id: number;
@@ -15,7 +16,7 @@ interface Usuario {
 
 export function UsuariosCompany() {
   useAuthGuard(["COMPANY_ADMIN"]);
-  useRequireSubscription()
+  useRequireSubscription();
 
   const companyId = localStorage.getItem("companyId");
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -26,7 +27,9 @@ export function UsuariosCompany() {
   const fetchUsuarios = async (page: number) => {
     if (!companyId) return;
     try {
-      const res = await api.get(`/user/${companyId}?page=${page}&limit=${limit}`);
+      const res = await api.get(
+        `/user/${companyId}?page=${page}&limit=${limit}`
+      );
       setUsuarios(res.data.data);
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
@@ -40,15 +43,47 @@ export function UsuariosCompany() {
   }, [companyId, page]);
 
   const handleExclude = async (id: number) => {
-    if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
-    try {
-      await api.delete(`/user/${companyId}/${id}`);
-      alert("Usuário excluído com sucesso!");
-      fetchUsuarios(page);
-    } catch (err) {
-      console.error("Erro ao excluir usuário:", err);
-      alert("Erro ao excluir usuário");
-    }
+    toast(
+      (t) => (
+        <div className="flex flex-col">
+          <span>
+            Tem certeza? Todas as vendas e requisições relacionadas ao usuário
+            serão excluidas.
+          </span>
+          <div className="flex justify-end mt-2 gap-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id); // fecha o toast
+                // ação
+                excludeOnce();
+              }}
+              className="px-2 py-1 bg-red-500 text-white rounded"
+            >
+              Sim
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-2 py-1 bg-gray-300 rounded"
+            >
+              Não
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 5000 } // tempo que o toast fica visível (opcional)
+    );
+
+    const excludeOnce = async () => {
+      try {
+        await api.delete(`/user/${companyId}/${id}`);
+        toast.success("Usuário excluído com sucesso!")
+        fetchUsuarios(page);
+      } catch (err) {
+        console.error("Erro ao excluir usuário:", err);
+        toast.error("Erro ao excluir usuário")
+        
+      }
+    };
   };
 
   const handlePrevPage = () => page > 1 && setPage(page - 1);
@@ -59,7 +94,9 @@ export function UsuariosCompany() {
       <SidebarDash />
 
       <div className="flex-1 p-4 md:p-6 bg-gray-50">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Usuários da Empresa</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Usuários da Empresa
+        </h2>
         <CreateUser onCreated={() => fetchUsuarios(page)} />
 
         {usuarios.length > 0 ? (
@@ -69,12 +106,24 @@ export function UsuariosCompany() {
               <table className="w-full border-collapse bg-white text-sm md:text-base">
                 <thead className="bg-gray-100 border-b">
                   <tr>
-                    <th className="p-3 text-left font-semibold text-gray-700">ID</th>
-                    <th className="p-3 text-left font-semibold text-gray-700">Nome</th>
-                    <th className="p-3 text-left font-semibold text-gray-700">Email</th>
-                    <th className="p-3 text-left font-semibold text-gray-700">Função</th>
-                    <th className="p-3 text-left font-semibold text-gray-700">Criado em</th>
-                    <th className="p-3 text-center font-semibold text-gray-700">Ações</th>
+                    <th className="p-3 text-left font-semibold text-gray-700">
+                      ID
+                    </th>
+                    <th className="p-3 text-left font-semibold text-gray-700">
+                      Nome
+                    </th>
+                    <th className="p-3 text-left font-semibold text-gray-700">
+                      Email
+                    </th>
+                    <th className="p-3 text-left font-semibold text-gray-700">
+                      Função
+                    </th>
+                    <th className="p-3 text-left font-semibold text-gray-700">
+                      Criado em
+                    </th>
+                    <th className="p-3 text-center font-semibold text-gray-700">
+                      Ações
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -84,7 +133,9 @@ export function UsuariosCompany() {
                       className="border-b hover:bg-gray-50 transition-colors"
                     >
                       <td className="p-3 text-gray-600">{usuario.id}</td>
-                      <td className="p-3 font-medium text-gray-800">{usuario.name}</td>
+                      <td className="p-3 font-medium text-gray-800">
+                        {usuario.name}
+                      </td>
                       <td className="p-3 text-gray-600 truncate max-w-[200px]">
                         {usuario.email}
                       </td>
@@ -96,7 +147,9 @@ export function UsuariosCompany() {
                           : usuario.role}
                       </td>
                       <td className="p-3 text-gray-600">
-                        {new Date(usuario.createdAt).toLocaleDateString("pt-BR")}
+                        {new Date(usuario.createdAt).toLocaleDateString(
+                          "pt-BR"
+                        )}
                       </td>
                       <td className="p-3 text-center">
                         <button

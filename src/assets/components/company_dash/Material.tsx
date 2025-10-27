@@ -5,6 +5,7 @@ import api from "@/services/api/api";
 import { NewMaterial } from "./NewMaterial";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import toast from "react-hot-toast";
+import type { AxiosError } from "axios";
 
 interface Material {
   id: number;
@@ -55,7 +56,6 @@ export function MaterialsCompany() {
                 toast.dismiss(t.id); // fecha o toast
                 // ação
                 excludeOnce();
-                
               }}
               className="px-2 py-1 bg-red-500 text-white rounded"
             >
@@ -80,9 +80,11 @@ export function MaterialsCompany() {
         toast.success("Material excluído com sucesso!");
         fetchMaterials(page);
       } catch (err) {
-        console.error("Erro ao excluir material:", err);
-        // alert("Erro ao excluir material");
-        toast.error("Erro ao excluir material")
+        const error = err as AxiosError<{ message: string }>;
+        const mensagem = error.response?.data?.message || "Erro inesperado";
+        console.error(mensagem);
+        toast.error(mensagem);
+        fetchMaterials(page);
       }
     };
   };

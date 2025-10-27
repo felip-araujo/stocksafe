@@ -1,5 +1,7 @@
 import { useState } from "react";
 import api from "@/services/api/api";
+import toast from "react-hot-toast";
+import type { AxiosError } from "axios";
 
 export function CreateUser({ onCreated }: { onCreated?: () => void }) {
   const companyId = Number(localStorage.getItem("companyId"));
@@ -29,14 +31,17 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
     try {
       // Inclui companyId no corpo
       const res = await api.post(`/user`, { ...formData, companyId });
-      alert("Usuário criado com sucesso!");
+
+      toast.success("Usuário criado com sucesso!");
       console.log(res);
       setIsOpen(false);
       setFormData({ name: "", email: "", password: "", role: "EMPLOYEE" });
       if (onCreated) onCreated(); // callback p/ atualizar lista de usuários
     } catch (err) {
-      console.error("Erro ao criar usuário:", err);
-      alert("Erro ao criar usuário");
+      const error = err as AxiosError<{ message: string }>;
+      const mensagem = error.response?.data?.message || "Erro inesperado";
+      console.error(mensagem);
+      toast.error(mensagem);
     }
   };
 
@@ -55,7 +60,10 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
             <h2 className="text-xl font-bold mb-4">Criar Usuário</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-1"
+                >
                   Nome
                 </label>
                 <input
@@ -68,7 +76,10 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium mb-1"
+                >
                   Email
                 </label>
                 <input
@@ -81,7 +92,10 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium mb-1"
+                >
                   Senha
                 </label>
                 <input
@@ -94,7 +108,10 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
                 />
               </div>
               <div>
-                <label htmlFor="role" className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="role"
+                  className="block text-sm font-medium mb-1"
+                >
                   Função
                 </label>
                 <select
@@ -104,7 +121,9 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="EMPLOYEE">Funcionário</option>
-                  <option value="COMPANY_ADMIN">Administrador da Empresa</option>  
+                  <option value="COMPANY_ADMIN">
+                    Administrador da Empresa
+                  </option>
                 </select>
               </div>
 
