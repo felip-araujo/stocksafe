@@ -1,6 +1,7 @@
 import api from "@/services/api/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export function CancelarAssinatura() {
   const navigate = useNavigate();
@@ -18,12 +19,12 @@ export function CancelarAssinatura() {
     e.preventDefault();
 
     if (!motivo.trim()) {
-      alert("Por favor, descreva o motivo do cancelamento.");
+      toast("Por favor, descreva o motivo do cancelamento.");
       return;
     }
 
     if (!userId || !companyId) {
-      alert("Erro: informações do usuário não encontradas.");
+      toast("Erro: informações do usuário não encontradas.");
       return;
     }
 
@@ -36,14 +37,20 @@ export function CancelarAssinatura() {
         motivo,
       });
 
-      // 2️⃣ Cancela a assinatura no Stripe
-      await api.post(`/subscription/${companyId}/cancel`);
+      // 2️⃣ Cancela a assinatura no Stripe e recebe mensagem do servidor
+      const response = await api.post(`/subscription/${companyId}/cancel`);
 
-      alert("Assinatura cancelada com sucesso.");
+      // 3️⃣ Exibe a mensagem personalizada vinda do backend
+      if (response?.data?.message) {
+        toast.success(response.data.message);
+      } else {
+        toast.success("Assinatura cancelada com sucesso.");
+      }
+
       navigate("/assinatura/necessaria");
     } catch (error) {
       console.error("Erro ao cancelar assinatura:", error);
-      alert("Ocorreu um erro ao cancelar a assinatura. Tente novamente.");
+      toast.error("Ocorreu um erro ao cancelar a assinatura. Tente novamente.");
     } finally {
       setLoading(false);
     }
