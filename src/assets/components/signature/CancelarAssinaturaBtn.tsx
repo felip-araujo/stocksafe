@@ -1,10 +1,9 @@
 import api from "@/services/api/api";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import toast from "react-hot-toast";
 
 export function CancelarAssinatura() {
-  const navigate = useNavigate();
   const userId = localStorage.getItem("id");
   const companyId = localStorage.getItem("companyId");
   const [showForm, setShowForm] = useState(false);
@@ -43,11 +42,10 @@ export function CancelarAssinatura() {
       // 3️⃣ Exibe a mensagem personalizada vinda do backend
       if (response?.data?.message) {
         toast.success(response.data.message);
+        localStorage.setItem("dataCancel", response.data.message)
       } else {
         toast.success("Assinatura cancelada com sucesso.");
       }
-
-      navigate("/assinatura/necessaria");
     } catch (error) {
       console.error("Erro ao cancelar assinatura:", error);
       toast.error("Ocorreu um erro ao cancelar a assinatura. Tente novamente.");
@@ -72,7 +70,8 @@ export function CancelarAssinatura() {
               Cancelar assinatura
             </h2>
             <p className="text-sm text-zinc-600 mb-4">
-              Antes de prosseguir, conte-nos brevemente o motivo do cancelamento.
+              Antes de prosseguir, conte-nos brevemente o motivo do
+              cancelamento.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
