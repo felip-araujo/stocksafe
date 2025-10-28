@@ -33,7 +33,7 @@ export function Contato() {
       const res = await api.post("/contato", body);
 
       if (res.status === 200 || res.status === 201) {
-        toast.success("✅ Sua mensagem foi enviada com sucesso!");
+        toast.success("Mensagem enviada! Em breve entraremos em contato");
         setFormData({ nome: "", email: "", telefone: "", mensagem: "" });
       } else {
         toast.error("❌ Ocorreu um erro ao enviar sua mensagem.");
@@ -52,14 +52,7 @@ export function Contato() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           {/* Coluna esquerda: Título + Subtítulo */}
           <div className="flex flex-col justify-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4 text-center">
-              Vamos conversar?
-            </h2>
-            <p className="text-gray-600 text-lg text-center">
-              Preencha o formulário nossa equipe entrará em contato para
-              entender suas necessidades e apresentar uma demonstração do nosso
-              sistema.
-            </p>
+            
             <img src="images/mockup-app.png" alt="Dashboard sistema Stock Seguro" 
             className=""/>
           </div>
@@ -102,7 +95,7 @@ export function Contato() {
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">
-                  Telefone
+                  Whatsapp
                 </label>
                 <input
                   type="tel"
@@ -134,7 +127,7 @@ export function Contato() {
                 disabled={status === "loading"}
                 className="w-full bg-blue-600 text-white font-bold rounded-xl py-3 hover:bg-blue-700 transition-all duration-300 disabled:opacity-50"
               >
-                {status === "loading" ? "Enviando..." : "Enviar mensagem"}
+                {status === "loading" ? "Enviando..." : "Enviar"}
               </button>
             </div>
           </form>
