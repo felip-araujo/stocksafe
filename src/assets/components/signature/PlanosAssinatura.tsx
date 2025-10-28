@@ -20,7 +20,7 @@ export function SubscriptionPlans() {
       id: "basic",
       name: "Plano Básico",
       price: "R$ 79,90/mês",
-      description: "Ideal para pequenas equipes que estão começando.",
+      description: "Ideal para gerenciar o almoxarifado, registrar requisições e automatizar o dia a dia.",
       priceId: "price_1SAy2LKKzmjTKU738zEEFmhd",
       features: [
         "Até 10 usuários",
@@ -34,15 +34,15 @@ export function SubscriptionPlans() {
       id: "gold",
       name: "Plano Ouro",
       price: "R$ 119,90/mês",
-      description: "Para empresas que precisam de mais controle e recursos.",
+      description: "Usuários ilimitados, com controle de vendas, estoque e valores em tempo real.",
       priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",
       features: [
         "Usuários ilimitados",
         "Atendimento técnico via chat",
         "Acesso ao painel de Materiais",
         "Acesso ao painel de Requisições",
-        "Acesso ao painel de vendas",
-        "Acesso ao painel de produtos",
+        "Acesso ao painel de Vendas",
+        "Acesso ao painel de Produtos",
       ],
     },
   ];
