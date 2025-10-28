@@ -1,6 +1,6 @@
 import { PackagePlus } from "lucide-react";
 
-export function LogoNome() {
+export function LogoNomeBranco() {
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
       {/* Ícone */}
@@ -12,7 +12,7 @@ export function LogoNome() {
 
       {/* Texto */}
       <a href="/" className="text-center sm:text-left">
-        <p className="text-zinc-900 text-base sm:text-lg font-normal tracking-tight">
+        <p className="text-white text-base sm:text-lg font-ligth tracking-tight">
           StockSeguro
         </p>
       </a>
