@@ -5,31 +5,48 @@ import { useNavigate } from "react-router-dom";
 export function CancelarAssinatura() {
   const navigate = useNavigate();
   const userId = localStorage.getItem("id");
+  const companyId = localStorage.getItem("companyId");
   const [showForm, setShowForm] = useState(false);
   const [motivo, setMotivo] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleCancelClick = () => {
     setShowForm(true);
   };
 
-  const handleSubmit = (e:  React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (motivo.trim() === "") {
+    if (!motivo.trim()) {
       alert("Por favor, descreva o motivo do cancelamento.");
       return;
     }
 
-    console.log("Motivo do cancelamento:", motivo);
+    if (!userId || !companyId) {
+      alert("Erro: informações do usuário não encontradas.");
+      return;
+    }
 
-    api.post("/cancelar", {
-      userId,
-      motivo,
-    });
-    // Aqui você pode enviar o motivo para o servidor se desejar:
-    // await fetch("/api/cancelar", { method: "POST", body: JSON.stringify({ motivo }) });
+    try {
+      setLoading(true);
 
-    navigate("/assinatura/necessaria");
+      // 1️⃣ Salva o motivo do cancelamento
+      await api.post("/cancelar", {
+        userId,
+        motivo,
+      });
+
+      // 2️⃣ Cancela a assinatura no Stripe
+      await api.post(`/subscription/${companyId}/cancel`);
+
+      alert("Assinatura cancelada com sucesso.");
+      navigate("/assinatura/necessaria");
+    } catch (error) {
+      console.error("Erro ao cancelar assinatura:", error);
+      alert("Ocorreu um erro ao cancelar a assinatura. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -48,9 +65,9 @@ export function CancelarAssinatura() {
               Cancelar assinatura
             </h2>
             <p className="text-sm text-zinc-600 mb-4">
-              Antes de prosseguir, conte-nos brevemente o motivo do
-              cancelamento.
+              Antes de prosseguir, conte-nos brevemente o motivo do cancelamento.
             </p>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <textarea
                 value={motivo}
@@ -63,15 +80,22 @@ export function CancelarAssinatura() {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
+                  disabled={loading}
                   className="px-4 py-2 text-sm text-zinc-600 hover:text-zinc-800"
                 >
                   Voltar
                 </button>
+
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-destructive text-white text-sm rounded-md hover:bg-red-600"
+                  disabled={loading}
+                  className={`px-4 py-2 text-sm rounded-md text-white ${
+                    loading
+                      ? "bg-zinc-400 cursor-not-allowed"
+                      : "bg-destructive hover:bg-red-600"
+                  }`}
                 >
-                  Confirmar Cancelamento
+                  {loading ? "Cancelando..." : "Confirmar Cancelamento"}
                 </button>
               </div>
             </form>
