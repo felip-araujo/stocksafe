@@ -35,7 +35,7 @@ export function LinkGenerate() {
       {/* ✅ Botão principal com ícone alinhado */}
       <button
         onClick={genLink}
-        className="flex items-center gap-2 mt-15 md:mt-5 ml-2 bg-blue-600 p-2 rounded mb-4 text-white font-medium hover:bg-blue-700 transition"
+        className="flex items-center gap-2 mt-5 md:mt-5 ml-2 bg-blue-600 p-2 rounded mb-4 text-white font-medium hover:bg-blue-700 transition"
       >
         <LinkIcon className="w-4 h-4" />
         Link de Cadastro

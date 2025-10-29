@@ -117,7 +117,7 @@ export function DashboardCompany() {
   const premiumCards = ["Produtos", "Valor total em estoque", "Valor total em Vendas"];
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
+    <div className="mt-15 md:mt-0 flex flex-col md:flex-row min-h-screen bg-gray-50">
       <SidebarDash />
       <main className="flex-1 p-4 md:p-6">
 

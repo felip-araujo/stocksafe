@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import api from "@/services/api/api";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { LogoNome } from "../logo/Logo&Nome";
 
 type FormState = {
   name: string;
@@ -11,16 +13,25 @@ type FormState = {
 };
 
 export function RegisterInvite(): JSX.Element {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const inviteToken = searchParams.get("invite");
 
-  const [form, setForm] = useState<FormState>({ name: "", email: "", password: "" });
-  const [passwordStrength, setPasswordStrength] = useState<"Fraca" | "Média" | "Forte" | "">("");
+  const [form, setForm] = useState<FormState>({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [passwordStrength, setPasswordStrength] = useState<
+    "Fraca" | "Média" | "Forte" | ""
+  >("");
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // === Avalia força da senha (tipada) ===
-  const checkPasswordStrength = (password: string): "Fraca" | "Média" | "Forte" | "" => {
+  const checkPasswordStrength = (
+    password: string
+  ): "Fraca" | "Média" | "Forte" | "" => {
     if (!password) return "";
     let strength = 0;
     if (password.length >= 8) strength++;
@@ -53,16 +64,22 @@ export function RegisterInvite(): JSX.Element {
 
     try {
       setLoading(true);
-      const response = await api.post("/register", {
+      await api.post("/register", {
         name: form.name,
         email: form.email,
         password: form.password,
         inviteToken,
       });
 
-      toast.success(response.data?.message ?? "Usuário registrado com sucesso!");
+      toast.success(
+        "Cadastro concluído com sucesso! Faça login para continuar."
+      );
+
       setForm({ name: "", email: "", password: "" });
       setPasswordStrength("");
+      setTimeout(() => {
+        navigate("/auth");
+      }, 3000);
     } catch (err: unknown) {
       // tratamento seguro do erro
       const message =
@@ -80,12 +97,18 @@ export function RegisterInvite(): JSX.Element {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
       <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-2 text-center">Criar Conta</h1>
-        <p className="text-gray-500 text-center mb-6">Complete os campos abaixo para finalizar o cadastro.</p>
+        <LogoNome />
+
+        <p className="text-gray-500 text-center mb-6">
+          Para criar sua conta e acessar todos os recursos, preencha
+          os campos abaixo com suas informações.
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Nome completo</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Nome completo
+            </label>
             <input
               type="text"
               name="name"
@@ -98,7 +121,9 @@ export function RegisterInvite(): JSX.Element {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">E-mail</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              E-mail
+            </label>
             <input
               type="email"
               name="email"
@@ -111,7 +136,9 @@ export function RegisterInvite(): JSX.Element {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Senha</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Senha
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -129,7 +156,11 @@ export function RegisterInvite(): JSX.Element {
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-gray-700"
                 aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
 
@@ -150,12 +181,30 @@ export function RegisterInvite(): JSX.Element {
 
                 {/* dica visual com requisitos */}
                 <ul className="mt-2 text-xs text-gray-500 space-y-1">
-                  <li className={form.password.length >= 8 ? "text-gray-700" : ""}>
+                  <li
+                    className={form.password.length >= 8 ? "text-gray-700" : ""}
+                  >
                     • Mínimo 8 caracteres
                   </li>
-                  <li className={/[A-Z]/.test(form.password) ? "text-gray-700" : ""}>• Uma letra maiúscula</li>
-                  <li className={/[0-9]/.test(form.password) ? "text-gray-700" : ""}>• Pelo menos um número</li>
-                  <li className={/[^A-Za-z0-9]/.test(form.password) ? "text-gray-700" : ""}>
+                  <li
+                    className={
+                      /[A-Z]/.test(form.password) ? "text-gray-700" : ""
+                    }
+                  >
+                    • Uma letra maiúscula
+                  </li>
+                  <li
+                    className={
+                      /[0-9]/.test(form.password) ? "text-gray-700" : ""
+                    }
+                  >
+                    • Pelo menos um número
+                  </li>
+                  <li
+                    className={
+                      /[^A-Za-z0-9]/.test(form.password) ? "text-gray-700" : ""
+                    }
+                  >
                     • Um caractere especial (ex: !@#$%)
                   </li>
                 </ul>
@@ -170,6 +219,23 @@ export function RegisterInvite(): JSX.Element {
           >
             {loading ? "Cadastrando..." : "Cadastrar"}
           </button>
+          <p className="text-sm mt-4 text-gray-400 text-center">
+              Ao se cadastrar, você concorda com os {" "}
+              <a
+                href="/termos-de-uso"
+                className="font-semibold text-gray-600 hover:text-gray-700 underline transition-colors"
+              >
+                Termos de Uso
+              </a>
+              , e{" "}
+              <a
+                href="/politica"
+                className="font-semibold text-gray-600 hover:text-gray-700 underline transition-colors"
+              >
+                Políticas de Privacidade
+              </a>
+              .
+            </p>
         </form>
       </div>
     </div>

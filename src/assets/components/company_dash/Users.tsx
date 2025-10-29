@@ -93,7 +93,7 @@ export function UsuariosCompany() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
-      <div className="flex-1 p-4 md:p-6 bg-gray-50">
+      <div className="mt-10 md:mt-0 flex-1 p-4 md:p-6 bg-gray-50">
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <CreateUser onCreated={() => fetchUsuarios(page)} />
           <LinkGenerate />

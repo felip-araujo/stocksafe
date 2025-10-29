@@ -309,7 +309,7 @@ export function RequestsCompany() {
             </div>
           </>
         ) : (
-          <p className="text-gray-600 mt-4">Nenhuma requisição encontrada.</p>
+          <p className="text-gray-600 mt-15 md:mt-4">Nenhuma requisição encontrada.</p>
         )}
       </div>
     </div>
