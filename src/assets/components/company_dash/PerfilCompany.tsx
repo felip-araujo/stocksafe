@@ -6,6 +6,7 @@ import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 import { UpgradePlan } from "../signature/FazerUpgrade";
 import { CancelarAssinatura } from "../signature/CancelarAssinaturaBtn";
+import { Bolt } from "lucide-react";
 
 interface UserData {
   id: number;
@@ -68,7 +69,9 @@ export function PerfilCompany() {
       <SidebarDash />
       <div className="flex-1 p-4 md:p-8">
         <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-          Meu Perfil
+          
+        <a href=""><Bolt size={36} className="text-blue-900 mb-5"/>  </a>
+ 
         </h1>
 
         {userData ? (

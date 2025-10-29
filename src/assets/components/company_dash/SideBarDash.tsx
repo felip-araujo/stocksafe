@@ -28,7 +28,6 @@ export function SidebarDash() {
   const [isOpen, setIsOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 🔹 Rotas exclusivas do plano GOLD
   const goldFeatures = ["/sales", "/produtos", "/sales/user"];
 
   let navItems = [
@@ -47,13 +46,11 @@ export function SidebarDash() {
 
   if (role === "EMPLOYEE") {
     navItems = [
-      
       {
         to: "/user-request",
         label: "Requisições",
         icon: <NotebookPen size={20} />,
       },
-
       { to: "/material", label: "Material Consumo", icon: <Store size={20} /> },
       {
         to: "/produtos",
@@ -67,21 +64,26 @@ export function SidebarDash() {
 
   return (
     <>
-      {/* Botão mobile fixo */}
-      <button
-        onClick={() => setIsMobileMenuOpen(true)}
-        className="md:hidden fixed top-6 right-6 z-50 bg-gray-900 p-2 rounded-lg text-gray-100"
-      >
-        <Menu size={22} />
-      </button>
+      {/* 🔹 Faixa superior no mobile */}
+      <div className="md:hidden fixed top-0 left-0 w-full z-40 bg-gray-900 text-gray-100 flex items-center justify-between px-4 py-3 shadow-md">
+        <span className="font-semibold">{companyName}</span>
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="p-2 rounded-lg hover:bg-gray-800 transition"
+        >
+          <Menu size={22} />
+        </button>
+      </div>
 
+      {/* 🔹 Fundo escuro quando menu mobile aberto */}
       {isMobileMenuOpen && (
         <div
           onClick={() => setIsMobileMenuOpen(false)}
-          className="fixed inset-0 bg-black/40 bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
         />
       )}
 
+      {/* 🔹 Sidebar */}
       <aside
         className={`fixed md:static top-0 left-0 z-50 bg-gray-900 text-gray-100 flex flex-col shadow-lg transition-all duration-300
         ${isOpen ? "w-64" : "w-20"}
@@ -93,7 +95,7 @@ export function SidebarDash() {
         min-h-screen
       `}
       >
-        {/* Header */}
+        {/* Header interno */}
         <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700">
           {isOpen && <span className="text-lg font-bold">{companyName}</span>}
           <div className="flex items-center gap-2">
@@ -117,7 +119,7 @@ export function SidebarDash() {
           </div>
         </div>
 
-        {/* Menu */}
+        {/* Menu principal */}
         <nav className="flex flex-col h-full px-2 py-4 space-y-2 overflow-y-auto">
           {navItems.map((item) => {
             const isGoldFeature = goldFeatures.includes(item.to);
@@ -141,8 +143,6 @@ export function SidebarDash() {
                         <Lock size={14} className="opacity-70" />
                       </span>
                     )}
-
-                    {/* Tooltip corrigido */}
                     <div className="fixed left-[calc(100%+8px)] top-1/2 -translate-y-1/2 hidden group-hover:flex bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-[9999] pointer-events-none">
                       Recurso exclusivo do plano Gold
                     </div>
@@ -181,3 +181,4 @@ export function SidebarDash() {
     </>
   );
 }
+

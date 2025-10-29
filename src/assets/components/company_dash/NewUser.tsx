@@ -49,7 +49,7 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-green-600 p-2 rounded mb-4 text-white font-medium"
+        className="mt-5 md:mt-5 bg-green-600 p-2 rounded mb-4 text-white font-medium"
       >
         Criar Usuário
       </button>

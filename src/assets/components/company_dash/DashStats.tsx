@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
-import { ArrowUp, ArrowDown, Minus, LockIcon } from "lucide-react";
+import { ArrowUp, ArrowDown, Minus, LockIcon, LayoutTemplate } from "lucide-react";
 
 export interface DashboardStats {
   totalUsers: number;
@@ -15,7 +15,7 @@ export interface DashboardStats {
 
 export function DashboardCompany() {
   const companyId = localStorage.getItem("companyId");
-  const plan = localStorage.getItem("plano"); // Plano do usuário
+  const plan = localStorage.getItem("plano");
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
   const [totalValue, setTotalValue] = useState<number | null>(null);
@@ -64,18 +64,54 @@ export function DashboardCompany() {
   // 🔹 Determina status das vendas
   const getSalesStatus = () => {
     if (totalValue === null || totalPrice === null) {
-      return { bg: "bg-yellow-300", textColor: "text-black", icon: <Minus className="w-5 h-5" />, label: "Carregando..." };
+      return {
+        bg: "bg-yellow-300",
+        textColor: "text-black",
+        icon: <Minus className="w-5 h-5" />,
+        label: "Carregando...",
+      };
     }
     if (totalValue > totalPrice) {
-      return { bg: "bg-green-600", textColor: "text-white", icon: <ArrowUp className="w-5 h-5 text-white" />, label: "Lucro" };
+      return {
+        bg: "bg-green-600",
+        textColor: "text-white",
+        icon: <ArrowUp className="w-5 h-5 text-white" />,
+        label: "Lucro",
+      };
     }
     if (totalValue < totalPrice) {
-      return { bg: "bg-red-500", textColor: "text-white", icon: <ArrowDown className="w-5 h-5 text-white" />, label: "Abaixo do esperado" };
+      return {
+        bg: "bg-red-500",
+        textColor: "text-white",
+        icon: <ArrowDown className="w-5 h-5 text-white" />,
+        label: "Abaixo do esperado",
+      };
     }
-    return { bg: "bg-yellow-300", textColor: "text-black", icon: <Minus className="w-5 h-5" />, label: "Equilibrado" };
+    return {
+      bg: "bg-yellow-300",
+      textColor: "text-black",
+      icon: <Minus className="w-5 h-5" />,
+      label: "Equilibrado",
+    };
   };
 
   const salesStatus = getSalesStatus();
+
+  // 🔹 Define a cor do card de requisições pendentes
+  const getPendingStatus = () => {
+    if ((stats?.pendingRequests ?? 0) >= 1) {
+      return {
+        bg: "bg-yellow-500",
+        textColor: "text-black",
+      };
+    }
+    return {
+      bg: "bg-white",
+      textColor: "text-gray-800",
+    };
+  };
+
+  const pendingStatus = getPendingStatus();
 
   // 🔹 Cards premium (apenas para Gold)
   const premiumCards = ["Produtos", "Valor total em estoque", "Valor total em Vendas"];
@@ -84,20 +120,41 @@ export function DashboardCompany() {
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       <SidebarDash />
       <main className="flex-1 p-4 md:p-6">
-        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <LayoutTemplate size={36} className="text-blue-900 mb-5" />
 
         {loading ? (
           <p>Carregando...</p>
         ) : stats ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { label: "Colaboradores", value: stats.totalUsers },
+              {
+                label: "Valor total em Vendas",
+                value:
+                  totalValue !== null
+                    ? totalValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+                    : "—",
+                bg: salesStatus.bg,
+                textColor: salesStatus.textColor,
+                icon: salesStatus.icon,
+                labelStatus: salesStatus.label,
+              },
+              {
+                label: "Valor total em estoque",
+                value:
+                  totalPrice !== null
+                    ? totalPrice.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+                    : "—",
+                highlight: "text-blue-900",
+              },
+              {
+                label: "Requisições Pendentes",
+                value: stats.pendingRequests ?? 0,
+                bg: pendingStatus.bg,
+                textColor: pendingStatus.textColor,
+              },
               { label: "Produtos", value: stats.totalProducts },
+              { label: "Colaboradores", value: stats.totalUsers },
               { label: "Materiais", value: stats.totalMaterial },
-              { label: "Total de Requisições", value: stats.totalRequests },
-              { label: "Valor total em estoque", value: totalPrice !== null ? totalPrice.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "—", highlight: "text-blue-900" },
-              { label: "Requisições Pendentes", value: stats.pendingRequests === 0 ? "Nenhuma" : stats.pendingRequests },
-              { label: "Valor total em Vendas", value: totalValue !== null ? totalValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "—", bg: salesStatus.bg, textColor: salesStatus.textColor, icon: salesStatus.icon, labelStatus: salesStatus.label },
             ].map((card, index) => {
               const isPremium = premiumCards.includes(card.label);
               const isLocked = plan === "basic" && isPremium;
@@ -111,13 +168,25 @@ export function DashboardCompany() {
                     transition-all duration-300`}
                   title={isLocked ? "Recurso exclusivo do plano Gold" : ""}
                 >
-                  <h2 className={`text-lg font-semibold mb-2 ${card.textColor || ""}`}>{card.label}</h2>
+                  <h2 className={`text-lg font-semibold mb-2 ${card.textColor || ""}`}>
+                    {card.label}
+                  </h2>
                   <div className="flex items-center space-x-2">
-                    <p className={`text-3xl font-bold ${card.highlight || card.textColor || ""}`}>{card.value}</p>
+                    <p className={`text-3xl font-bold ${card.textColor || card.highlight || ""}`}>
+                      {card.value}
+                    </p>
                     {card.icon && !isLocked && card.icon}
                   </div>
-                  {card.labelStatus && !isLocked && <p className={`mt-1 text-sm font-medium ${card.textColor}`}>{card.labelStatus}</p>}
-                  {isLocked && <span className="absolute top-1 right-2 text-gray-200"><LockIcon></LockIcon></span>}
+                  {card.labelStatus && !isLocked && (
+                    <p className={`mt-1 text-sm font-medium ${card.textColor}`}>
+                      {card.labelStatus}
+                    </p>
+                  )}
+                  {isLocked && (
+                    <span className="absolute top-1 right-2 text-gray-200">
+                      <LockIcon />
+                    </span>
+                  )}
                 </div>
               );
             })}

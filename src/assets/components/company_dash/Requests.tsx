@@ -105,9 +105,7 @@ export function RequestsCompany() {
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-6 bg-gray-50">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Requisições de Materiais
-        </h2>
+  
 
         {requests.length > 0 ? (
           <>

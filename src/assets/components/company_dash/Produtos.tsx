@@ -6,6 +6,7 @@ import { CreateProduct } from "./NewProduct";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
+import { formatCurrency } from "@/services/hooks/AuxFunctions";
 
 interface Produto {
   id: number;
@@ -217,7 +218,8 @@ export function ProdutosCompany() {
                         {role === "EMPLOYEE" && <p>{produto.codigo}</p>}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
-                        R$ {produto.price.toFixed(2)}
+                        {formatCurrency(produto.price)}
+                        
                       </td>
 
                       <td className="p-3 text-sm text-gray-600 flex items-center gap-2">

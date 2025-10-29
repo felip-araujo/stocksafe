@@ -94,9 +94,7 @@ export function UsuariosCompany() {
       <SidebarDash />
 
       <div className="flex-1 p-4 md:p-6 bg-gray-50">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Usuários da Empresa
-        </h2>
+        
         <CreateUser onCreated={() => fetchUsuarios(page)} />
 
         {usuarios.length > 0 ? (

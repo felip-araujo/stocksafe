@@ -2,6 +2,10 @@ import { SidebarDash } from "./SideBarDash";
 import { usePaginatedFetch } from "@/services/hooks/usePaginatedFetch";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import { CreateSale } from "./NewSale";
+import { formatPhone } from "@/services/hooks/AuxFunctions";
+import { whatsappLink } from "@/services/hooks/AuxFunctions";
+import { formatCpf } from "@/services/hooks/AuxFunctions";
+import { formatCurrency } from "@/services/hooks/AuxFunctions";
 
 interface Sale {
   id: number;
@@ -20,6 +24,7 @@ interface Sale {
   };
 }
 
+// 🧠 Funções auxiliares
 export function UserSales() {
   useRequireSubscription();
 
@@ -62,13 +67,19 @@ export function UserSales() {
                       Produto
                     </th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Cliente
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      CPF
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Telefone
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Quantidade
                     </th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Total
-                    </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
-                      Cliente
                     </th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Data
@@ -82,14 +93,27 @@ export function UserSales() {
                       <td className="p-3 text-sm font-medium text-gray-800">
                         {sale.product?.name || "—"}
                       </td>
+                      <td className="p-3 text-sm text-gray-700">
+                        {sale.buyerName}
+                      </td>
+                      <td className="p-3 text-sm text-gray-600">
+                        {formatCpf(sale.buyerCpfCnpj)}
+                      </td>
+                      <td className="p-3 text-sm text-gray-700">
+                        <a
+                          href={whatsappLink(sale.buyerPhone)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 hover:underline"
+                        >
+                          {formatPhone(sale.buyerPhone)}
+                        </a>
+                      </td>
                       <td className="p-3 text-sm text-gray-600">
                         {sale.quantity}
                       </td>
                       <td className="p-3 text-sm font-semibold text-gray-800">
-                        R$ {sale.totalPrice?.toFixed(2)}
-                      </td>
-                      <td className="p-3 text-sm text-gray-700">
-                        {sale.buyerName}
+                        {formatCurrency(sale.totalPrice)}
                       </td>
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(sale.createdAt).toLocaleDateString("pt-BR")}
@@ -107,7 +131,7 @@ export function UserSales() {
                   key={sale.id}
                   className="bg-white rounded-lg shadow p-4 border border-gray-200"
                 >
-                  <p className="font-semibold text-gray-800">
+                  <p className="font-semibold text-gray-800 mb-1">
                     {sale.product?.name || "—"}
                   </p>
                   <p className="text-sm text-gray-700 mb-1">
@@ -115,12 +139,27 @@ export function UserSales() {
                     {sale.buyerName}
                   </p>
                   <p className="text-sm text-gray-700 mb-1">
+                    <span className="font-medium">CPF:</span>{" "}
+                    {formatCpf(sale.buyerCpfCnpj)}
+                  </p>
+                  <p className="text-sm text-gray-700 mb-1">
+                    <span className="font-medium">Telefone:</span>{" "}
+                    <a
+                      href={whatsappLink(sale.buyerPhone)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 hover:underline"
+                    >
+                      {formatPhone(sale.buyerPhone)}
+                    </a>
+                  </p>
+                  <p className="text-sm text-gray-700 mb-1">
                     <span className="font-medium">Quantidade:</span>{" "}
                     {sale.quantity}
                   </p>
                   <p className="text-sm text-gray-700 mb-1">
-                    <span className="font-medium">Total:</span> R${" "}
-                    {sale.totalPrice?.toFixed(2)}
+                    <span className="font-medium">Total:</span>{" "}
+                    {formatCurrency(sale.totalPrice)}
                   </p>
                   <p className="text-sm text-gray-700">
                     <span className="font-medium">Data:</span>{" "}

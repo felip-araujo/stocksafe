@@ -54,7 +54,7 @@ export function CreateProduct({ onCreated }: { onCreated?: () => void }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-green-600 p-2 rounded mb-4 text-white font-medium"
+        className="mt-15 md:mt-5 bg-green-600 p-2 rounded mb-4 text-white font-medium"
       >
         Novo Produto
       </button>
