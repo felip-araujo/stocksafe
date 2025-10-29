@@ -41,8 +41,9 @@ export function CancelarAssinatura() {
 
       // 3️⃣ Exibe a mensagem personalizada vinda do backend
       if (response?.data?.message) {
-        toast.success(response.data.message);
-        localStorage.setItem("dataCancel", response.data.message)
+        // toast.success(response.data.message);
+        toast.success("Assinatura cancelada com sucesso!");
+        localStorage.setItem("dataCancel", response.data.message);
       } else {
         toast.success("Assinatura cancelada com sucesso.");
       }
