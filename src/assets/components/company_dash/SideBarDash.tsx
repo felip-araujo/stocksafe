@@ -151,9 +151,9 @@ export function SidebarDash() {
                   <NavLink
                     to={item.to}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 w-full py-2 rounded-lg transition-colors ${
+                      `flex items-center gap-3 w-full py-2 rounded-sm transition-colors ${
                         isActive
-                          ? "bg-gray-800 text-blue-400"
+                          ? " text-blue-300"
                           : "hover:bg-gray-800 hover:text-blue-300"
                       }`
                     }
