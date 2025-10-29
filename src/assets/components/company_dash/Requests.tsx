@@ -3,6 +3,7 @@ import { useAuthGuard } from "@/services/hooks/validator";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
+import toast from "react-hot-toast";
 
 interface Request {
   id: number;
@@ -27,7 +28,7 @@ interface Request {
 
 export function RequestsCompany() {
   useAuthGuard(["COMPANY_ADMIN"]);
-  useRequireSubscription()
+  useRequireSubscription();
 
   const companyId = localStorage.getItem("companyId");
   const [requests, setRequests] = useState<Request[]>([]);
@@ -85,11 +86,13 @@ export function RequestsCompany() {
 
     try {
       await api.put(`/requisicao/${companyId}/${id}`, { status: newStatus });
-      alert("Status atualizado com sucesso!");
+      
+      toast.success("Status atualizado com sucesso!")
       fetchRequests(page);
     } catch (err) {
       console.error("Erro ao atualizar status:", err);
-      alert("Erro ao atualizar status");
+      
+      toast.error("Erro ao atualizar status")
     }
   };
 
@@ -105,8 +108,6 @@ export function RequestsCompany() {
     <div className="flex min-h-screen">
       <SidebarDash />
       <div className="flex-1 p-6 bg-gray-50">
-  
-
         {requests.length > 0 ? (
           <>
             {/* Desktop Table */}
@@ -138,14 +139,28 @@ export function RequestsCompany() {
                   {requests.map((req) => (
                     <tr key={req.id} className="border-b hover:bg-gray-50">
                       <td className="p-3 text-sm font-medium text-gray-800">
-                        {req.items.map((item) => item.material.name).join(", ")}
+                        {/* ✅ Container rolável para muitos materiais */}
+                        <div className="max-h-24 overflow-y-auto custom-scrollbar">
+                          {req.items.map((item) => (
+                            <div key={item.id}>{item.material.name}</div>
+                          ))}
+                        </div>
                       </td>
+
                       <td className="p-3 text-sm text-gray-600">
                         {req.user.name}
                       </td>
+
                       <td className="p-3 text-sm text-gray-600">
-                        {req.items.map((item) => `${item.material.name}: ${item.quantity}`).join(", ")}
+                        <div className="max-h-24 overflow-y-auto custom-scrollbar">
+                          {req.items.map((item) => (
+                            <div key={item.id}>
+                              {item.material.name}: {item.quantity}
+                            </div>
+                          ))}
+                        </div>
                       </td>
+
                       <td className="p-3 text-sm text-gray-600">
                         <select
                           value={statusChanges[req.id] || req.status}
@@ -165,9 +180,11 @@ export function RequestsCompany() {
                           <option value="rejected">Rejeitado</option>
                         </select>
                       </td>
+
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(req.createdAt).toLocaleDateString("pt-BR")}
                       </td>
+
                       <td className="p-3 text-center">
                         <button
                           onClick={() => handleExclude(req.id)}
@@ -225,7 +242,9 @@ export function RequestsCompany() {
                     <span className="font-medium text-gray-700">
                       Quantidade:
                     </span>{" "}
-                    {req.items.map((item) => `${item.material.name}: ${item.quantity}`).join(", ")}
+                    {req.items
+                      .map((item) => `${item.material.name}: ${item.quantity}`)
+                      .join(", ")}
                   </p>
                   <p className="text-sm text-gray-600 mb-2">
                     <span className="font-medium text-gray-700">

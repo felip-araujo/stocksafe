@@ -37,7 +37,7 @@ export function LoginPage() {
       const funcao = res.data.user.role;
       if (funcao === "SUPER_ADMIN") navigate("/superdash");
       if (funcao === "COMPANY_ADMIN") navigate("/dashboard");
-      if (funcao === "EMPLOYEE") navigate("/dash-employee");
+      if (funcao === "EMPLOYEE") navigate("/user-request");
 
       setFormData({ email: "", password: "" });
     } catch (err: unknown) {

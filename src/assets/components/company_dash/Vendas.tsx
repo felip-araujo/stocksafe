@@ -4,6 +4,10 @@ import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import { CreateSale } from "./NewSale";
+import { formatPhone } from "@/services/hooks/AuxFunctions";
+import { whatsappLink } from "@/services/hooks/AuxFunctions";
+import { formatCpf } from "@/services/hooks/AuxFunctions";
+// import { formatCurrency } from "@/services/hooks/AuxFunctions";
 
 interface Venda {
   id: number;
@@ -14,7 +18,7 @@ interface Venda {
   createdAt: string;
   buyerCpfCnpj: string;
   buyerName: string;
-  buyerPhone?: string; // 🔹 Adiciona o telefone retornado pela API
+  buyerPhone?: string;
   product?: {
     name: string;
   };
@@ -49,35 +53,8 @@ export function VendasCompany() {
     fetchVendas(page);
   }, [companyId, page]);
 
-  const handlePrevPage = () => {
-    if (page > 1) setPage(page - 1);
-  };
-
-  const handleNextPage = () => {
-    if (page < totalPages) setPage(page + 1);
-  };
-
-  // 🔹 Função para criar link de WhatsApp
-  const formatPhoneForWhatsapp = (phone: string) => {
-    const cleaned = phone.replace(/\D/g, ""); // remove caracteres não numéricos
-    return `https://wa.me/55${cleaned}`; // adiciona código do Brasil
-  };
-
-  function formatPhoneNumber(phone: string | number): string {
-  const cleaned = String(phone).replace(/\D/g, ""); // remove tudo que não for número
-
-  if (cleaned.length === 11) {
-    // Ex: 11987654321 → (11) 98765-4321
-    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-  } else if (cleaned.length === 10) {
-    // Ex: 1134567890 → (11) 3456-7890
-    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-  } else {
-    // Retorna como está se não for um formato reconhecido
-    return phone.toString();
-  }
-}
-
+  const handlePrevPage = () => page > 1 && setPage(page - 1);
+  const handleNextPage = () => page < totalPages && setPage(page + 1);
 
   return (
     <div className="flex min-h-screen">
@@ -87,7 +64,7 @@ export function VendasCompany() {
 
         {vendas.length > 0 ? (
           <>
-            {/* Tabela Desktop */}
+            {/* ✅ Tabela Desktop */}
             <div className="hidden md:block overflow-x-auto rounded-lg shadow">
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
@@ -111,24 +88,29 @@ export function VendasCompany() {
                       <td className="p-3 text-sm text-gray-700">
                         {venda.user?.name || `Usuário #${venda.userId}`}
                       </td>
+                      <td className="p-3 text-sm text-gray-700">{venda.buyerName}</td>
+
+                      {/* ✅ CPF formatado e parcialmente mascarado */}
                       <td className="p-3 text-sm text-gray-700">
-                        {venda.buyerName || `Usuário #${venda.userId}`}
+                        {venda.buyerCpfCnpj ? formatCpf(venda.buyerCpfCnpj) : "—"}
                       </td>
+
+                      {/* ✅ Telefone com link pro WhatsApp */}
                       <td className="p-3 text-sm text-gray-700">
                         {venda.buyerPhone ? (
                           <a
-                            href={formatPhoneForWhatsapp(venda.buyerPhone)}
+                            href={whatsappLink(venda.buyerPhone)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-green-600 hover:underline font-medium"
                           >
-                            
-                              {formatPhoneNumber(venda.buyerPhone)}
+                            {formatPhone(venda.buyerPhone)}
                           </a>
                         ) : (
                           "—"
                         )}
                       </td>
+
                       <td className="p-3 text-sm text-gray-700">{venda.quantity}</td>
                       <td className="p-3 text-sm text-gray-700 font-medium">
                         {venda.totalPrice.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
@@ -142,40 +124,46 @@ export function VendasCompany() {
               </table>
             </div>
 
-            {/* Layout Mobile */}
+            {/* ✅ Layout Mobile */}
             <div className="block md:hidden space-y-4 mt-4">
               {vendas.map((venda) => (
-                <div
-                  key={venda.id}
-                  className="bg-white rounded-lg shadow p-4 flex flex-col text-sm"
-                >
+                <div key={venda.id} className="bg-white rounded-lg shadow p-4 flex flex-col text-sm">
                   <p><span className="font-semibold text-gray-700">Produto:</span> {venda.product?.name}</p>
                   <p><span className="font-semibold text-gray-700">Vendedor:</span> {venda.user?.name}</p>
                   <p><span className="font-semibold text-gray-700">Comprador:</span> {venda.buyerName}</p>
-                  <p><span className="font-semibold text-gray-700">Comprador:</span> {venda.buyerCpfCnpj}</p>
+                  
+                  {/* ✅ CPF mascarado */}
+                  <p><span className="font-semibold text-gray-700">CPF:</span> {formatCpf(venda.buyerCpfCnpj)}</p>
+
                   <p>
                     <span className="font-semibold text-gray-700">Telefone:</span>{" "}
                     {venda.buyerPhone ? (
                       <a
-                        href={formatPhoneForWhatsapp(venda.buyerPhone)}
+                        href={whatsappLink(venda.buyerPhone)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-green-600 hover:underline font-medium"
                       >
-                        {venda.buyerPhone}
+                        {formatPhone(venda.buyerPhone)}
                       </a>
                     ) : (
                       "—"
                     )}
                   </p>
                   <p><span className="font-semibold text-gray-700">Qtd:</span> {venda.quantity}</p>
-                  <p><span className="font-semibold text-gray-700">Total:</span> R$ {venda.totalPrice.toFixed(2)}</p>
-                  <p><span className="font-semibold text-gray-700">Data:</span> {new Date(venda.createdAt).toLocaleDateString("pt-BR")}</p>
+                  <p>
+                    <span className="font-semibold text-gray-700">Total:</span>{" "}
+                    {venda.totalPrice.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-gray-700">Data:</span>{" "}
+                    {new Date(venda.createdAt).toLocaleDateString("pt-BR")}
+                  </p>
                 </div>
               ))}
             </div>
 
-            {/* Paginação */}
+            {/* ✅ Paginação */}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-6">
               <button
                 onClick={handlePrevPage}

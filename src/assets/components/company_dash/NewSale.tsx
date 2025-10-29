@@ -103,7 +103,7 @@ export function CreateSale({ onCreated }: { onCreated?: () => void }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="mt-5 md:mt-0 bg-green-600 p-2 rounded mb-4 text-white font-medium"
+        className="mt-15 md:mt-0 bg-green-600 p-2 rounded mb-4 text-white font-medium"
       >
         Nova Venda
       </button>

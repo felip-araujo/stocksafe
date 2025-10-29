@@ -22,7 +22,7 @@ interface Request {
 }
 
 export function UserRequest() {
-  useRequireSubscription()
+  useRequireSubscription();
 
   const userId = localStorage.getItem("id");
   const companyId = localStorage.getItem("companyId");
@@ -53,7 +53,7 @@ export function UserRequest() {
           <p className="text-red-600">{error}</p>
         ) : requests.length > 0 ? (
           <>
-            {/* ✅ Layout responsivo */}
+            {/* ✅ Layout responsivo - Desktop */}
             <div className="hidden md:block overflow-x-auto rounded-lg shadow">
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
@@ -70,7 +70,6 @@ export function UserRequest() {
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Criado em
                     </th>
-
                   </tr>
                 </thead>
 
@@ -78,14 +77,20 @@ export function UserRequest() {
                   {requests.map((req) => (
                     <tr key={req.id} className="border-b hover:bg-gray-50">
                       <td className="p-3 text-sm font-medium text-gray-800">
-                        {req.items.map((item) => item.material.name).join(", ")}
+                        <div className="max-h-24 overflow-y-auto custom-scrollbar">
+                          {req.items.map((item) => (
+                            <div key={item.id}>{item.material.name}</div>
+                          ))}
+                        </div>
                       </td>
                       <td className="p-3 text-sm text-gray-600">
-                        {req.items
-                          .map(
-                            (item) => `${item.material.name}: ${item.quantity}`
-                          )
-                          .join(", ")}
+                        <div className="max-h-24 overflow-y-auto custom-scrollbar">
+                          {req.items.map((item) => (
+                            <div key={item.id}>
+                              {item.material.name}: {item.quantity}
+                            </div>
+                          ))}
+                        </div>
                       </td>
                       <td className="p-3 text-sm font-medium text-center">
                         <span
@@ -109,18 +114,16 @@ export function UserRequest() {
                             : req.status}
                         </span>
                       </td>
-
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(req.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                     
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            {/* ✅ Cards no mobile */}
+            {/* ✅ Cards Mobile */}
             <div className="grid grid-cols-1 gap-4 md:hidden">
               {requests.map((req) => (
                 <div
@@ -129,7 +132,11 @@ export function UserRequest() {
                 >
                   <div className="flex justify-between items-center mb-2">
                     <p className="font-semibold text-gray-800">
-                      {req.items.map((item) => item.material.name).join(", ")}
+                      <div className="max-h-24 overflow-y-auto custom-scrollbar">
+                        {req.items.map((item) => (
+                          <div key={item.id}>{item.material.name}</div>
+                        ))}
+                      </div>
                     </p>
                     <span
                       className={`text-sm font-medium
@@ -148,10 +155,14 @@ export function UserRequest() {
                   </div>
 
                   <p className="text-sm text-gray-700 mb-1">
-                    <span className="font-medium">Quantidade:</span>{" "}
-                    {req.items
-                      .map((item) => `${item.material.name}: ${item.quantity}`)
-                      .join(", ")}
+                    <span className="font-medium">Quantidade:</span>
+                    <div className="max-h-24 overflow-y-auto custom-scrollbar">
+                      {req.items.map((item) => (
+                        <div key={item.id}>
+                          {item.material.name}: {item.quantity}
+                        </div>
+                      ))}
+                    </div>
                   </p>
                   <p className="text-sm text-gray-700 mb-1">
                     <span className="font-medium">Empresa:</span>{" "}
