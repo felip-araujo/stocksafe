@@ -37,16 +37,10 @@ export function CancelarAssinatura() {
       });
 
       // 2️⃣ Cancela a assinatura no Stripe e recebe mensagem do servidor
-      const response = await api.post(`/subscription/${companyId}/cancel`);
+      await api.post(`/subscription/${companyId}/cancel`);
 
-      // 3️⃣ Exibe a mensagem personalizada vinda do backend
-      if (response?.data?.message) {
-        // toast.success(response.data.message);
-        toast.success("Assinatura cancelada com sucesso!");
-        localStorage.setItem("dataCancel", response.data.message);
-      } else {
-        toast.success("Assinatura cancelada com sucesso.");
-      }
+      toast.success("Assinatura cancelada! Nenhuma cobrança será gerada");
+
     } catch (error) {
       console.error("Erro ao cancelar assinatura:", error);
       toast.error("Ocorreu um erro ao cancelar a assinatura. Tente novamente.");
