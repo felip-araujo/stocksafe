@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { SidebarDash } from "./SideBarDash";
 import api from "@/services/api/api";
-import { ArrowUp, ArrowDown, Minus, LockIcon, LayoutTemplate } from "lucide-react";
+import { ArrowUp, ArrowDown, Minus, LockIcon } from "lucide-react";
 
 export interface DashboardStats {
   totalUsers: number;
@@ -120,7 +120,7 @@ export function DashboardCompany() {
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       <SidebarDash />
       <main className="flex-1 p-4 md:p-6">
-        <LayoutTemplate size={36} className="text-blue-900 mb-5" />
+
 
         {loading ? (
           <p>Carregando...</p>
