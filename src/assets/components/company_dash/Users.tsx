@@ -5,6 +5,8 @@ import api from "@/services/api/api";
 import { CreateUser } from "./NewUser";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import toast from "react-hot-toast";
+import { LinkGenerate } from "../register/inviteGenerate";
+
 
 interface Usuario {
   id: number;
@@ -76,12 +78,11 @@ export function UsuariosCompany() {
     const excludeOnce = async () => {
       try {
         await api.delete(`/user/${companyId}/${id}`);
-        toast.success("Usuário excluído com sucesso!")
+        toast.success("Usuário excluído com sucesso!");
         fetchUsuarios(page);
       } catch (err) {
         console.error("Erro ao excluir usuário:", err);
-        toast.error("Erro ao excluir usuário")
-        
+        toast.error("Erro ao excluir usuário");
       }
     };
   };
@@ -92,10 +93,11 @@ export function UsuariosCompany() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
-
       <div className="flex-1 p-4 md:p-6 bg-gray-50">
-        
-        <CreateUser onCreated={() => fetchUsuarios(page)} />
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          <CreateUser onCreated={() => fetchUsuarios(page)} />
+          <LinkGenerate />
+        </div>
 
         {usuarios.length > 0 ? (
           <>

@@ -26,6 +26,7 @@ import { Sobre } from "./assets/pages/About";
 import { VendasCompany } from "./assets/components/company_dash/Vendas";
 import { UserSales } from "./assets/components/company_dash/VendasOfUser";
 import { Terms } from "./assets/pages/Termos";
+import { RegisterInvite } from "./assets/components/register/registerInvite";
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/esqueci-senha" element={<EsqSenha></EsqSenha>} ></Route>
         <Route path="/reset-password/:token" element={<ResetPassword></ResetPassword>} ></Route>
         <Route path="/code-insert" element={<CodeMail></CodeMail>}></Route>
+        <Route path="/register" element={<RegisterInvite></RegisterInvite>}></Route>
 
         {/* Dashboards e elementos de dashboards */}
         <Route path="/dashboard" element={<DashPage></DashPage>}></Route>
