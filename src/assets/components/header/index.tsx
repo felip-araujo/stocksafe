@@ -40,12 +40,12 @@ export function Header() {
         </a>
 
         <Link
-          to="contato"
+          to="plans"
           smooth={true}
           duration={500}
           className="text-base font-normal bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-all"
         >
-          Solicitar Demonstração
+          Teste Grátis
         </Link>
       </div>
 
