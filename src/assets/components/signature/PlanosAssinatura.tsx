@@ -7,8 +7,9 @@ interface Plan {
   name: string;
   price: string;
   description: string;
-  priceId: string;
+  priceId?: string;
   features: string[];
+  isTrial?: boolean;
 }
 
 export function SubscriptionPlans() {
@@ -17,10 +18,25 @@ export function SubscriptionPlans() {
 
   const plans: Plan[] = [
     {
+      id: "trial",
+      name: "Plano Gratuito",
+      price: "7 dias grátis",
+      priceId: "price_1SAy2LKKzmjTKU738zEEFmhd",
+      description:
+        "Experimente o Stock Seguro sem compromisso. Descubra como é simples gerenciar seu estoque de forma inteligente.",
+      features: [
+        "7 dias de acesso gratuito",
+        "Todos os recursos do plano Básico",
+        "Sem necessidade de cartão de crédito",
+      ],
+      isTrial: true,
+    },
+    {
       id: "basic",
       name: "Plano Básico",
       price: "R$ 79,90/mês",
-      description: "Ideal para gerenciar o almoxarifado, registrar requisições e automatizar o dia a dia.",
+      description:
+        "Ideal para gerenciar o almoxarifado, registrar requisições e automatizar o dia a dia.",
       priceId: "price_1SAy2LKKzmjTKU738zEEFmhd",
       features: [
         "Até 10 usuários",
@@ -34,7 +50,8 @@ export function SubscriptionPlans() {
       id: "gold",
       name: "Plano Ouro",
       price: "R$ 119,90/mês",
-      description: "Usuários ilimitados, com controle de vendas, estoque e valores em tempo real.",
+      description:
+        "Usuários ilimitados, com controle de vendas, estoque e valores em tempo real.",
       priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",
       features: [
         "Usuários ilimitados",
@@ -62,7 +79,7 @@ export function SubscriptionPlans() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ priceId, plano }),
+          body: JSON.stringify({ priceId, plano, trial: true }),
         }
       );
 
@@ -80,6 +97,39 @@ export function SubscriptionPlans() {
     }
   };
 
+  const handleStartTrial = async () => {
+    try {
+      setLoading("trial");
+      const companyId = localStorage.getItem("companyId");
+
+      if (!companyId) {
+        navigate(`/cadastro?trial=true`);
+        return;
+      }
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/subscription/trial/start/${companyId}`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(data.message || "Período de teste iniciado!");
+        navigate("/dashboard"); // redireciona pro sistema
+      } else {
+        alert("Erro ao iniciar período de teste.");
+      }
+    } catch (error) {
+      console.error("Erro ao iniciar trial:", error);
+      alert("Erro ao iniciar período de teste.");
+    } finally {
+      setLoading(null);
+    }
+  };
+
   return (
     <Element name="plans">
       <section className="w-full bg-gray-50 py-8 px-5 sm:px-8 flex mt-6 flex-col items-center">
@@ -92,14 +142,19 @@ export function SubscriptionPlans() {
           <span className="font-semibold text-gray-800">
             controle total do seu estoque
           </span>{" "}
-          — o <strong>Stock Seguro</strong> te mostra o que entra, o que sai e o que realmente dá lucro.
+          — o <strong>Stock Seguro</strong> te mostra o que entra, o que sai e o
+          que realmente dá lucro.
         </p>
 
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 max-w-5xl w-full">
+        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3 max-w-6xl w-full">
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="bg-white rounded-2xl shadow-md p-6 sm:p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-300"
+              className={`bg-white rounded-2xl shadow-md p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 ${
+                plan.isTrial
+                  ? "border-2 border-blue-500 hover:shadow-lg"
+                  : "hover:shadow-lg"
+              }`}
             >
               <div>
                 <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
@@ -109,7 +164,11 @@ export function SubscriptionPlans() {
                   {plan.description}
                 </p>
 
-                <p className="text-3xl sm:text-4xl font-bold text-blue-600 mb-6">
+                <p
+                  className={`text-3xl sm:text-4xl font-bold mb-6 ${
+                    plan.isTrial ? "text-blue-500" : "text-blue-600"
+                  }`}
+                >
                   {plan.price}
                 </p>
 
@@ -124,15 +183,29 @@ export function SubscriptionPlans() {
               </div>
 
               <button
-                onClick={() => handleSubscribe(plan.priceId, plan.id)}
-                disabled={loading === plan.priceId}
-                className={`w-full py-3 sm:py-4 rounded-lg font-semibold text-white text-base sm:text-lg ${
-                  loading === plan.priceId
+                onClick={() => {
+                  if (plan.isTrial) {
+                    handleStartTrial();
+                  } else if (plan.priceId) {
+                    handleSubscribe(plan.priceId, plan.id);
+                  } else {
+                    alert("ID do plano não encontrado.");
+                  }
+                }}
+                disabled={loading === plan.id || loading === plan.priceId}
+                className={`w-full py-3 sm:py-4 rounded-lg font-semibold text-white text-base sm:text-lg transition-all ${
+                  loading === plan.id || loading === plan.priceId
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 transition-all"
+                    : plan.isTrial
+                    ? "bg-blue-500 hover:bg-blue-600"
+                    : "bg-blue-600 hover:bg-blue-700"
                 }`}
               >
-                {loading === plan.priceId ? "Processando..." : "Assinar Agora"}
+                {loading === plan.id || loading === plan.priceId
+                  ? "Processando..."
+                  : plan.isTrial
+                  ? "Começar Teste Grátis"
+                  : "Assinar Agora"}
               </button>
             </div>
           ))}

@@ -46,7 +46,7 @@ export function CadastroComp() {
 
       const subRes = await axios.post(
         `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
-        { priceId }
+        { priceId, trial: true }
       );
 
       if (subRes.data?.url) {
