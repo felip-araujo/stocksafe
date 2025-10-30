@@ -17,12 +17,14 @@ import { useLogout } from "@/services/hooks/logout";
 import { useState } from "react";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import { useCheckPlanLevel } from "@/services/hooks/CheckPlanLevel";
+import { TrialWarning } from "../signature/TrialWarning";
 
 export function SidebarDash() {
   useRequireSubscription();
   const plan = useCheckPlanLevel();
   const logout = useLogout();
 
+  const status = localStorage.getItem("status")
   const role = localStorage.getItem("role");
   const companyName = localStorage.getItem("companyName");
   const [isOpen, setIsOpen] = useState(true);
@@ -66,7 +68,8 @@ export function SidebarDash() {
     <>
       {/* 🔹 Faixa superior no mobile */}
       <div className="md:hidden fixed top-0 left-0 w-full z-40 bg-gray-900 text-gray-100 flex items-center justify-between px-4 py-3 shadow-md">
-        <span className="font-semibold">{companyName}</span>
+        <span className="font-semibold">{companyName} <TrialWarning /></span>
+        
         <button
           onClick={() => setIsMobileMenuOpen(true)}
           className="p-2 rounded-lg hover:bg-gray-800 transition"
@@ -97,7 +100,11 @@ export function SidebarDash() {
       >
         {/* Header interno */}
         <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700">
-          {isOpen && <span className="text-lg font-bold">{companyName}</span>}
+          {isOpen && <span className="text-lg font-bold">{companyName} 
+            { status !== "active" && (<a href="/assinatura/necessaria" className="font-light text-lm"> <br /> <TrialWarning /> </a>  )}
+          </span> }
+          
+          
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsOpen(!isOpen)}

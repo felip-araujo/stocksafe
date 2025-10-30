@@ -1,6 +1,7 @@
 // hooks/useRequireSubscription.ts
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 
 
@@ -24,6 +25,7 @@ export function useRequireSubscription() {
           },
         });
 
+       
         if (!res.ok) {
           // assinatura inativa ou erro → redireciona
           navigate("/assinatura/necessaria");
@@ -38,6 +40,17 @@ export function useRequireSubscription() {
       }
     };
 
+    const checkTrial = async () => {
+      const companyId = localStorage.getItem("companyId")
+      const trialR = await api.get(`${import.meta.env.VITE_API_URL}/subscription/status/${companyId}`)
+      const status = trialR.data.data.status
+      console.log(trialR.data.data.currentPeriodEnd)
+      localStorage.setItem("status",  status)
+      localStorage.setItem("fim_teste", trialR.data.data.currentPeriodEnd )
+    } 
+
+
+    checkTrial()
     checkSubscription();
   }, [navigate]);
 }
