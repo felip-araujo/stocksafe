@@ -1,9 +1,6 @@
-// hooks/useRequireSubscription.ts
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api/api";
-
-
+import toast from "react-hot-toast";
 
 export function useRequireSubscription() {
   const navigate = useNavigate();
@@ -11,7 +8,7 @@ export function useRequireSubscription() {
   useEffect(() => {
     const checkSubscription = async () => {
       try {
-        const token = localStorage.getItem("token"); // se estiver usando JWT
+        const token = localStorage.getItem("token");
         const companyId = localStorage.getItem("companyId");
 
         if (!token || !companyId) {
@@ -19,38 +16,28 @@ export function useRequireSubscription() {
           return;
         }
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/subscription/status/${companyId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/subscription/status/${companyId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-       
         if (!res.ok) {
-          // assinatura inativa ou erro → redireciona
+          toast.error("Seu plano está expirado ou cancelado");
+          // ⚡ Não limpar localStorage, só redirecionar
           navigate("/assinatura/necessaria");
-          // localStorage.clear()
-          
+        } else {
+          const data = await res.json();
+          // Atualiza status e fim do trial
+          localStorage.setItem("status", data.data.status);
+          localStorage.setItem("fim_teste", data.data.currentPeriodEnd);
         }
-        
       } catch (err) {
         console.error("Erro ao verificar assinatura:", err);
-        navigate("/assinatura/necessaria");
-        localStorage.clear()
       }
     };
 
-    const checkTrial = async () => {
-      const companyId = localStorage.getItem("companyId")
-      const trialR = await api.get(`${import.meta.env.VITE_API_URL}/subscription/status/${companyId}`)
-      const status = trialR.data.data.status
-      console.log(trialR.data.data.currentPeriodEnd)
-      localStorage.setItem("status",  status)
-      localStorage.setItem("fim_teste", trialR.data.data.currentPeriodEnd )
-    } 
-
-
-    checkTrial()
     checkSubscription();
   }, [navigate]);
 }

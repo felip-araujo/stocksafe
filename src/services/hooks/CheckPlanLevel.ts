@@ -26,7 +26,7 @@ export function useCheckPlanLevel() {
         setPlan(planoAtual);
       } catch (err) {
         console.error("Erro ao verificar assinatura:", err);
-        localStorage.clear();
+        
       }
     };
 

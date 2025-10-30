@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { LogoNome } from "../components/logo/Logo&Nome";
 import { LogoNomeBranco } from "../components/logo/Logo&NomeBranco";
 
+
 export function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
@@ -33,6 +34,8 @@ export function LoginPage() {
       localStorage.setItem("representant", res.data.user.company.representant);
 
       toast.success("Login realizado com sucesso!");
+      
+      
 
       const funcao = res.data.user.role;
       if (funcao === "SUPER_ADMIN") navigate("/superdash");

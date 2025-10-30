@@ -20,13 +20,14 @@ import { PerfilCompany } from "./assets/components/company_dash/PerfilCompany";
 import { UserRequest } from "./assets/components/company_dash/RequestsOfUser";
 import { Blog } from "./assets/pages/Blog";
 import SuccessPage from "./assets/pages/AssinaturaSucesso";
-import { AssinaturaPendente } from "./assets/pages/AssinaturaNecessaria";
+
 import { PrivPolicy } from "./assets/pages/PrivacyPolicy";
 import { Sobre } from "./assets/pages/About";
 import { VendasCompany } from "./assets/components/company_dash/Vendas";
 import { UserSales } from "./assets/components/company_dash/VendasOfUser";
 import { Terms } from "./assets/pages/Termos";
 import { RegisterInvite } from "./assets/components/register/registerInvite";
+import { AssinaturaExpirada } from "./assets/components/signature/AssinaturaExpirada";
 
 
 function App() {
@@ -56,7 +57,7 @@ function App() {
         <Route path="/config"  element={<PerfilCompany></PerfilCompany>} ></Route>
         <Route path="/user-request" element={<UserRequest></UserRequest>} ></Route>
         <Route path="/assinatura/sucesso" element={<SuccessPage></SuccessPage>}></Route>
-        <Route path="/assinatura/necessaria" element={<AssinaturaPendente></AssinaturaPendente>}></Route>
+        <Route path="/assinatura/necessaria" element={<AssinaturaExpirada></AssinaturaExpirada>}></Route>
         <Route path="/sales" element={<VendasCompany></VendasCompany>}></Route>
         <Route path="/sales/user" element={<UserSales></UserSales>}></Route>
         
