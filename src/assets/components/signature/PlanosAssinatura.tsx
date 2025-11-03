@@ -98,37 +98,41 @@ export function SubscriptionPlans() {
   };
 
   const handleStartTrial = async () => {
-    try {
-      setLoading("trial");
-      const companyId = localStorage.getItem("companyId");
+  try {
+    setLoading("trial");
+    const companyId = localStorage.getItem("companyId");
 
-      if (!companyId) {
-        navigate(`/cadastro?trial=true`);
-        return;
-      }
-
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/subscription/trial/start/${companyId}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const data = await res.json();
-
-      if (res.ok) {
-        alert(data.message || "Período de teste iniciado!");
-        navigate("/dashboard"); // redireciona pro sistema
-      } else {
-        alert("Erro ao iniciar período de teste.");
-      }
-    } catch (error) {
-      console.error("Erro ao iniciar trial:", error);
-      alert("Erro ao iniciar período de teste.");
-    } finally {
-      setLoading(null);
+    if (!companyId) {
+      navigate(`/cadastro?trial=true`);
+      return;
     }
-  };
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          priceId: "price_1SJG1MKKzmjTKU73xxqtViUk", // plano ouro
+          trial: true,
+        }),
+      }
+    );
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Erro ao iniciar teste gratuito.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao iniciar teste gratuito.");
+  } finally {
+    setLoading(null);
+  }
+};
+
 
   return (
     <Element name="plans">
