@@ -113,7 +113,7 @@ export function SubscriptionPlans() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          priceId: "price_1SJG1MKKzmjTKU73xxqtViUk", // plano ouro
+          priceId: "price_1SLMTMKKzmjTKU73yN4NEgKN", // plano ouro
           trial: true,
         }),
       }
