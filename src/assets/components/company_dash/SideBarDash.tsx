@@ -68,7 +68,8 @@ export function SidebarDash() {
     <>
       {/* 🔹 Faixa superior no mobile */}
       <div className="md:hidden fixed top-0 left-0 w-full z-40 bg-gray-900 text-gray-100 flex items-center justify-between px-4 py-3 shadow-md">
-        <span className="font-semibold">{companyName} <TrialWarning /></span>
+        <span className="font-semibold">{companyName} </span>
+        { status !== "active" && (<a href="/assinatura/necessaria" className="font-light text-lm"> <br /> <TrialWarning /> </a>  )}
         
         <button
           onClick={() => setIsMobileMenuOpen(true)}

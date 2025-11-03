@@ -107,9 +107,6 @@ export function UsuariosCompany() {
                 <thead className="bg-gray-100 border-b">
                   <tr>
                     <th className="p-3 text-left font-semibold text-gray-700">
-                      ID
-                    </th>
-                    <th className="p-3 text-left font-semibold text-gray-700">
                       Nome
                     </th>
                     <th className="p-3 text-left font-semibold text-gray-700">
@@ -132,7 +129,7 @@ export function UsuariosCompany() {
                       key={usuario.id}
                       className="border-b hover:bg-gray-50 transition-colors"
                     >
-                      <td className="p-3 text-gray-600">{usuario.id}</td>
+                      
                       <td className="p-3 font-medium text-gray-800">
                         {usuario.name}
                       </td>

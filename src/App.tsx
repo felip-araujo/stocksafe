@@ -28,6 +28,7 @@ import { UserSales } from "./assets/components/company_dash/VendasOfUser";
 import { Terms } from "./assets/pages/Termos";
 import { RegisterInvite } from "./assets/components/register/registerInvite";
 import { AssinaturaExpirada } from "./assets/components/signature/AssinaturaExpirada";
+import { Cancelada } from "./assets/pages/AssinaturaCancelada";
 
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
         <Route path="/assinatura/necessaria" element={<AssinaturaExpirada></AssinaturaExpirada>}></Route>
         <Route path="/sales" element={<VendasCompany></VendasCompany>}></Route>
         <Route path="/sales/user" element={<UserSales></UserSales>}></Route>
+        <Route path="/assinatura/cancelada" element={<Cancelada></Cancelada>}></Route>
         
 
         {/* Paginas & Blog*/}

@@ -67,7 +67,7 @@ export function PerfilCompany() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <SidebarDash />
-      <div className="flex-1 p-4 md:p-8">
+      <div className="flex-1 mt-10 p-4 md:p-8">
         <h1 className="text-2xl font-semibold text-gray-800 mb-6">
           
         

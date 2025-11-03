@@ -21,7 +21,7 @@ export function SubscriptionPlans() {
       id: "trial",
       name: "Plano Gratuito",
       price: "7 dias grátis",
-      priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",
+      priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",  
       description:
         "Experimente o Stock Seguro sem compromisso. Descubra como é simples gerenciar seu estoque de forma inteligente.",
       features: [

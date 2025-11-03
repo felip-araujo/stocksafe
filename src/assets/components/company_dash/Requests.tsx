@@ -107,7 +107,7 @@ export function RequestsCompany() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
-      <div className="flex-1 p-6 bg-gray-50">
+      <div className="flex-1 p-6 mt-20 bg-gray-50">
         {requests.length > 0 ? (
           <>
             {/* Desktop Table */}
