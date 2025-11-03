@@ -51,6 +51,7 @@ export function CadastroComp() {
 
       if (subRes.data?.url) {
         window.location.href = subRes.data.url;
+        localStorage.setItem("checkout", subRes.data.url);
       } else {
         navigate("/auth");
       }
