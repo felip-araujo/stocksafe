@@ -10,6 +10,7 @@ interface Plan {
   priceId?: string;
   features: string[];
   isTrial?: boolean;
+  
 }
 
 export function SubscriptionPlans() {
@@ -21,7 +22,7 @@ export function SubscriptionPlans() {
       id: "trial",
       name: "Plano Gratuito",
       price: "7 dias grátis",
-      priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",  
+      priceId: "price_1SJG1MKKzmjTKU73xxqtViUk",
       description:
         "Experimente o Stock Seguro sem compromisso. Descubra como é simples gerenciar seu estoque de forma inteligente.",
       features: [
@@ -64,75 +65,43 @@ export function SubscriptionPlans() {
     },
   ];
 
-  const handleSubscribe = async (priceId: string, plano: string) => {
-    try {
-      setLoading(priceId);
-      const companyId = localStorage.getItem("companyId");
-
-      if (!companyId) {
-        navigate(`/cadastro?priceId=${priceId}&plano=${plano}`);
-        return;
-      }
-
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ priceId, plano, trial: true }),
-        }
-      );
-
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert("Erro ao iniciar assinatura.");
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert("Erro ao criar sessão de pagamento.");
-    } finally {
-      setLoading(null);
-    }
-  };
-
-  const handleStartTrial = async () => {
+ const handleSubscribe = async (priceId: string, plano: string, isTrial = false) => {
   try {
-    setLoading("trial");
+    setLoading(priceId);
     const companyId = localStorage.getItem("companyId");
 
     if (!companyId) {
-      navigate(`/cadastro?trial=true`);
+      navigate(`/cadastro?priceId=${priceId}&plano=${plano}`);
       return;
     }
+
+    // corpo flexível (pode incluir ou não o campo trial)
+    const body: Record<string, unknown> = { priceId, plano };
+    if (isTrial) body.trial = true;
 
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          priceId: "price_1SLMTMKKzmjTKU73yN4NEgKN", // plano ouro
-          trial: true,
-        }),
+        body: JSON.stringify(body),
       }
     );
 
     const data = await res.json();
+
     if (data.url) {
       window.location.href = data.url;
     } else {
-      alert("Erro ao iniciar teste gratuito.");
+      alert("Erro ao iniciar assinatura.");
     }
   } catch (error) {
-    console.error(error);
-    alert("Erro ao iniciar teste gratuito.");
+    console.error("Erro:", error);
+    alert("Erro ao criar sessão de pagamento.");
   } finally {
     setLoading(null);
   }
 };
-
 
   return (
     <Element name="plans">
@@ -187,15 +156,9 @@ export function SubscriptionPlans() {
               </div>
 
               <button
-                onClick={() => {
-                  if (plan.isTrial) {
-                    handleStartTrial();
-                  } else if (plan.priceId) {
-                    handleSubscribe(plan.priceId, plan.id);
-                  } else {
-                    alert("ID do plano não encontrado.");
-                  }
-                }}
+                onClick={() =>
+                  handleSubscribe(plan.priceId || "", plan.id, plan.isTrial)
+                }
                 disabled={loading === plan.id || loading === plan.priceId}
                 className={`w-full py-3 sm:py-4 rounded-lg font-semibold text-white text-base sm:text-lg transition-all ${
                   loading === plan.id || loading === plan.priceId
