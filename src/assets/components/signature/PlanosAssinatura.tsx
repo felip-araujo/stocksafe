@@ -13,6 +13,12 @@ interface Plan {
   
 }
 
+interface SubscribeBody {
+  priceId: string;
+  plano: string;
+  trial?: boolean;
+}
+
 export function SubscriptionPlans() {
   const [loading, setLoading] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -65,7 +71,7 @@ export function SubscriptionPlans() {
     },
   ];
 
- const handleSubscribe = async (priceId: string, plano: string, isTrial = false) => {
+const handleSubscribe = async (priceId: string, plano: string, isTrial = false) => {
   try {
     setLoading(priceId);
     const companyId = localStorage.getItem("companyId");
@@ -75,9 +81,12 @@ export function SubscriptionPlans() {
       return;
     }
 
-    // corpo flexível (pode incluir ou não o campo trial)
-    const body: Record<string, unknown> = { priceId, plano };
-    if (isTrial) body.trial = true;
+    // Corpo do request com tipagem correta
+    const body: SubscribeBody = {
+      priceId,
+      plano,
+      ...(isTrial ? { trial: true } : {}), // adiciona trial apenas se for trial
+    };
 
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
@@ -93,7 +102,7 @@ export function SubscriptionPlans() {
     if (data.url) {
       window.location.href = data.url;
     } else {
-      alert("Erro ao iniciar assinatura.");
+      alert(data.message || "Erro ao iniciar assinatura.");
     }
   } catch (error) {
     console.error("Erro:", error);
@@ -102,6 +111,7 @@ export function SubscriptionPlans() {
     setLoading(null);
   }
 };
+
 
   return (
     <Element name="plans">
