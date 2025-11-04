@@ -7,18 +7,18 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="p-4 flex ml-10 mr-10 justify-between items-center border-b border-gray-200 relative">
+    <header className="p-4 flex mx-6 md:mx-10 justify-between items-center border-b border-gray-200 relative">
       {/* Logo + Texto */}
       <LogoNome />
 
       {/* Menu Desktop */}
-      <div className="hidden md:flex items-center">
-        <nav>
+      <div className="hidden md:flex items-center space-x-4">
+        <nav className="flex items-center space-x-4">
           <Link
             to="contato"
             smooth={true}
             duration={500}
-            className="text-base mr-2 font-normal text-zinc-900 hover:text-blue-800 transition-all ease-in-out cursor-pointer"
+            className="text-base font-normal text-zinc-900 hover:text-blue-800 transition-all ease-in-out cursor-pointer"
           >
             Contato
           </Link>
@@ -33,7 +33,14 @@ export function Header() {
         </nav>
 
         <a
-          className="text-base font-normal text-zinc-900 px-3 py-2 mr-2 hover: hover:text-blue-800 transition-all ease-in-out"
+          className="text-base font-normal text-zinc-900 px-2 py-2 hover:text-blue-800 transition-all ease-in-out"
+          href="https://blog.stockseguro.com.br/"
+        >
+          Blog
+        </a>
+
+        <a
+          className="text-base font-normal text-zinc-900 px-2 py-2 hover:text-blue-800 transition-all ease-in-out"
           href="/auth"
         >
           Entrar
@@ -43,7 +50,7 @@ export function Header() {
           to="plans"
           smooth={true}
           duration={500}
-          className="text-base font-normal bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-all"
+          className="text-base font-normal bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition-all"
         >
           Teste Grátis
         </Link>
