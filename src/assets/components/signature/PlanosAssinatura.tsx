@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Element } from "react-scroll";
 
@@ -10,7 +11,6 @@ interface Plan {
   priceId?: string;
   features: string[];
   isTrial?: boolean;
-  
 }
 
 interface SubscribeBody {
@@ -71,47 +71,50 @@ export function SubscriptionPlans() {
     },
   ];
 
-const handleSubscribe = async (priceId: string, plano: string, isTrial = false) => {
-  try {
-    setLoading(priceId);
-    const companyId = localStorage.getItem("companyId");
+  const handleSubscribe = async (
+    priceId: string,
+    plano: string,
+    isTrial = false
+  ) => {
+    try {
+      setLoading(priceId);
+      const companyId = localStorage.getItem("companyId");
 
-    if (!companyId) {
-      navigate(`/cadastro?priceId=${priceId}&plano=${plano}`);
-      return;
-    }
-
-    // Corpo do request com tipagem correta
-    const body: SubscribeBody = {
-      priceId,
-      plano,
-      ...(isTrial ? { trial: true } : {}), // adiciona trial apenas se for trial
-    };
-
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+      if (!companyId) {
+        navigate(`/cadastro?priceId=${priceId}&plano=${plano}`);
+        return;
       }
-    );
 
-    const data = await res.json();
+      // Corpo do request com tipagem correta
+      const body: SubscribeBody = {
+        priceId,
+        plano,
+        ...(isTrial ? { trial: true } : {}), // adiciona trial apenas se for trial
+      };
 
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert(data.message || "Erro ao iniciar assinatura.");
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.message || "Erro ao iniciar assinatura.");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      toast.error("Erro ao criar sessão de pagamento.");
+    } finally {
+      setLoading(null);
     }
-  } catch (error) {
-    console.error("Erro:", error);
-    alert("Erro ao criar sessão de pagamento.");
-  } finally {
-    setLoading(null);
-  }
-};
-
+  };
 
   return (
     <Element name="plans">
