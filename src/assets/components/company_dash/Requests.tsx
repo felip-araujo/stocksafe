@@ -107,11 +107,11 @@ export function RequestsCompany() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
-      <div className="flex-1 p-6 mt-20 bg-gray-50">
+      <div className="flex-1 p-6  bg-gray-50">
         {requests.length > 0 ? (
           <>
             {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto rounded-lg shadow">
+            <div className="hidden md:block overflow-x-auto rounded-lg mt-4 shadow">
               <table className="w-full border-collapse bg-white">
                 <thead className="bg-gray-100 border-b">
                   <tr>

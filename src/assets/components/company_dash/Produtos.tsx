@@ -7,6 +7,7 @@ import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
 import { formatCurrency } from "@/services/hooks/AuxFunctions";
+import { ImportarProdutos } from "./NewProductImport";
 
 interface Produto {
   id: number;
@@ -142,6 +143,9 @@ export function ProdutosCompany() {
 
         {role !== "EMPLOYEE" && (
           <CreateProduct onCreated={() => fetchProdutos(page)} />
+        )}
+        {role !== "EMPLOYEE" && (
+          <ImportarProdutos />
         )}
 
         {produtos.length > 0 ? (
