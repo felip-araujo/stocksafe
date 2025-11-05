@@ -6,6 +6,7 @@ import { NewMaterial } from "./NewMaterial";
 import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
+import { ImportarMateriais } from "./NewMaterialImport";
 
 interface Material {
   id: number;
@@ -27,7 +28,7 @@ export function MaterialsCompany() {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 5;
 
-  const fetchMaterials = async (page: number) => {
+   const fetchMaterials = async (page: number) => {
     if (!companyId) return;
     try {
       const res = await api.get(
@@ -118,8 +119,10 @@ export function MaterialsCompany() {
   return (
     <div className="flex min-h-screen">
       <SidebarDash />
+      
 
       <div className="flex-1 p-6 bg-gray-50">
+        
         {role === "EMPLOYEE" && (
           <h1 className="text-xl font-semibold text-gray-800 mb-6">
             Material de Consumo
@@ -127,6 +130,8 @@ export function MaterialsCompany() {
         )}
 
         {role !== "EMPLOYEE" && <NewMaterial />}
+        {role !== "EMPLOYEE" && <ImportarMateriais />}
+        
 
         {materials.length > 0 ? (
           <>
