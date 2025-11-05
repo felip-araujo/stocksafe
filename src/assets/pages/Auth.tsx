@@ -120,7 +120,7 @@ export function LoginPage() {
           <div className="mt-4 text-right space-y-2">
             <a
               className="text-blue-600 text-sm hover:underline"
-              href="/assinatura/necessaria"
+              href="/"
             >
               Cadastre-se
             </a>
