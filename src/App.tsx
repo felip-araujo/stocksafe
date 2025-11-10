@@ -29,6 +29,8 @@ import { Terms } from "./assets/pages/Termos";
 import { RegisterInvite } from "./assets/components/register/registerInvite";
 import { AssinaturaExpirada } from "./assets/components/signature/AssinaturaExpirada";
 import { Cancelada } from "./assets/pages/AssinaturaCancelada";
+import { AssinaturasCompany } from "./assets/components/super_dash/Assinaturas";
+import { EmpresasCadastradas } from "./assets/components/super_dash/Companies";
 
 
 function App() {
@@ -62,6 +64,11 @@ function App() {
         <Route path="/sales" element={<VendasCompany></VendasCompany>}></Route>
         <Route path="/sales/user" element={<UserSales></UserSales>}></Route>
         <Route path="/assinatura/cancelada" element={<Cancelada></Cancelada>}></Route>
+
+        {/* Super Dash */}
+        <Route path="/assinaturas" element={<AssinaturasCompany></AssinaturasCompany>}></Route>
+        <Route path="/companies" element={<EmpresasCadastradas></EmpresasCadastradas>}></Route>
+
         
 
         {/* Paginas & Blog*/}

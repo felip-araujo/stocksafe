@@ -1,5 +1,5 @@
 import {
-  Users,
+  
   Settings,
   LogOut,
   Menu,
@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   Building2,
   CreditCard,
+  House,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useLogout } from "@/services/hooks/logout";
@@ -18,9 +19,9 @@ export function SuperSideBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { to: "/", label: "Usuários", icon: <Users size={20} /> },
-    { to: "/", label: "Empresas", icon: <Building2 size={20} /> },
-    { to: "/", label: "Assinaturas", icon: <CreditCard size={20} /> },
+    { to: "/superdash", label: "Home", icon: <House size={20} /> },
+    { to: "/companies", label: "Empresas", icon: <Building2 size={20} /> },
+    { to: "/assinaturas", label: "Assinaturas", icon: <CreditCard size={20} /> },
     { to: "/config", label: "Configurações", icon: <Settings size={20} /> },
   ];
 
