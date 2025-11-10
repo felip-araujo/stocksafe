@@ -6,6 +6,7 @@ import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 import { UpgradePlan } from "../signature/FazerUpgrade";
 import { CancelarAssinatura } from "../signature/CancelarAssinaturaBtn";
+import { SuperSideBar } from "../super_dash/superSideBar";
 
 
 interface UserData {
@@ -17,7 +18,7 @@ interface UserData {
 }
 
 export function PerfilCompany() {
-  useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE"]);
+  useAuthGuard(["COMPANY_ADMIN", "EMPLOYEE", "SUPER_ADMIN" ]);
   useRequireSubscription();
   const planoAtual = localStorage.getItem("plano");
   const companyId = localStorage.getItem("companyId");
@@ -66,7 +67,9 @@ export function PerfilCompany() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <SidebarDash />
+      
+      {role === "SUPER_ADMIN" ? <SuperSideBar /> : <SidebarDash/>}
+
       <div className="flex-1 mt-10 p-4 md:p-8">
         <h1 className="text-2xl font-semibold text-gray-800 mb-6">
           

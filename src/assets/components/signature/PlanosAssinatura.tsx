@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Element } from "react-scroll";
+import { registerClick } from "@/services/hooks/registerClicksFunctions.js";
 
 interface Plan {
   id: string;
@@ -22,6 +23,10 @@ interface SubscribeBody {
 export function SubscriptionPlans() {
   const [loading, setLoading] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    registerClick("viewed_subscription_plans", window.location.pathname);
+  }, []);
 
   const plans: Plan[] = [
     {
@@ -77,6 +82,9 @@ export function SubscriptionPlans() {
     isTrial = false
   ) => {
     try {
+      // 🔹 Registra o clique no backend
+      registerClick(`click-assinar-${plano}`, window.location.pathname);
+
       setLoading(priceId);
       const companyId = localStorage.getItem("companyId");
 
@@ -85,11 +93,10 @@ export function SubscriptionPlans() {
         return;
       }
 
-      // Corpo do request com tipagem correta
       const body: SubscribeBody = {
         priceId,
         plano,
-        ...(isTrial ? { trial: true } : {}), // adiciona trial apenas se for trial
+        ...(isTrial ? { trial: true } : {}),
       };
 
       const res = await fetch(
