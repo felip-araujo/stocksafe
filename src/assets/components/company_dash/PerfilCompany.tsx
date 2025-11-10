@@ -6,7 +6,10 @@ import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 
 import { UpgradePlan } from "../signature/FazerUpgrade";
 import { CancelarAssinatura } from "../signature/CancelarAssinaturaBtn";
-import { SuperSideBar } from "../super_dash/superSideBar";
+import { SuperSideBar } from "../super_dash/SuperSide";
+
+
+
 
 
 interface UserData {
