@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "@/services/api/api";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
@@ -7,12 +7,24 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
   const companyId = Number(localStorage.getItem("companyId"));
 
   const [isOpen, setIsOpen] = useState(false);
+  const [departments, setDepartments] = useState<{ id: number; name: string }[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     role: "EMPLOYEE",
+    departmentId: "", // novo campo
   });
+
+  // Buscar departamentos ao abrir o modal
+  useEffect(() => {
+    if (isOpen && companyId) {
+      api
+        .get(`/department/company/${companyId}`)
+        .then((res) => setDepartments(res.data))
+        .catch((err) => console.error("Erro ao buscar departamentos:", err));
+    }
+  }, [isOpen, companyId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -29,14 +41,25 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
     if (!companyId) return;
 
     try {
-      // Inclui companyId no corpo
-      const res = await api.post(`/user`, { ...formData, companyId });
+      const body = {
+        ...formData,
+        companyId,
+        departmentId: Number(formData.departmentId) || null,
+      };
 
+      const res = await api.post(`/user`, body);
       toast.success("Usuário criado com sucesso!");
       console.log(res);
+
       setIsOpen(false);
-      setFormData({ name: "", email: "", password: "", role: "EMPLOYEE" });
-      if (onCreated) onCreated(); // callback p/ atualizar lista de usuários
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        role: "EMPLOYEE",
+        departmentId: "",
+      });
+      if (onCreated) onCreated();
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
       const mensagem = error.response?.data?.message || "Erro inesperado";
@@ -55,15 +78,12 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 bg-opacity-20 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Criar Usuário</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-1"
-                >
+                <label htmlFor="name" className="block text-sm font-medium mb-1">
                   Nome
                 </label>
                 <input
@@ -71,15 +91,13 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
                   id="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
                   required
                 />
               </div>
+
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-1"
-                >
+                <label htmlFor="email" className="block text-sm font-medium mb-1">
                   Email
                 </label>
                 <input
@@ -87,15 +105,13 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
                   id="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
                   required
                 />
               </div>
+
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium mb-1"
-                >
+                <label htmlFor="password" className="block text-sm font-medium mb-1">
                   Senha
                 </label>
                 <input
@@ -103,27 +119,45 @@ export function CreateUser({ onCreated }: { onCreated?: () => void }) {
                   id="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
                   required
                 />
               </div>
+
               <div>
-                <label
-                  htmlFor="role"
-                  className="block text-sm font-medium mb-1"
-                >
+                <label htmlFor="role" className="block text-sm font-medium mb-1">
                   Função
                 </label>
                 <select
                   id="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
                 >
                   <option value="EMPLOYEE">Funcionário</option>
-                  <option value="COMPANY_ADMIN">
-                    Administrador da Empresa
-                  </option>
+                  <option value="COMPANY_ADMIN">Administrador da Empresa</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="departmentId"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Departamento
+                </label>
+                <select
+                  id="departmentId"
+                  value={formData.departmentId}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
+                >
+                  <option value="">Selecione um departamento</option>
+                  {departments.map((dep) => (
+                    <option key={dep.id} value={dep.id}>
+                      {dep.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 

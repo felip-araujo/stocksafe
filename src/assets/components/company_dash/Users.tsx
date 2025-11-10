@@ -7,13 +7,15 @@ import { useRequireSubscription } from "@/services/hooks/CheckSubscription";
 import toast from "react-hot-toast";
 import { LinkGenerate } from "../register/inviteGenerate";
 
-
 interface Usuario {
   id: number;
   name: string;
   email: string;
   role: string;
   createdAt: string;
+  department?: {
+    name: string;
+  };
 }
 
 export function UsuariosCompany() {
@@ -55,8 +57,7 @@ export function UsuariosCompany() {
           <div className="flex justify-end mt-2 gap-2">
             <button
               onClick={() => {
-                toast.dismiss(t.id); // fecha o toast
-                // ação
+                toast.dismiss(t.id);
                 excludeOnce();
               }}
               className="px-2 py-1 bg-red-500 text-white rounded"
@@ -72,7 +73,7 @@ export function UsuariosCompany() {
           </div>
         </div>
       ),
-      { duration: 5000 } // tempo que o toast fica visível (opcional)
+      { duration: 5000 }
     );
 
     const excludeOnce = async () => {
@@ -113,6 +114,9 @@ export function UsuariosCompany() {
                       Email
                     </th>
                     <th className="p-3 text-left font-semibold text-gray-700">
+                      Setor
+                    </th>
+                    <th className="p-3 text-left font-semibold text-gray-700">
                       Função
                     </th>
                     <th className="p-3 text-left font-semibold text-gray-700">
@@ -129,12 +133,14 @@ export function UsuariosCompany() {
                       key={usuario.id}
                       className="border-b hover:bg-gray-50 transition-colors"
                     >
-                      
                       <td className="p-3 font-medium text-gray-800">
                         {usuario.name}
                       </td>
                       <td className="p-3 text-gray-600 truncate max-w-[200px]">
                         {usuario.email}
+                      </td>
+                      <td className="p-3 text-gray-600 truncate max-w-[200px]">
+                        {usuario.department?.name || "Sem setor"}
                       </td>
                       <td className="p-3 text-gray-600 capitalize">
                         {usuario.role === "COMPANY_ADMIN"
@@ -191,7 +197,8 @@ export function UsuariosCompany() {
                   </p>
 
                   <p className="text-sm text-gray-600 mt-1">
-                    <span className="font-medium">ID:</span> {usuario.id}
+                    <span className="font-medium">Setor:</span>{" "}
+                    {usuario.department?.name || "Sem setor"}
                   </p>
 
                   <p className="text-sm text-gray-600 mt-1">
