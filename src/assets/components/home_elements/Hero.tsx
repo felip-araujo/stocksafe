@@ -92,9 +92,10 @@ export function Hero() {
             {/* Embed do vídeo */}
             <iframe
               className="w-full h-full rounded-2xl"
-              src="video/Stock-Seguro-Vt.mp4"
+              src="https://www.youtube.com/embed/599UrcoG0H8?si=cxqT1wyX6HIILm0S"
               title="Apresentação Stock Seguro"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             ></iframe>
           </div>
