@@ -1,5 +1,6 @@
 import { useAuthGuard } from "@/services/hooks/validator";
-import { SuperSideBar } from "../components/super_dash/superSideBar";
+import { SuperSideBar } from "../components/super_dash/SuperSide";
+
 
 
 
