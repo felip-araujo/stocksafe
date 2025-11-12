@@ -13,6 +13,9 @@ interface Request {
   createdAt: string;
   user: {
     name: string;
+    department?: {
+      name: string;
+    } | null; // pode ser null caso o usuário não tenha departamento
   };
   items: {
     id: number;
@@ -25,6 +28,7 @@ interface Request {
     };
   }[];
 }
+
 
 export function RequestsCompany() {
   useAuthGuard(["COMPANY_ADMIN"]);
@@ -46,7 +50,8 @@ export function RequestsCompany() {
         `/requisicao/${companyId}?page=${page}&limit=${limit}`
       );
       setRequests(res.data.data);
-      console.log(res.data);
+      console.log(res.data.data);
+      
       setTotalPages(res.data.pagination.totalPages);
       setPage(res.data.pagination.page);
     } catch (err) {
@@ -86,13 +91,13 @@ export function RequestsCompany() {
 
     try {
       await api.put(`/requisicao/${companyId}/${id}`, { status: newStatus });
-      
-      toast.success("Status atualizado com sucesso!")
+
+      toast.success("Status atualizado com sucesso!");
       fetchRequests(page);
     } catch (err) {
       console.error("Erro ao atualizar status:", err);
-      
-      toast.error("Erro ao atualizar status")
+
+      toast.error("Erro ao atualizar status");
     }
   };
 
@@ -120,6 +125,9 @@ export function RequestsCompany() {
                     </th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Usuário
+                    </th>
+                    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+                      Departamento
                     </th>
                     <th className="p-3 text-left text-sm font-semibold text-gray-700">
                       Quantidade
@@ -150,6 +158,11 @@ export function RequestsCompany() {
                       <td className="p-3 text-sm text-gray-600">
                         {req.user.name}
                       </td>
+                      <td className="p-3 text-sm text-gray-600">
+                         {req.user.department?.name ?? "Sem departamento"}
+                      </td>
+
+                      
 
                       <td className="p-3 text-sm text-gray-600">
                         <div className="max-h-24 overflow-y-auto custom-scrollbar">
@@ -309,7 +322,9 @@ export function RequestsCompany() {
             </div>
           </>
         ) : (
-          <p className="text-gray-600 mt-15 md:mt-4">Nenhuma requisição encontrada.</p>
+          <p className="text-gray-600 mt-15 md:mt-4">
+            Nenhuma requisição encontrada.
+          </p>
         )}
       </div>
     </div>
