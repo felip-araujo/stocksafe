@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LogoNome } from "../components/logo/Logo&Nome";
-import { Eye, EyeOff } from "lucide-react";
+import {  Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 
 export function CadastroComp() {
@@ -20,13 +20,37 @@ export function CadastroComp() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+
+    // ✅ Verificação de senha forte (sem alterar a lógica principal)
+    if (id === "password") {
+      const strongPassword =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      if (!strongPassword.test(value)) {
+        setPasswordError(
+          "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial."
+        );
+      } else {
+        setPasswordError("");
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // ✅ Impede envio se a senha não for forte
+    const strongPassword =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!strongPassword.test(formData.password)) {
+      toast.error("A senha não atende aos requisitos de segurança.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -39,14 +63,12 @@ export function CadastroComp() {
       if (!companyId) throw new Error("Erro: ID da empresa não retornado.");
 
       localStorage.setItem("companyId", companyId);
-
       toast.success("Empresa cadastrada com sucesso!");
 
       const priceId = searchParams.get("priceId");
-
       const subRes = await axios.post(
         `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
-        { priceId}
+        { priceId }
       );
 
       if (subRes.data?.url) {
@@ -82,6 +104,7 @@ export function CadastroComp() {
             Preencha o formulário abaixo para continuar com seu cadastro.
           </p>
         </div>
+
         {/* Formulário */}
         <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
           <div className="flex flex-col">
@@ -164,7 +187,11 @@ export function CadastroComp() {
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none pr-10"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 ${
+                  passwordError
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                } outline-none pr-10`}
                 required
               />
               <button
@@ -179,6 +206,20 @@ export function CadastroComp() {
                 )}
               </button>
             </div>
+
+            {/* ✅ Exibe requisitos da senha */}
+            {passwordError ? (
+              <p className="text-xs text-red-500 mt-1">{passwordError}</p>
+            ) : formData.password ? (
+              <p className="text-xs text-green-600 mt-1">
+                Senha forte e válida!
+              </p>
+            ) : (
+              <p className="text-xs text-gray-500 mt-1">
+                A senha deve conter 8+ caracteres, letra maiúscula, minúscula,
+                número e caractere especial.
+              </p>
+            )}
           </div>
 
           <div className="md:col-span-2 mt-4">
