@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   DollarSign,
   Lock,
+  BowArrow,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useLogout } from "@/services/hooks/logout";
@@ -42,7 +43,7 @@ export function SidebarDash() {
     },
     { to: "/usuarios", label: "Usuários", icon: <Users size={20} /> },
     { to: "/produtos", label: "Produtos Estoque", icon: <Package size={20} /> },
-    { to: "/sales", label: "Vendas", icon: <DollarSign size={20} /> },
+    { to: "/sales", label: "Vendas", icon: <DollarSign size={20} />   },
     { to: "/config", label: "Configurações", icon: <Settings size={20} /> },
   ];
 
@@ -59,7 +60,8 @@ export function SidebarDash() {
         label: "Produtos Estoque",
         icon: <Package size={20} />,
       },
-      { to: "/sales/user", label: "Vendas", icon: <DollarSign size={20} /> },
+      
+      { to: "/sales/user", label: "Vendas", icon: <BowArrow size={20} />   },
       { to: "/config", label: "Configurações", icon: <Settings size={20} /> },
     ];
   }

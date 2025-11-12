@@ -112,7 +112,9 @@ export function PerfilCompany() {
 
   // 🔹 Excluir departamento
   const handleDeleteDepartment = async (id: number) => {
-    const confirmDelete = window.confirm("Deseja realmente excluir este departamento?");
+    const confirmDelete = window.confirm(
+      "Deseja realmente excluir este departamento?"
+    );
     if (!confirmDelete) return;
     try {
       await api.delete(`/department/${id}`);
@@ -128,7 +130,9 @@ export function PerfilCompany() {
       {role === "SUPER_ADMIN" ? <SuperSideBar /> : <SidebarDash />}
 
       <div className="flex-1 mt-10 p-4 md:p-8">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6">Perfil da Empresa</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+          Perfil da Empresa
+        </h1>
 
         {userData ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
@@ -136,16 +140,22 @@ export function PerfilCompany() {
             <div className="bg-white shadow rounded-xl p-4 md:p-6 flex flex-col gap-3">
               <div>
                 <p className="text-gray-500 text-sm">Nome</p>
-                <p className="text-gray-800 font-medium truncate">{userData.name}</p>
+                <p className="text-gray-800 font-medium truncate">
+                  {userData.name}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm">E-mail</p>
-                <p className="text-gray-800 font-medium truncate">{userData.email}</p>
+                <p className="text-gray-800 font-medium truncate">
+                  {userData.email}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Função</p>
                 <p className="text-gray-800 font-medium">
-                  {userData.role === "COMPANY_ADMIN" ? "Administrador" : "Funcionário"}
+                  {userData.role === "COMPANY_ADMIN"
+                    ? "Administrador"
+                    : "Funcionário"}
                 </p>
               </div>
               <div>
@@ -153,13 +163,17 @@ export function PerfilCompany() {
                 <p className="text-gray-800 font-medium">
                   {new Date(userData.createdAt).toLocaleDateString("pt-BR")}
                 </p>
-                {role !== "EMPLOYEE" && planoAtual !== "gold" && <UpgradePlan />}
+                {role !== "EMPLOYEE" && planoAtual !== "gold" && (
+                  <UpgradePlan />
+                )}
               </div>
             </div>
 
             {/* Alterar Senha */}
             <div className="bg-white shadow rounded-xl p-4 md:p-6 flex flex-col gap-3 relative">
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">Alterar Senha</h2>
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                Alterar Senha
+              </h2>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -187,66 +201,75 @@ export function PerfilCompany() {
             </div>
 
             {/* Departamentos */}
-            <div className="bg-white shadow rounded-xl p-4 md:p-6 flex flex-col gap-3 col-span-1 md:col-span-2">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg font-semibold text-gray-800">Departamentos</h2>
-                <button
-                  onClick={fetchDepartments}
-                  className="flex items-center gap-2 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition"
-                >
-                  <RefreshCcw size={16} />
-                  Atualizar
-                </button>
-              </div>
+            {role !== "EMPLOYEE" && (
+              <div className="bg-white shadow rounded-xl p-4 md:p-6 flex flex-col gap-3 col-span-1 md:col-span-2">
+                <div className="flex justify-between items-center mb-2">
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    Departamentos
+                  </h2>
+                  <button
+                    onClick={fetchDepartments}
+                    className="flex items-center gap-2 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition"
+                  >
+                    <RefreshCcw size={16} />
+                    Atualizar
+                  </button>
+                </div>
 
-              <div className="flex gap-2 items-center">
-                <input
-                  type="text"
-                  placeholder="Nome do departamento"
-                  value={newDeptName}
-                  onChange={(e) => setNewDeptName(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <button
-                  onClick={handleCreateDepartment}
-                  className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-                >
-                  <PlusCircle size={18} />
-                  Criar
-                </button>
-              </div>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    placeholder="Nome do departamento"
+                    value={newDeptName}
+                    onChange={(e) => setNewDeptName(e.target.value)}
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                  <button
+                    onClick={handleCreateDepartment}
+                    className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                  >
+                    <PlusCircle size={18} />
+                    Criar
+                  </button>
+                </div>
 
-              <div className="mt-3">
-                {loadingDepts ? (
-                  <p>Carregando departamentos...</p>
-                ) : departments.length > 0 ? (
-                  <ul className="divide-y divide-gray-200">
-                    {departments.map((dept) => (
-                      <li
-                        key={dept.id}
-                        className="py-2 flex justify-between items-center hover:bg-gray-50 rounded-md px-2"
-                      >
-                        <div>
-                          <span className="font-medium">{dept.name}</span>
-                          <p className="text-sm text-gray-500">
-                            Criado em {new Date(dept.createdAt).toLocaleDateString("pt-BR")}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => handleDeleteDepartment(dept.id)}
-                          className="text-red-600 hover:text-red-800 transition"
-                          title="Excluir departamento"
+                <div className="mt-3">
+                  {loadingDepts ? (
+                    <p>Carregando departamentos...</p>
+                  ) : departments.length > 0 ? (
+                    <ul className="divide-y divide-gray-200">
+                      {departments.map((dept) => (
+                        <li
+                          key={dept.id}
+                          className="py-2 flex justify-between items-center hover:bg-gray-50 rounded-md px-2"
                         >
-                          <Trash2 size={18} />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-600">Nenhum departamento cadastrado.</p>
-                )}
+                          <div>
+                            <span className="font-medium">{dept.name}</span>
+                            <p className="text-sm text-gray-500">
+                              Criado em{" "}
+                              {new Date(dept.createdAt).toLocaleDateString(
+                                "pt-BR"
+                              )}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteDepartment(dept.id)}
+                            className="text-red-600 hover:text-red-800 transition"
+                            title="Excluir departamento"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-600">
+                      Nenhum departamento cadastrado.
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            )}  
           </div>
         ) : (
           <p className="text-gray-600">Não foi possível carregar os dados.</p>

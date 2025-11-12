@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api/api";
-import { Plus, Minus, X } from "lucide-react";
+import { Plus, Minus, X, Search } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Material {
   id: number;
   name: string;
-
-  [key: string]: unknown; // caso venha mais campos da API
+  [key: string]: unknown;
 }
 
 interface SelectedMaterial {
@@ -22,34 +21,41 @@ export function CreateRequest() {
   const [isOpen, setIsOpen] = useState(false);
   const [materials, setMaterials] = useState<Material[]>([]);
   const [selectedMaterials, setSelectedMaterials] = useState<SelectedMaterial[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Carregar materiais ao abrir o modal
+  // ✅ Buscar materiais ao abrir o modal ou ao digitar na busca
   useEffect(() => {
     if (isOpen) {
       const fetchMaterials = async () => {
         try {
-          const res = await api.get(`/material/${companyId}`);
-          setMaterials(res.data.data);
+          setLoading(true);
+          const res = await api.get(`/material/${companyId}?search=${search}`);
+          setMaterials(res.data.data || []);
         } catch (err) {
           console.error("Erro ao buscar materiais:", err);
+        } finally {
+          setLoading(false);
         }
       };
-      fetchMaterials();
-    }
-  }, [isOpen]);
 
-  // Lidar com seleção de materiais
-  const handleSelect = (materialId: number) => {
-    if (selectedMaterials.some((m) => m.materialId === materialId)) {
-      setSelectedMaterials(
-        selectedMaterials.filter((m) => m.materialId !== materialId)
-      );
-    } else {
-      setSelectedMaterials([...selectedMaterials, { materialId, quantity: 1 }]);
+      // debounce leve (aguarda 400ms antes de buscar novamente)
+      const timer = setTimeout(fetchMaterials, 400);
+      return () => clearTimeout(timer);
     }
+  }, [isOpen, search, companyId]);
+
+  // ✅ Selecionar/deselecionar material
+  const handleSelect = (materialId: number) => {
+    setSelectedMaterials((prev) => {
+      const exists = prev.some((m) => m.materialId === materialId);
+      return exists
+        ? prev.filter((m) => m.materialId !== materialId)
+        : [...prev, { materialId, quantity: 1 }];
+    });
   };
 
-  // Alterar quantidade
+  // ✅ Alterar quantidade
   const handleQuantityChange = (materialId: number, newQuantity: number) => {
     setSelectedMaterials((prev) =>
       prev.map((m) =>
@@ -60,7 +66,7 @@ export function CreateRequest() {
     );
   };
 
-  // Enviar requisição
+  // ✅ Enviar requisição
   const handleSubmit = async () => {
     try {
       await api.post(`/requisicao/${companyId}`, {
@@ -70,14 +76,13 @@ export function CreateRequest() {
           quantity: item.quantity,
         })),
       });
-      // alert("Requisição criada com sucesso!");
-      toast.success("Requisição criada com sucesso!")
+      toast.success("Requisição criada com sucesso!");
       setIsOpen(false);
       setSelectedMaterials([]);
+      setSearch("");
     } catch (err) {
       console.error("Erro ao criar requisição:", err);
-      // alert("Erro ao criar requisição.");
-      toast.error("Erro ao criar requisição!")
+      toast.error("Erro ao criar requisição!");
     }
   };
 
@@ -85,15 +90,15 @@ export function CreateRequest() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-green-600 p-2 rounded mb-4 text-white font-medium"
+        className="bg-green-600 p-2 rounded  text-white font-medium"
       >
         Nova Requisição
       </button>
 
       {isOpen && (
-        <div className="fixed z-10 inset-0 bg-black/40 flex justify-center items-center">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
-            {/* Fechar modal */}
+        <div className="fixed z-10 inset-0 bg-black/40 flex justify-center items-center px-4">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative animate-fade-in">
+            {/* ❌ Fechar modal */}
             <button
               onClick={() => setIsOpen(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
@@ -105,10 +110,25 @@ export function CreateRequest() {
               Selecionar Materiais
             </h2>
 
-            {materials.length === 0 ? (
-              <p className="text-gray-500">Nenhum material disponível.</p>
+            {/* 🔍 Campo de busca */}
+            <div className="flex items-center gap-2 mb-4 border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-green-500">
+              <Search size={18} className="text-gray-500" />
+              <input
+                type="text"
+                placeholder="Buscar material..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full outline-none text-gray-700"
+              />
+            </div>
+
+            {/* 📦 Lista de materiais */}
+            {loading ? (
+              <p className="text-gray-500">Carregando materiais...</p>
+            ) : materials.length === 0 ? (
+              <p className="text-gray-500">Nenhum material encontrado.</p>
             ) : (
-              <div className="max-h-80 overflow-y-auto">
+              <div className="max-h-80 overflow-y-auto rounded-md border">
                 {materials.map((mat) => {
                   const selected = selectedMaterials.find(
                     (m) => m.materialId === mat.id
@@ -116,8 +136,8 @@ export function CreateRequest() {
                   return (
                     <div
                       key={mat.id}
-                      className={`flex items-center justify-between border-b py-2 px-2 ${
-                        selected ? "bg-green-50" : ""
+                      className={`flex items-center justify-between border-b py-2 px-2 transition-colors ${
+                        selected ? "bg-green-50" : "hover:bg-gray-50"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -176,10 +196,11 @@ export function CreateRequest() {
               </div>
             )}
 
+            {/* ✅ Botão confirmar */}
             <button
               onClick={handleSubmit}
               disabled={selectedMaterials.length === 0}
-              className={`mt-4 w-full py-2 rounded font-bold ${
+              className={`mt-4 w-full py-2 rounded font-bold transition ${
                 selectedMaterials.length === 0
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-green-600 text-white hover:bg-green-700"
