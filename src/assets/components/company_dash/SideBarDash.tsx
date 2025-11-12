@@ -54,6 +54,7 @@ export function SidebarDash() {
         label: "Requisições",
         icon: <NotebookPen size={20} />,
       },
+      { to: "/sales/user", label: "Vendas", icon: <BowArrow size={20} />   },
       { to: "/material", label: "Material Consumo", icon: <Store size={20} /> },
       {
         to: "/produtos",
@@ -61,7 +62,7 @@ export function SidebarDash() {
         icon: <Package size={20} />,
       },
       
-      { to: "/sales/user", label: "Vendas", icon: <BowArrow size={20} />   },
+      
       { to: "/config", label: "Configurações", icon: <Settings size={20} /> },
     ];
   }
