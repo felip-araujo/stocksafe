@@ -31,7 +31,7 @@ export function useRequireSubscription() {
           const data = await res.json();
           // Atualiza status e fim do trial
           localStorage.setItem("status", data.data.status);
-          localStorage.setItem("fim_teste", data.data.currentPeriodEnd);
+          localStorage.setItem("fim_teste", data.data.trialEndsAt);
         }
       } catch (err) {
         console.error("Erro ao verificar assinatura:", err);

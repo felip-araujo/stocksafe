@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { LogoNome } from "../components/logo/Logo&Nome";
 import { LogoNomeBranco } from "../components/logo/Logo&NomeBranco";
 
-
 export function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
@@ -33,8 +32,9 @@ export function LoginPage() {
       localStorage.setItem("companyName", res.data.user.company.name);
       localStorage.setItem("representant", res.data.user.company.representant);
 
+      console.log(res.data);
+
       toast.success("Login realizado com sucesso!");
-      
       
 
       const funcao = res.data.user.role;
@@ -118,10 +118,7 @@ export function LoginPage() {
           </form>
 
           <div className="mt-4 text-right space-y-2">
-            <a
-              className="text-blue-600 text-sm hover:underline"
-              href="/"
-            >
+            <a className="text-blue-600 text-sm hover:underline" href="/">
               Cadastre-se
             </a>
             <br />
