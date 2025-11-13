@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LogoNome } from "../components/logo/Logo&Nome";
-import {  Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 
 export function CadastroComp() {
@@ -26,7 +26,7 @@ export function CadastroComp() {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
 
-    // ✅ Verificação de senha forte (sem alterar a lógica principal)
+    // ✅ Verificação de senha forte
     if (id === "password") {
       const strongPassword =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -54,6 +54,7 @@ export function CadastroComp() {
     setLoading(true);
 
     try {
+      // ✅ Criação da empresa
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/companies`,
         formData
@@ -65,12 +66,22 @@ export function CadastroComp() {
       localStorage.setItem("companyId", companyId);
       toast.success("Empresa cadastrada com sucesso!");
 
+      // ✅ Captura dos parâmetros do plano
       const priceId = searchParams.get("priceId");
+      const plano = searchParams.get("plano");
+      const isTrial = plano === "trial"; // 👈 Verifica se é o plano de teste
+
+      // ✅ Requisição de assinatura com suporte a trial
       const subRes = await axios.post(
         `${import.meta.env.VITE_API_URL}/subscription/${companyId}/subscribe`,
-        { priceId }
+        {
+          priceId,
+          plano,
+          ...(isTrial ? { trial: true } : {}),
+        }
       );
 
+      // ✅ Redirecionamento
       if (subRes.data?.url) {
         window.location.href = subRes.data.url;
         localStorage.setItem("checkout", subRes.data.url);
@@ -78,6 +89,7 @@ export function CadastroComp() {
         navigate("/auth");
       }
 
+      // ✅ Limpa formulário
       setFormData({
         name: "",
         cnpj: "",
@@ -207,7 +219,6 @@ export function CadastroComp() {
               </button>
             </div>
 
-            {/* ✅ Exibe requisitos da senha */}
             {passwordError ? (
               <p className="text-xs text-red-500 mt-1">{passwordError}</p>
             ) : formData.password ? (
