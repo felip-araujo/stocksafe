@@ -71,7 +71,7 @@ export function AssinaturasCompany() {
 
     const cancelNow = async () => {
       try {
-        await api.post(`/subscription/cancel/${id}`);
+        await api.post(`/subscription/${id}/cancel`);
         toast.success("Assinatura cancelada com sucesso!");
         fetchAssinaturas(page);
       } catch (err) {
@@ -143,11 +143,11 @@ export function AssinaturasCompany() {
                         {sub.status}
                       </td>
                       <td className="p-3 text-gray-600">
-                        {new Date(sub.currentPeriodStart).toLocaleDateString(
+                        {new Date(sub.updatedAt).toLocaleDateString(
                           "pt-BR"
                         )}{" "}
                         —{" "}
-                        {new Date(sub.currentPeriodEnd).toLocaleDateString(
+                        {new Date(sub.trialEndsAt).toLocaleDateString(
                           "pt-BR"
                         )}
                       </td>
