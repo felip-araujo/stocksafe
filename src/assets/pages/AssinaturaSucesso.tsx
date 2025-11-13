@@ -27,7 +27,7 @@ const SuccessPage = () => {
 
         const data = await res.json();
 
-        if (data.status === "active") {
+        if (data.status === "active" || data.status === "trialing") {
           setStatus("Assinatura confirmada! Acesso liberado.");
           toast.success("Assinatura confirmada!");
           navigate("/auth");
